@@ -47,15 +47,24 @@ auth.onAuthStateChanged(async function (fbUser) {
     }
     try {
         const doc = await db.collection('users').doc(fbUser.uid).get();
+        if (window.__registering) return; // التسجيل الجديد بيكتب الملف بنفسه
         if (!doc.exists) {
             // مستند المستخدم بيتنشئ تلقائياً بواسطة Cloud Function عند التسجيل
             // (onCreate trigger). لو لسه محصلش (تأخير بسيط)، نحاول مرة كمان.
             await new Promise(r => setTimeout(r, 1200));
             const retry = await db.collection('users').doc(fbUser.uid).get();
-            if (!retry.exists) { _cacheUser(null); return; }
+            if (!retry.exists) {
+                // المستخدم موجود في Authentication بس ملفه مش في Firestore → نكمل بملف أساسي بدل ما نخرّجه
+                const basic = _profileFromDoc(fbUser.uid, { name: fbUser.displayName || '', email: fbUser.email || '' });
+                _cacheUser(basic);
+                document.dispatchEvent(new CustomEvent('authReady', { detail: basic }));
+                if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
+                return;
+            }
             const profile = _profileFromDoc(fbUser.uid, retry.data());
             _cacheUser(profile);
             document.dispatchEvent(new CustomEvent('authReady', { detail: profile }));
+            if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
             return;
         }
         const data = doc.data();
@@ -71,6 +80,9 @@ auth.onAuthStateChanged(async function (fbUser) {
         if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
     } catch (e) {
         console.error('auth state error', e);
+        // فشل قراءة Firestore (مثلاً قواعد الأمان) — لا نمسح الجلسة، نبني ملفاً أساسياً من Firebase Auth
+        _cacheUser(_profileFromDoc(fbUser.uid, { name: fbUser.displayName || '', email: fbUser.email || '' }));
+        if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
     }
 });
 
@@ -90,8 +102,11 @@ async function handleLogin(event) {
 
     try {
         const cred = await auth.signInWithEmailAndPassword(email, password);
-        const doc = await db.collection('users').doc(cred.user.uid).get();
-        const data = doc.exists ? doc.data() : {};
+        let data = { name: cred.user.displayName || '', email: cred.user.email || '' };
+        try {
+            const doc = await db.collection('users').doc(cred.user.uid).get();
+            if (doc.exists) data = doc.data();
+        } catch (e) { console.error('تعذر قراءة ملف المستخدم', e); }
 
         if (data.blocked) {
             showToast('تم حظر حسابك. تواصل مع الإدارة', 'error');
@@ -101,6 +116,7 @@ async function handleLogin(event) {
 
         const profile = _profileFromDoc(cred.user.uid, data);
         _cacheUser(profile);
+        if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
 
         showToast(`مرحباً ${(profile.name || 'بك').split(' ')[0]}! تم تسجيل الدخول بنجاح`);
 
@@ -139,6 +155,7 @@ async function handleRegister(event) {
     const btn = event.target.querySelector('.form-submit');
     if (btn) { btn.disabled = true; btn.textContent = 'جاري الإنشاء...'; }
 
+    window.__registering = true;
     try {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
         await cred.user.updateProfile({ displayName: name });
@@ -171,10 +188,13 @@ async function handleRegister(event) {
 
         const profile = _profileFromDoc(cred.user.uid, newUserData);
         _cacheUser(profile);
+        if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
 
         showToast('تم إنشاء الحساب بنجاح! مرحباً بك');
         setTimeout(() => { window.location.href = 'index.html'; }, 1000);
     } catch (err) {
+        window.__registering = false;
+        console.error(err);
         showToast(_authErrorMessage(err), 'error');
     } finally {
         if (btn) { btn.disabled = false; btn.textContent = 'إنشاء حساب'; }
@@ -197,9 +217,13 @@ function _authErrorMessage(err) {
         'auth/invalid-email': 'صيغة البريد الإلكتروني غير صحيحة',
         'auth/weak-password': 'كلمة المرور ضعيفة جداً',
         'auth/network-request-failed': 'تعذّر الاتصال بالخادم، تحقق من الإنترنت',
-        'auth/too-many-requests': 'محاولات كثيرة، حاول لاحقاً'
+        'auth/too-many-requests': 'محاولات كثيرة، حاول لاحقاً',
+        'auth/operation-not-allowed': 'تسجيل (البريد/كلمة المرور) غير مفعّل في Firebase — فعّله من Authentication ← Sign-in method',
+        'auth/unauthorized-domain': 'دومين الموقع غير مضاف في Firebase — أضفه من Authentication ← Settings ← Authorized domains',
+        'auth/invalid-api-key': 'مفتاح Firebase غير صحيح، راجع firebase-config.js',
+        'auth/user-disabled': 'هذا الحساب موقوف'
     };
-    return map[err.code] || 'حدث خطأ، حاول مرة أخرى';
+    return map[err.code] || ('حدث خطأ، حاول مرة أخرى' + (err && err.code ? ' (' + err.code + ')' : ''));
 }
 
 // ========== حماية الصفحات ==========
