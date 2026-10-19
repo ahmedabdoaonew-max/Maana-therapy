@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<style id="authGateStyle">html{visibility:hidden !important}</style>
+<script>setTimeout(function(){if(document.getElementById("authGateStyle"))location.replace("login.html")},8000)</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Carrot Dash — لعبة الجري | معنى ثيرابي</title>
+    <meta name="description" content="لعبة جري خفيفة للاسترخاء وتهدئة الذهن بين المهام، من ألعاب تنمية المهارات في معنى ثيرابي.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="معنى ثيرابي">
+    <link rel="canonical" href="https://maana-therapy.vercel.app/carrot-dash.html">
+    <link rel="alternate" hreflang="ar" href="https://maana-therapy.vercel.app/carrot-dash.html">
+    <link rel="alternate" hreflang="x-default" href="https://maana-therapy.vercel.app/carrot-dash.html">
+
+    <!-- Open Graph (فيسبوك / واتساب / لينكدإن / تيليجرام) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="معنى ثيرابي | Maana Therapy">
+    <meta property="og:locale" content="ar_EG">
+    <meta property="og:title" content="Carrot Dash — لعبة الجري | معنى ثيرابي">
+    <meta property="og:description" content="لعبة جري خفيفة للاسترخاء وتهدئة الذهن بين المهام، من ألعاب تنمية المهارات في معنى ثيرابي.">
+    <meta property="og:url" content="https://maana-therapy.vercel.app/carrot-dash.html">
+    <meta property="og:image" content="https://maana-therapy.vercel.app/images/og-image.jpg">
+    <meta property="og:image:secure_url" content="https://maana-therapy.vercel.app/images/og-image.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="شعار معنى ثيرابي — كل نفس لها معنى">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Carrot Dash — لعبة الجري | معنى ثيرابي">
+    <meta name="twitter:description" content="لعبة جري خفيفة للاسترخاء وتهدئة الذهن بين المهام، من ألعاب تنمية المهارات في معنى ثيرابي.">
+    <meta name="twitter:image" content="https://maana-therapy.vercel.app/images/og-image.jpg">
+    <meta name="twitter:image:alt" content="شعار معنى ثيرابي — كل نفس لها معنى">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html,body {
+    width:100%; height:100%; overflow:hidden;
+    background:#0f172a;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    user-select:none;
+    touch-action: none;
+  }
+  #gameContainer {
+    position:relative;
+    width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  canvas {
+    display:block;
+    background:#87CEEB;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+    max-width:100%;
+    max-height:100%;
+  }
+  #hud {
+    position:absolute; top:0; left:0; right:0;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:16px 20px;
+    pointer-events:none;
+    font-weight:800;
+    color:#fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  #score { font-size:28px; display:flex; align-items:center; gap:8px; }
+  #score .carrotIcon { font-size:26px; }
+  #best { font-size:16px; opacity:0.9; margin-top:4px; }
+  #speedTag {
+    font-size:13px;
+    background:rgba(0,0,0,0.25);
+    padding:4px 10px;
+    border-radius:20px;
+    margin-top:6px;
+    display:inline-block;
+  }
+  .overlay {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(15,23,42,0.75), rgba(15,23,42,0.9));
+    color:#fff; text-align:center; padding:20px;
+    animation: fadeIn .25s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .overlay h1 {
+    font-size:clamp(28px,6vw,52px);
+    background: linear-gradient(90deg,#FF7A18,#FFC93C);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:10px;
+    text-shadow:none;
+  }
+  .overlay p { font-size:16px; opacity:0.85; margin-bottom:22px; max-width:400px; line-height:1.6; }
+  .bunnyEmoji { font-size:64px; margin-bottom:10px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4)); }
+  .btn {
+    background: linear-gradient(135deg,#FF7A18,#FFB238);
+    color:#1a1200;
+    border:none;
+    padding:14px 38px;
+    font-size:18px;
+    font-weight:800;
+    border-radius:30px;
+    cursor:pointer;
+    box-shadow: 0 8px 20px rgba(255,122,24,0.4);
+    transition: transform .12s ease, box-shadow .12s ease;
+    pointer-events:auto;
+  }
+  .btn:active { transform: scale(0.95); box-shadow:0 4px 10px rgba(255,122,24,0.4); }
+  .statsRow { display:flex; gap:30px; margin-bottom:22px; }
+  .statBox { display:flex; flex-direction:column; align-items:center; }
+  .statBox .val { font-size:26px; font-weight:800; color:#FFC93C; }
+  .statBox .lbl { font-size:12px; opacity:0.7; }
+  .hint {
+    position:absolute; bottom:18px; left:0; right:0;
+    text-align:center; color:#fff; font-size:13px; opacity:0.75;
+    pointer-events:none;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  #controls {
+    position:absolute; bottom:22px; left:0; right:0;
+    display:flex; justify-content:center; gap:18px;
+    z-index:20;
+    pointer-events:none;
+  }
+  .ctrlBtn {
+    pointer-events:auto;
+    width:84px; height:84px;
+    border-radius:50%;
+    border:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800;
+    color:#1a1200;
+    background: linear-gradient(135deg,#FFD36E,#FF9B2E);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+    cursor:pointer;
+    -webkit-user-select:none; user-select:none;
+    transition: transform .08s ease;
+  }
+  .ctrlBtn .icon { font-size:28px; line-height:1; margin-bottom:2px; }
+  .ctrlBtn:active, .ctrlBtn.pressed { transform: scale(0.9); box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+  .hidden { display:none !important; }
+</style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://maana-therapy.vercel.app/carrot-dash.html#webpage",
+      "url": "https://maana-therapy.vercel.app/carrot-dash.html",
+      "name": "Carrot Dash — لعبة الجري | معنى ثيرابي",
+      "description": "لعبة جري خفيفة للاسترخاء وتهدئة الذهن بين المهام، من ألعاب تنمية المهارات في معنى ثيرابي.",
+      "inLanguage": "ar",
+      "isPartOf": {
+        "@id": "https://maana-therapy.vercel.app/#website"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://maana-therapy.vercel.app/images/og-image.jpg"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "الرئيسية",
+          "item": "https://maana-therapy.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Carrot Dash",
+          "item": "https://maana-therapy.vercel.app/carrot-dash.html"
+        }
+      ]
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+<div id="gameContainer">
+  <canvas id="game" width="900" height="500"></canvas>
+
+  <div id="hud">
+    <div>
+      <div id="score"><span class="carrotIcon">🥕</span><span id="scoreVal">0</span></div>
+      <div id="best">أفضل نتيجة: <span id="bestVal">0</span></div>
+      <div id="speedTag">السرعة: <span id="speedVal">1.0x</span></div>
+    </div>
+  </div>
+
+  <div id="startScreen" class="overlay">
+    <div class="bunnyEmoji">🐰</div>
+    <h1>Carrot Dash</h1>
+    <p>اجري بأقصى سرعة، اقفز فوق العوائق، وانحنِ تحت الطيور، واجمع أكبر عدد من الجزر الممكن!</p>
+    <button class="btn" id="startBtn">ابدأ اللعب</button>
+  </div>
+
+  <div id="gameOverScreen" class="overlay hidden">
+    <h1>انتهت اللعبة!</h1>
+    <div class="statsRow">
+      <div class="statBox"><div class="val" id="finalScore">0</div><div class="lbl">النتيجة</div></div>
+      <div class="statBox"><div class="val" id="finalBest">0</div><div class="lbl">أفضل نتيجة</div></div>
+    </div>
+    <button class="btn" id="restartBtn">إعادة المحاولة</button>
+  </div>
+
+  <div class="hint" id="hintText">اضغط مسافة / اضغط للأعلى للقفز — السهم للأسفل أو اسحب للأسفل للانحناء</div>
+
+  <div id="controls" class="hidden">
+    <button class="ctrlBtn" id="duckBtn"><span class="icon">⬇️</span>انحناء</button>
+    <button class="ctrlBtn" id="jumpBtn"><span class="icon">⬆️</span>قفز</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const GROUND_Y = H - 90;
+
+  // ---------- UI elements ----------
+  const scoreVal = document.getElementById('scoreVal');
+  const bestVal = document.getElementById('bestVal');
+  const speedVal = document.getElementById('speedVal');
+  const startScreen = document.getElementById('startScreen');
+  const gameOverScreen = document.getElementById('gameOverScreen');
+  const finalScore = document.getElementById('finalScore');
+  const finalBest = document.getElementById('finalBest');
+  const startBtn = document.getElementById('startBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const hintText = document.getElementById('hintText');
+  const controls = document.getElementById('controls');
+  const jumpBtn = document.getElementById('jumpBtn');
+  const duckBtn = document.getElementById('duckBtn');
+
+  let bestScore = 0; // session best (no persistent storage)
+
+  // ---------- Game state ----------
+  let state = 'idle'; // idle | playing | gameover
+  let score = 0;
+  let distance = 0;
+  let baseSpeed = 6;
+  let speed = baseSpeed;
+  let speedMultiplier = 1.0;
+  let frame = 0;
+  let obstacles = [];
+  let carrots = [];
+  let particles = [];
+  let clouds = [];
+  let hills = [];
+  let spawnTimer = 0;
+  let nextSpawnAt = 60;
+  let shakeTime = 0;
+
+  // Player (rabbit)
+  const player = {
+    x: 120,
+    y: GROUND_Y,
+    w: 46,
+    h: 58,
+    vy: 0,
+    ducking: false,
+    grounded: true,
+    legPhase: 0,
+    jumpsUsed: 0,
+    maxJumps: 2 // double jump allowed
+  };
+  const GRAVITY = 0.85;
+  const JUMP_FORCE = -15.5;
+  const DUCK_H = 34;
+
+  // ---------- Input ----------
+  let downHeld = false;
+
+  function tryJump() {
+    if (state !== 'playing') return;
+    if (player.jumpsUsed < player.maxJumps) {
+      player.vy = JUMP_FORCE;
+      player.grounded = false;
+      player.jumpsUsed++;
+      spawnJumpParticles();
+    }
+  }
+  function startDuck() {
+    if (state !== 'playing') return;
+    downHeld = true;
+    if (player.grounded) player.ducking = true;
+  }
+  function endDuck() {
+    downHeld = false;
+    player.ducking = false;
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); tryJump(); }
+    if (e.code === 'ArrowDown') { e.preventDefault(); startDuck(); }
+    if (e.code === 'Enter') {
+      if (state === 'idle') beginGame();
+      if (state === 'gameover') beginGame();
+    }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowDown') endDuck();
+  });
+
+  // Touch controls: tap upper area = jump, tap/hold lower area = duck
+  let touchStartY = null;
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (state !== 'playing') { beginGame(); return; }
+    const t = e.touches[0];
+    touchStartY = t.clientY;
+    tryJump();
+  }, { passive:false });
+  canvas.addEventListener('touchmove', (e) => {
+    if (touchStartY === null) return;
+    const t = e.touches[0];
+    if (t.clientY - touchStartY > 40) startDuck();
+  }, { passive:false });
+  canvas.addEventListener('touchend', (e) => {
+    touchStartY = null;
+    endDuck();
+  });
+  canvas.addEventListener('mousedown', () => {
+    if (state !== 'playing') { beginGame(); return; }
+    tryJump();
+  });
+
+  startBtn.addEventListener('click', beginGame);
+  restartBtn.addEventListener('click', beginGame);
+
+  function bindPressBtn(el, onPress, onRelease) {
+    const press = (e) => { e.preventDefault(); onPress(); };
+    const release = (e) => { if (onRelease) onRelease(); };
+    el.addEventListener('touchstart', press, { passive:false });
+    el.addEventListener('mousedown', press);
+    el.addEventListener('touchend', release);
+    el.addEventListener('mouseup', release);
+    el.addEventListener('mouseleave', release);
+  }
+  bindPressBtn(jumpBtn, tryJump);
+  bindPressBtn(duckBtn, startDuck, endDuck);
+
+  // ---------- Background elements ----------
+  function initBackground() {
+    clouds = [];
+    for (let i=0;i<5;i++) {
+      clouds.push({ x: Math.random()*W, y: 40+Math.random()*100, s: 0.6+Math.random()*0.8 });
+    }
+    hills = [];
+    for (let i=0;i<4;i++) {
+      hills.push({ x: i*300, w: 260+Math.random()*80 });
+    }
+  }
+
+  function spawnJumpParticles() {
+    for (let i=0;i<6;i++) {
+      particles.push({
+        x: player.x + player.w/2, y: player.y + player.h,
+        vx: (Math.random()-0.5)*3, vy: Math.random()*-2,
+        life: 20, color: '#d9d9d9'
+      });
+    }
+  }
+
+  function spawnCarrotBurst(x,y) {
+    for (let i=0;i<8;i++) {
+      particles.push({
+        x, y,
+        vx: (Math.random()-0.5)*5, vy: (Math.random()-1.2)*5,
+        life: 24, color: '#FFA500'
+      });
+    }
+  }
+
+  // ---------- Obstacle types ----------
+  // ground: rock / fence -> must jump
+  // air: bird -> must duck (flies at duck height)
+  function spawnObstacle() {
+    const r = Math.random();
+    if (r < 0.55) {
+      // ground obstacle
+      const kind = Math.random() < 0.5 ? 'rock' : 'fence';
+      const h = kind === 'rock' ? 34 + Math.random()*20 : 46;
+      obstacles.push({
+        type:'ground', kind,
+        x: W + 40, y: GROUND_Y - h + 58, w: kind==='rock'?38:30, h,
+        passed:false
+      });
+    } else if (r < 0.85) {
+      // bird flying at head height (must duck)
+      obstacles.push({
+        type:'bird',
+        x: W + 40, y: GROUND_Y - 70 - Math.random()*20, w:40, h:26,
+        passed:false, wingPhase: Math.random()*Math.PI*2
+      });
+    } else {
+      // double rock (harder) 
+      obstacles.push({
+        type:'ground', kind:'rock',
+        x: W + 40, y: GROUND_Y - 34 + 58, w:34, h:34, passed:false
+      });
+      obstacles.push({
+        type:'ground', kind:'rock',
+        x: W + 40 + 50, y: GROUND_Y - 34 + 58, w:34, h:34, passed:false
+      });
+    }
+  }
+
+  function spawnCarrotRow() {
+    const groundLevel = Math.random() < 0.6;
+    const y = groundLevel ? GROUND_Y - 20 : GROUND_Y - 90;
+    const count = 3 + Math.floor(Math.random()*4);
+    const startX = W + 60;
+    for (let i=0;i<count;i++) {
+      carrots.push({ x: startX + i*36, y, taken:false, bob: Math.random()*Math.PI*2 });
+    }
+  }
+
+  // ---------- Game flow ----------
+  function beginGame() {
+    state = 'playing';
+    score = 0; distance = 0;
+    speed = baseSpeed; speedMultiplier = 1.0;
+    obstacles = []; carrots = []; particles = [];
+    spawnTimer = 0; nextSpawnAt = 70;
+    player.y = GROUND_Y; player.vy = 0; player.grounded = true; player.ducking = false; player.jumpsUsed = 0;
+    startScreen.classList.add('hidden');
+    gameOverScreen.classList.add('hidden');
+    hintText.classList.add('hidden');
+    controls.classList.remove('hidden');
+    initBackground();
+  }
+
+  function endGame() {
+    state = 'gameover';
+    if (score > bestScore) bestScore = score;
+    finalScore.textContent = Math.floor(score);
+    finalBest.textContent = Math.floor(bestScore);
+    bestVal.textContent = Math.floor(bestScore);
+    gameOverScreen.classList.remove('hidden');
+    controls.classList.add('hidden');
+    shakeTime = 14;
+  }
+
+  // ---------- Collision ----------
+  function playerBox() {
+    const h = player.ducking ? DUCK_H : player.h;
+    const y = player.y + 58 - h;
+    return { x: player.x+8, y: y+6, w: player.w-16, h: h-10 };
+  }
+  function rectsOverlap(a,b) {
+    return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
+  }
+
+  // ---------- Update ----------
+  function update() {
+    frame++;
+    distance += speed;
+    score += speed * 0.045;
+
+    // difficulty scaling
+    speedMultiplier = 1 + Math.min(1.4, distance / 9000);
+    speed = baseSpeed * speedMultiplier;
+
+    // player physics
+    if (!player.grounded) {
+      player.vy += GRAVITY;
+      player.y += player.vy;
+      if (player.y >= GROUND_Y) {
+        player.y = GROUND_Y;
+        player.vy = 0;
+        player.grounded = true;
+        player.jumpsUsed = 0;
+        player.ducking = downHeld;
+      }
+    } else {
+      player.ducking = downHeld;
+    }
+    player.legPhase += speed * 0.06;
+
+    // spawn logic
+    spawnTimer++;
+    if (spawnTimer >= nextSpawnAt) {
+      spawnTimer = 0;
+      nextSpawnAt = Math.max(38, 85 - distance/300) + Math.random()*30;
+      spawnObstacle();
+      if (Math.random() < 0.55) spawnCarrotRow();
+    }
+
+    // move obstacles
+    for (const o of obstacles) {
+      o.x -= speed;
+      if (o.type==='bird') o.wingPhase += 0.25;
+    }
+    obstacles = obstacles.filter(o => o.x + o.w > -20);
+
+    // move carrots
+    for (const c of carrots) c.x -= speed;
+    carrots = carrots.filter(c => c.x > -20 && !c.taken);
+
+    // particles
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.life--;
+    }
+    particles = particles.filter(p => p.life > 0);
+
+    // background scroll
+    for (const c of clouds) {
+      c.x -= speed*0.15;
+      if (c.x < -80) { c.x = W+80; c.y = 30+Math.random()*100; }
+    }
+    for (const h of hills) {
+      h.x -= speed*0.4;
+      if (h.x < -h.w) h.x = W;
+    }
+
+    // collisions
+    const pBox = playerBox();
+    for (const o of obstacles) {
+      const oBox = { x:o.x, y:o.y, w:o.w, h:o.h };
+      if (rectsOverlap(pBox, oBox)) {
+        endGame();
+        return;
+      }
+    }
+    for (const c of carrots) {
+      if (c.taken) continue;
+      const cBox = { x:c.x-10, y:c.y-10, w:20, h:20 };
+      if (rectsOverlap(pBox, cBox)) {
+        c.taken = true;
+        score += 10;
+        spawnCarrotBurst(c.x, c.y);
+      }
+    }
+
+    if (shakeTime > 0) shakeTime--;
+
+    scoreVal.textContent = Math.floor(score);
+    speedVal.textContent = speedMultiplier.toFixed(1) + 'x';
+  }
+
+  // ---------- Draw ----------
+  function drawBackground() {
+    // sky gradient
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0, '#8ecbe8');
+    g.addColorStop(1, '#c9ecf5');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    // sun
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255,244,190,0.9)';
+    ctx.arc(W-90, 80, 45, 0, Math.PI*2);
+    ctx.fill();
+
+    // clouds
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    for (const c of clouds) {
+      ctx.beginPath();
+      ctx.ellipse(c.x, c.y, 30*c.s, 16*c.s, 0, 0, Math.PI*2);
+      ctx.ellipse(c.x+22*c.s, c.y+6*c.s, 22*c.s, 13*c.s, 0, 0, Math.PI*2);
+      ctx.ellipse(c.x-22*c.s, c.y+6*c.s, 20*c.s, 12*c.s, 0, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // hills
+    ctx.fillStyle = '#8bc98f';
+    for (const h of hills) {
+      ctx.beginPath();
+      ctx.ellipse(h.x + h.w/2, GROUND_Y+40, h.w/2, 60, 0, Math.PI, 0, true);
+      ctx.fill();
+    }
+
+    // ground
+    ctx.fillStyle = '#c9a76b';
+    ctx.fillRect(0, GROUND_Y+58, W, H-(GROUND_Y+58));
+    ctx.fillStyle = '#7cb46a';
+    ctx.fillRect(0, GROUND_Y+52, W, 10);
+    // ground stripes for motion feel
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    const stripeOffset = (frame*speed) % 60;
+    for (let x = -stripeOffset; x < W; x += 60) {
+      ctx.fillRect(x, GROUND_Y+66, 30, 6);
+    }
+  }
+
+  function drawPlayer() {
+    ctx.save();
+    const h = player.ducking ? DUCK_H : player.h;
+    const yTop = player.y + 58 - h;
+    const x = player.x, w = player.w;
+    const bounce = player.grounded ? Math.sin(player.legPhase)*2 : 0;
+
+    // shadow
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.ellipse(x+w/2, GROUND_Y+60, w/1.6, 7, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // body
+    ctx.fillStyle = '#f5f0e6';
+    roundRect(x, yTop+bounce, w, h, 14);
+    ctx.fill();
+
+    // belly
+    ctx.fillStyle = '#ffffff';
+    roundRect(x+w*0.28, yTop+bounce+h*0.35, w*0.55, h*0.55, 10);
+    ctx.fill();
+
+    if (!player.ducking) {
+      // ears
+      ctx.fillStyle = '#f5f0e6';
+      const earSway = Math.sin(frame*0.15)*3;
+      roundRect(x+6, yTop+bounce-26+earSway*0.2, 9, 30, 5);
+      ctx.fill();
+      roundRect(x+w-15, yTop+bounce-26-earSway*0.2, 9, 30, 5);
+      ctx.fill();
+      ctx.fillStyle = '#f7b8c6';
+      roundRect(x+8, yTop+bounce-22+earSway*0.2, 5, 20, 4);
+      ctx.fill();
+      roundRect(x+w-13, yTop+bounce-22-earSway*0.2, 5, 20, 4);
+      ctx.fill();
+    }
+
+    // eye
+    ctx.fillStyle = '#2b2b2b';
+    ctx.beginPath();
+    ctx.arc(x+w*0.72, yTop+bounce+h*0.28, 3.2, 0, Math.PI*2);
+    ctx.fill();
+
+    // nose
+    ctx.fillStyle = '#f28ba0';
+    ctx.beginPath();
+    ctx.arc(x+w*0.86, yTop+bounce+h*0.4, 3, 0, Math.PI*2);
+    ctx.fill();
+
+    // legs (simple running animation)
+    if (player.grounded && !player.ducking) {
+      const legOff = Math.sin(player.legPhase)*8;
+      ctx.fillStyle = '#e8dfcd';
+      roundRect(x+6, yTop+bounce+h-6, 10, 12+legOff*0.3, 4);
+      ctx.fill();
+      roundRect(x+w-16, yTop+bounce+h-6, 10, 12-legOff*0.3, 4);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function roundRect(x,y,w,h,r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function drawObstacles() {
+    for (const o of obstacles) {
+      if (o.type==='ground') {
+        if (o.kind==='rock') {
+          ctx.fillStyle = '#8a8a8a';
+          ctx.beginPath();
+          ctx.moveTo(o.x, o.y+o.h);
+          ctx.lineTo(o.x+o.w*0.2, o.y+o.h*0.2);
+          ctx.lineTo(o.x+o.w*0.55, o.y);
+          ctx.lineTo(o.x+o.w*0.85, o.y+o.h*0.3);
+          ctx.lineTo(o.x+o.w, o.y+o.h);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.15)';
+          ctx.beginPath();
+          ctx.moveTo(o.x+o.w*0.55,o.y);
+          ctx.lineTo(o.x+o.w*0.85,o.y+o.h*0.3);
+          ctx.lineTo(o.x+o.w*0.6,o.y+o.h*0.5);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          // fence
+          ctx.fillStyle = '#a9714a';
+          ctx.fillRect(o.x, o.y, 6, o.h);
+          ctx.fillRect(o.x+o.w-6, o.y, 6, o.h);
+          ctx.fillRect(o.x-2, o.y+8, o.w+4, 6);
+          ctx.fillRect(o.x-2, o.y+o.h-14, o.w+4, 6);
+        }
+      } else if (o.type==='bird') {
+        ctx.fillStyle = '#5a5ab5';
+        const wing = Math.sin(o.wingPhase)*10;
+        ctx.beginPath();
+        ctx.ellipse(o.x+20, o.y+13, 16, 10, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(o.x+8, o.y+13);
+        ctx.lineTo(o.x-6, o.y+13-wing);
+        ctx.lineTo(o.x+8, o.y+13-4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(o.x+32, o.y+13);
+        ctx.lineTo(o.x+46, o.y+13-wing);
+        ctx.lineTo(o.x+32, o.y+13-4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#e8974a';
+        ctx.beginPath();
+        ctx.moveTo(o.x+34,o.y+11);
+        ctx.lineTo(o.x+42,o.y+13);
+        ctx.lineTo(o.x+34,o.y+16);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+
+  function drawCarrots() {
+    for (const c of carrots) {
+      if (c.taken) continue;
+      const bobY = c.y + Math.sin(frame*0.1 + c.bob)*4;
+      ctx.save();
+      ctx.translate(c.x, bobY);
+      ctx.rotate(0.5);
+      ctx.fillStyle = '#FF8C1A';
+      ctx.beginPath();
+      ctx.moveTo(0,-10);
+      ctx.lineTo(6,10);
+      ctx.lineTo(-6,10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = '#3ba13b';
+      ctx.beginPath();
+      ctx.moveTo(c.x-3, bobY-10);
+      ctx.lineTo(c.x, bobY-18);
+      ctx.lineTo(c.x+4, bobY-9);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  function drawParticles() {
+    for (const p of particles) {
+      ctx.globalAlpha = Math.max(0, p.life/24);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function draw() {
+    ctx.save();
+    if (shakeTime > 0) {
+      ctx.translate((Math.random()-0.5)*shakeTime, (Math.random()-0.5)*shakeTime);
+    }
+    drawBackground();
+    drawCarrots();
+    drawObstacles();
+    drawPlayer();
+    drawParticles();
+    ctx.restore();
+  }
+
+  // ---------- Main loop ----------
+  function loop() {
+    if (state === 'playing') {
+      update();
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  initBackground();
+  draw();
+  requestAnimationFrame(loop);
+})();
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/gate.js"></script>
+</body>
+</html>

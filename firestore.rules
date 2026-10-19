@@ -1,0 +1,140 @@
+rules_version = '2';
+// ============================================================
+//  قواعد Firestore — معنى ثيرابي (خطة Spark المجانية)
+//  بتغطي كل المجموعات اللي الموقع بيستخدمها. انسخها في:
+//  Firebase Console ← Firestore Database ← Rules ← Publish
+//  (أو firebase deploy --only firestore:rules)
+// ============================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- دوال مساعدة ----------
+    function signedIn() { return request.auth != null; }
+    function userDoc() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userDoc().role in ['admin', 'super_admin'];
+    }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // ---------- المستخدمون ----------
+    // الإنشاء: صاحب الحساب فقط وبدور student وبدون أي صلاحيات مفتوحة
+    // التعديل الذاتي: الاسم والهاتف فقط — أي صلاحية/دور/اشتراك للأدمن فقط
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+        && request.resource.data.role == 'student'
+        && request.resource.data.keys().hasOnly(['name','email','phone','role','allowedSections','allowedSubSections','subscriptionType','paymentStatus','blocked','referralCode','rewardCredits','createdAt'])
+        && request.resource.data.allowedSections.size() == 0
+        && request.resource.data.allowedSubSections.size() == 0
+        && request.resource.data.blocked == false
+        && request.resource.data.rewardCredits == 0
+        && request.resource.data.subscriptionType == 'free';
+      allow update: if isAdmin()
+        || (isOwner(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone']));
+      allow delete: if isAdmin();
+    }
+
+    // ---------- محتوى عام: قراءة للجميع، كتابة للأدمن ----------
+    match /settings/{id}          { allow read: if true; allow write: if isAdmin(); }
+    match /sectionSettings/{id}   { allow read: if true; allow write: if isAdmin(); }
+    match /books/{id}             { allow read: if true; allow write: if isAdmin(); }
+    match /psychDoctors/{id}      { allow read: if true; allow write: if isAdmin(); }
+    match /certificates/{id}      { allow read: if true; allow write: if isAdmin(); }
+    match /onlineCategories/{id}  { allow read: if true; allow write: if isAdmin(); }
+    match /lectureGroups/{id}     { allow read: if true; allow write: if isAdmin(); }
+    match /lectureGroupItems/{id} { allow read: if true; allow write: if isAdmin(); }
+
+    // ---------- المحاضرات ----------
+    match /lectures/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      // رابط الفيديو: للأدمن أو لمن وافقت له الإدارة على طلبه
+      match /secureContent/{doc} {
+        allow get: if isAdmin()
+          || (signedIn()
+              && exists(/databases/$(database)/documents/accessRequests/$(request.auth.uid + '_' + id))
+              && get(/databases/$(database)/documents/accessRequests/$(request.auth.uid + '_' + id)).data.status == 'approved');
+        allow list: if isAdmin();
+        allow write: if isAdmin();
+      }
+    }
+
+    // طلبات مشاهدة المحاضرات (المستخدم يطلب، الأدمن يوافق)
+    match /accessRequests/{reqId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && reqId == request.auth.uid + '_' + request.resource.data.lectureId
+        && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+
+    // طلبات الاشتراك في الأقسام المدفوعة
+    match /subscriptionRequests/{reqId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow update: if isAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid
+            && resource.data.status != 'approved'
+            && request.resource.data.userId == request.auth.uid
+            && request.resource.data.status == 'pending');
+      allow delete: if isAdmin();
+    }
+
+    // ---------- عدّادات المشاهدة (تزيد فقط، والأدمن يصفّرها) ----------
+    match /registrations/{id} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if request.resource.data.viewCount == 1;
+      allow update: if isAdmin() || request.resource.data.viewCount == resource.data.viewCount + 1;
+      allow delete: if isAdmin();
+    }
+    match /lectureGroupViews/{id} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if request.resource.data.viewCount == 1;
+      allow update: if isAdmin() || request.resource.data.viewCount == resource.data.viewCount + 1;
+      allow delete: if isAdmin();
+    }
+
+    // ---------- الإشعارات ----------
+    match /notifications/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']));
+    }
+
+    // ---------- البودكاست ----------
+    match /podcastCategories/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /podcastEpisodes/{id}   { allow read: if true; allow write: if isAdmin(); }
+
+    // رابط الحلقة: مجاني للجميع، أو للأدمن، أو لمن فعّلت له الإدارة الحلقة
+    match /podcastMedia/{id} {
+      allow get: if resource.data.free == true
+        || isAdmin()
+        || (signedIn() && exists(/databases/$(database)/documents/podcastAccess/$(request.auth.uid + '_' + id)));
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+    match /podcastAccess/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+    match /podcastRequests/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create, update: if isAdmin()
+        || (signedIn()
+            && request.resource.data.userId == request.auth.uid
+            && request.resource.data.status == 'pending'
+            && id == request.auth.uid + '_' + request.resource.data.episodeId);
+      allow delete: if isAdmin();
+    }
+  }
+}

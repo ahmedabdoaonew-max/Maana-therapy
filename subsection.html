@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333A26">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <title>قسم فرعي | Maana Therapy</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css?v=6">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-spa"></i></div>
+                <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span>
+            </a>
+            <a href="login.html" id="headerQuickLogin" class="header-quick-login">تسجيل الدخول</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">الرئيسية</a>
+                <a href="courses.html">الأقسام</a>
+                <a href="lectures.html">المحاضرات</a>
+                <a href="podcast.html" class="nav-podcast"><i class="fas fa-podcast"></i> البودكاست</a>
+                <a href="books.html">الكتب التعليمية</a>
+                <div id="authButtons" style="display:flex;gap:8px;">
+                    <a href="login.html" class="btn-outline">دخول</a>
+                </div>
+                <div id="userMenu" style="display:none;align-items:center;gap:8px;">
+                    <div class="notif-bell-wrap">
+                        <button type="button" class="notif-bell-btn" id="notifBellBtn" onclick="toggleNotifPanel()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-badge" id="notifBadge"></span>
+                        </button>
+                        <div class="notif-panel" id="notifPanel">
+                            <div class="notif-panel-header">الإشعارات</div>
+                            <div id="notifList"></div>
+                        </div>
+                    </div>
+                    <a href="profile.html"><span class="user-name"></span></a>
+                    <button onclick="logout()" class="btn-outline" style="padding:6px 12px;">خروج</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-hero">
+        <h1 id="subPageTitle">جاري التحميل...</h1>
+        <p id="subPageDesc"></p>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="index.html">الرئيسية</a> /
+        <a href="courses.html">الأقسام</a> /
+        <a href="#" id="parentSectionLink">القسم</a> /
+        <span>المحتوى</span>
+    </div>
+
+    <section style="padding:30px 20px;">
+        <div id="subContentArea">
+            <!-- جاهز لإضافة المحتوى -->
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-bottom">© 2026 <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span></div>
+    </footer>
+
+    <!-- Firebase (Auth + Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js?v=11"></script>
+    <script src="js/auth.js?v=6"></script>
+    <script src="js/notifications.js?v=1"></script>
+    <script src="js/lectures.js?v=11"></script>
+    <script src="js/courses.js?v=11"></script>
+    <script src="js/float.js?v=10"></script>
+</body>
+</html>

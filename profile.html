@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333A26">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <title>الملف الشخصي | Maana Therapy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css?v=6">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-spa"></i></div>
+                <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span>
+            </a>
+            <a href="login.html" id="headerQuickLogin" class="header-quick-login">تسجيل الدخول</a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">الرئيسية</a>
+                <a href="lectures.html">المحاضرات</a>
+                <a href="podcast.html" class="nav-podcast"><i class="fas fa-podcast"></i> البودكاست</a>
+                <a href="books.html">الكتب التعليمية</a>
+                <button onclick="logout()" class="btn-outline">تسجيل الخروج</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="profile-card" id="profileContent"></div>
+
+    <!-- Firebase (Auth + Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js?v=11"></script>
+    <script src="js/auth.js?v=6"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!requireAuth()) return;
+            const user = getCurrentUser();
+            const el = document.getElementById('profileContent');
+            el.innerHTML = `
+                <div class="profile-avatar"><i class="fas fa-user"></i></div>
+                <h2 style="text-align:center;color:var(--primary-dark);margin-bottom:4px;">${user.name}</h2>
+                <p style="text-align:center;color:#666;margin-bottom:24px;">${user.email}</p>
+                <div style="display:grid;gap:12px;">
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:var(--beige-light);border-radius:10px;">
+                        <span>نوع الاشتراك</span>
+                        <strong>${user.subscriptionType === 'premium' ? 'مميز (Premium)' : user.subscriptionType === 'trial' ? 'تجريبي' : 'مجاني'}</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:var(--beige-light);border-radius:10px;">
+                        <span>حالة الدفع</span>
+                        <strong style="color:${user.paymentStatus==='paid'?'#0E2F5C':'#EF6C00'}">${user.paymentStatus==='paid'?'مدفوع':'غير مدفوع'}</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:var(--beige-light);border-radius:10px;">
+                        <span>رقم الهاتف</span>
+                        <strong>${user.phone || '-'}</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:var(--beige-light);border-radius:10px;">
+                        <span>تاريخ التسجيل</span>
+                        <strong>${user.createdAt || '-'}</strong>
+                    </div>
+                    <div style="padding:12px;background:var(--beige-light);border-radius:10px;">
+                        <span style="display:block;margin-bottom:8px;">الأقسام المسموح بها:</span>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            ${(user.allowedSections||[]).map(id => '<span class="badge badge-success">'+id+'</span>').join('') || '<span style="color:#888;">لا يوجد</span>'}
+                        </div>
+                    </div>
+                    <div style="padding:16px;background:linear-gradient(135deg, var(--gold), #a9821c);border-radius:10px;color:#1F2937;">
+                        <span style="display:block;margin-bottom:8px;font-weight:700;"><i class="fas fa-gift"></i> ادعُ صديق واكسبوا خصم 10% لكل واحد فيكم</span>
+                        <div style="display:flex;gap:8px;align-items:center;background:white;border-radius:8px;padding:8px 12px;margin-bottom:8px;">
+                            <strong style="flex:1;">${user.referralCode || '-'}</strong>
+                            <button type="button" onclick="navigator.clipboard.writeText('${user.referralCode || ''}');showToast('تم نسخ الكود')" style="background:none;border:none;cursor:pointer;color:var(--primary-dark);"><i class="fas fa-copy"></i></button>
+                        </div>
+                        <span style="font-size:0.85rem;">رصيد الخصم المتاح لك: <strong>${user.rewardCredits || 0}</strong></span>
+                    </div>
+                </div>
+                ${user.isAdmin ? '<a href="admin.html" class="form-submit" style="display:block;text-align:center;margin-top:24px;">لوحة التحكم</a>' : ''}
+            `;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333A26">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <title>مشاهدة المحاضرة | Maana Therapy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css?v=6">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-spa"></i></div>
+                <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span>
+            </a>
+            <a href="login.html" id="headerQuickLogin" class="header-quick-login">تسجيل الدخول</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">الرئيسية</a>
+                <a href="courses.html">البرامج التدريبية</a>
+                <a href="lectures.html" class="active">المحاضرات</a>
+                <a href="books.html">الكتب التعليمية</a>
+                <a href="certificates.html">الشهادات</a>
+                
+                <a href="mental-health.html"><i class="fas fa-hands-praying"></i> الصحة النفسية والروحية</a>
+                
+                <a href="about.html">عن المنصة</a>
+                <a href="contact.html">تواصل معنا</a>
+                <div id="authButtons" style="display:flex;gap:8px;">
+                    <a href="login.html" class="btn-outline">تسجيل الدخول</a>
+                    <a href="register.html" class="btn-primary">إنشاء حساب</a>
+                </div>
+                <div id="userMenu" style="display:none;align-items:center;gap:10px;">
+                    <div class="notif-bell-wrap">
+                        <button type="button" class="notif-bell-btn" id="notifBellBtn" onclick="toggleNotifPanel()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-badge" id="notifBadge"></span>
+                        </button>
+                        <div class="notif-panel" id="notifPanel">
+                            <div class="notif-panel-header">الإشعارات</div>
+                            <div id="notifList"></div>
+                        </div>
+                    </div>
+                    <a href="profile.html"><i class="fas fa-user-circle"></i> <span class="user-name"></span></a>
+                    <a href="admin.html" id="adminNavLink" style="display:none;" class="btn-primary"><i class="fas fa-cog"></i> لوحة التحكم</a>
+                    <button onclick="logout()" class="btn-outline" style="padding:6px 14px;">خروج</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    
+
+    <main class="lec-player-wrap">
+        <div class="lec-player-head">
+            <p class="lec-kicker"><i class="fas fa-clapperboard"></i> المحاضرات الأونلاين</p>
+            <h1 id="lectureTitle">جاري التحميل...</h1>
+            <span class="lec-viewer"><i class="fas fa-user"></i> <span id="viewerName"></span></span>
+        </div>
+        <div class="lec-player" id="videoPlayer"></div>
+        <div class="lec-player-actions">
+            <a href="lectures.html" class="btn-outline"><i class="fas fa-arrow-right"></i> رجوع للمحاضرات</a>
+            <a href="index.html" class="btn-primary"><i class="fas fa-house"></i> الرئيسية</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            © 2026 <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span> — معنى ثيرابي. جميع الحقوق محفوظة.
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js?v=11"></script>
+    <script src="js/auth.js?v=6"></script>
+    <script src="js/notifications.js?v=1"></script>
+    <script src="js/lectures.js?v=11"></script>
+</body>
+</html>

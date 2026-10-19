@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333A26">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>تسجيل الدخول | Maana Therapy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css?v=6">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            padding: 24px;
+        }
+        .auth-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 12px 40px rgba(51, 58, 38, 0.12);
+            border: 1px solid rgba(51, 58, 38, 0.06);
+        }
+        .auth-card h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 1.6rem;
+        }
+        .auth-card .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid rgba(51, 58, 38, 0.15);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text-dark);
+            transition: border-color 0.25s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(213, 180, 119, 0.25);
+        }
+        .form-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.2s;
+            margin-top: 8px;
+        }
+        .form-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .auth-link {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+        .auth-link a {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #D5B477, #B99A9B);
+            color: #333A26;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 14px;
+        }
+        .phone-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div style="text-align:center;margin-bottom:8px;">
+                <div class="logo-icon">
+                    <i class="fas fa-spa"></i>
+                </div>
+            </div>
+            <h2>تسجيل الدخول</h2>
+            <p class="subtitle">مرحباً بعودتك إلى معنى ثيرابي</p>
+
+            <form id="loginForm" onsubmit="handlePhoneLogin(event)">
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="loginName" placeholder="مثال: أحمد محمد" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="loginPhone" placeholder="01xxxxxxxxx" required pattern="[0-9]{10,15}" autocomplete="tel">
+                    <p class="phone-hint">أدخل الرقم بدون + أو مسافات (مثال: 01152013172)</p>
+                </div>
+                <button type="submit" class="form-submit">دخول</button>
+            </form>
+
+            <p class="auth-link">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
+            <p class="auth-link" style="margin-top:10px;"><a href="index.html">← العودة للرئيسية</a></p>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js?v=11"></script>
+    <script src="js/auth.js?v=7"></script>
+
+    <script>
+    function handlePhoneLogin(e) {
+        e.preventDefault();
+        const name = document.getElementById('loginName').value.trim();
+        const phone = document.getElementById('loginPhone').value.trim().replace(/\s+/g, '');
+
+        if (!name || name.length < 2) {
+            alert('من فضلك أدخل الاسم بشكل صحيح');
+            return;
+        }
+        if (!/^01[0-9]{9}$/.test(phone) && !/^[0-9]{10,15}$/.test(phone)) {
+            alert('من فضلك أدخل رقم هاتف صحيح');
+            return;
+        }
+
+        // حفظ بيانات المستخدم محلياً (سيتم ربطها ب Firebase لاحقاً)
+        const user = {
+            name: name,
+            phone: phone,
+            loginAt: new Date().toISOString(),
+            role: 'user'
+        };
+        localStorage.setItem('maanaUser', JSON.stringify(user));
+        localStorage.setItem('maanaLoggedIn', '1');
+
+        // توجيه للصفحة الرئيسية
+        window.location.href = 'index.html';
+    }
+    </script>
+</body>
+</html>
