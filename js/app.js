@@ -28,6 +28,9 @@ if ('serviceWorker' in navigator) {
     }
 })();
 
+// علّم الصفحة فوراً (قبل الرسم) لو المستخدم مسجّل دخول، عشان أزرار الدخول/الإنشاء ما تظهرش
+try { if (localStorage.getItem('currentUser')) document.documentElement.classList.add('is-auth'); } catch (e) {}
+
 // ========== تنبيهات عامة (تُستخدم في كل الصفحات) ==========
 function showToast(message, type) {
     let el = document.getElementById('globalToast');
@@ -53,7 +56,7 @@ function hideSplash() {
 }
 
 (function () {
-    var MIN_SHOW = 900;      // أقل مدة عرض (ms) عشان الصورة تتشاف
+    var MIN_SHOW = 3000;     // أقل مدة عرض: 3 ثواني حتى لو كل شيء حمّل
     var MAX_WAIT = 20000;    // أمان: لو الشبكة بطيئة جداً مانفضلش عالقين للأبد
     var started = Date.now();
     var done = false;
@@ -334,6 +337,7 @@ async function getLecturesAsync() {
 // تحديث الهيدر: يخفي أزرار الدخول ويظهر قائمة المستخدم
 function updateHeaderAuth() {
     var user = getCurrentUser();
+    document.documentElement.classList.toggle('is-auth', !!user);
     document.querySelectorAll('#authButtons').forEach(function (el) {
         el.style.display = user ? 'none' : 'flex';
     });
