@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تكرار النمط | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .simon-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:320px;margin:20px auto;}
+    .simon-btn{
+      aspect-ratio:1;border-radius:20px;border:none;cursor:pointer;
+      transition:.15s;box-shadow:0 6px 16px rgba(0,0,0,.2);font-size:2rem;
+    }
+    .simon-btn:active, .simon-btn.lit{filter:brightness(1.4);transform:scale(0.96);}
+    .s0{background:#e74c3c;} .s1{background:#2ecc71;}
+    .s2{background:#3498db;} .s3{background:#f1c40f;}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>🔊 تكرار النمط</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>تكرار النمط</h2>
+      <p class="game-desc">شاهد التسلسل ثم كرّره. درّب الذاكرة السمعية والبصرية والانتباه.</p>
+      <div class="score-bar">
+        <span>المستوى: <b id="level">0</b></span>
+        <span id="msg">اضغط ابدأ</span>
+      </div>
+      <div class="game-controls">
+        <button class="btn-game" id="startBtn" onclick="start()"><i class="fas fa-play"></i> ابدأ</button>
+      </div>
+      <div class="simon-grid">
+        <button class="simon-btn s0" data-i="0"></button>
+        <button class="simon-btn s1" data-i="1"></button>
+        <button class="simon-btn s2" data-i="2"></button>
+        <button class="simon-btn s3" data-i="3"></button>
+      </div>
+    </div>
+  </div>
+<script>
+let seq=[], user=[], playing=false, level=0;
+const btns=[...document.querySelectorAll('.simon-btn')];
+const freqs=[330,370,415,466];
+let ctx;
+function beep(i,dur=300){
+  try{
+    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.frequency.value=freqs[i]; o.connect(g); g.connect(ctx.destination);
+    g.gain.value=0.15; o.start(); setTimeout(()=>o.stop(),dur);
+  }catch(e){}
+}
+function light(i){
+  btns[i].classList.add('lit');
+  beep(i);
+  setTimeout(()=>btns[i].classList.remove('lit'),280);
+}
+async function playSeq(){
+  playing=true;
+  document.getElementById('msg').textContent='شاهد...';
+  for(const i of seq){
+    await new Promise(r=>setTimeout(r,450));
+    light(i);
+  }
+  await new Promise(r=>setTimeout(r,300));
+  playing=false;
+  user=[];
+  document.getElementById('msg').textContent='دورك!';
+}
+function start(){
+  seq=[]; level=0; next();
+}
+function next(){
+  level++;
+  document.getElementById('level').textContent=level;
+  seq.push(Math.floor(Math.random()*4));
+  playSeq();
+}
+btns.forEach(b=>{
+  b.onclick=()=>{
+    if(playing) return;
+    const i=+b.dataset.i;
+    light(i);
+    user.push(i);
+    if(user[user.length-1]!==seq[user.length-1]){
+      document.getElementById('msg').textContent='خطأ! حاول مجدداً';
+      playing=true;
+      setTimeout(()=>{seq=[];level=0;document.getElementById('level').textContent=0;document.getElementById('msg').textContent='اضغط ابدأ';playing=false;},1200);
+      return;
+    }
+    if(user.length===seq.length){
+      document.getElementById('msg').textContent='أحسنت!';
+      setTimeout(next,800);
+    }
+  };
+});
+</script>
+</body>
+</html>

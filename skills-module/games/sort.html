@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فرز حسب الفئة | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .bins{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
+    .bin{
+      width:120px;min-height:110px;border:3px dashed #333A26;border-radius:14px;
+      display:flex;flex-direction:column;align-items:center;padding:10px;background:#f0f6ff;
+    }
+    .bin h5{font-size:0.9rem;margin-bottom:6px;color:#333A26;}
+    .bin .drop{flex:1;width:100%;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;}
+    .items{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:60px;}
+    .item{
+      width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;cursor:grab;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.12);user-select:none;
+    }
+    .item.dragging{opacity:.5;}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>📦 فرز حسب الفئة</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>فرز حسب الفئة</h2>
+      <p class="game-desc">اسحب كل عنصر إلى الصندوق المناسب. ينمّي التصنيف والانتباه.</p>
+      <div class="score-bar"><span>صح: <b id="ok">0</b></span><span>خطأ: <b id="bad">0</b></span></div>
+      <div class="bins" id="bins"></div>
+      <div class="items" id="items"></div>
+      <div class="game-controls" style="margin-top:16px;">
+        <button class="btn-game" onclick="setup()"><i class="fas fa-redo"></i> جولة جديدة</button>
+      </div>
+    </div>
+  </div>
+<script>
+const CATS=[
+  {name:'فواكه', items:['🍎','🍌','🍇','🍊']},
+  {name:'حيوانات', items:['🐶','🐱','🦁','🐰']},
+  {name:'مركبات', items:['🚗','✈️','🚢','🚲']}
+];
+let ok=0,bad=0;
+function setup(){
+  ok=0;bad=0;
+  document.getElementById('ok').textContent=0;
+  document.getElementById('bad').textContent=0;
+  const bins=document.getElementById('bins');
+  const itemsBox=document.getElementById('items');
+  bins.innerHTML=''; itemsBox.innerHTML='';
+  CATS.forEach((c,i)=>{
+    const b=document.createElement('div');
+    b.className='bin'; b.dataset.cat=i;
+    b.innerHTML=`<h5>${c.name}</h5><div class="drop"></div>`;
+    b.ondragover=e=>e.preventDefault();
+    b.ondrop=e=>{
+      e.preventDefault();
+      const id=e.dataTransfer.getData('text');
+      const el=document.getElementById(id);
+      if(!el) return;
+      if(+el.dataset.cat===i){
+        b.querySelector('.drop').appendChild(el);
+        ok++; document.getElementById('ok').textContent=ok;
+        el.draggable=false; el.style.cursor='default';
+        if(ok===12) setTimeout(()=>alert('ممتاز! أكملت الفرز 🎉'),200);
+      } else {
+        bad++; document.getElementById('bad').textContent=bad;
+      }
+    };
+    bins.appendChild(b);
+  });
+  const all=[];
+  CATS.forEach((c,ci)=>c.items.forEach(it=>all.push({it,cat:ci})));
+  all.sort(()=>Math.random()-0.5).forEach((o,idx)=>{
+    const el=document.createElement('div');
+    el.className='item'; el.textContent=o.it; el.draggable=true;
+    el.id='it'+idx; el.dataset.cat=o.cat;
+    el.ondragstart=e=>{e.dataTransfer.setData('text',el.id); el.classList.add('dragging');};
+    el.ondragend=()=>el.classList.remove('dragging');
+    itemsBox.appendChild(el);
+  });
+}
+setup();
+</script>
+</body>
+</html>

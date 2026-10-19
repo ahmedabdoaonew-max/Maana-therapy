@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تعرّف على المشاعر | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .emo-face{font-size:6rem;text-align:center;margin:16px 0;}
+    .emo-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+    .emo-opts button{
+      background:#e8f0fe;border:2px solid #333A26;color:#333A26;
+      padding:12px 22px;border-radius:30px;font-family:inherit;font-weight:700;
+      font-size:1.05rem;cursor:pointer;transition:.2s;
+    }
+    .emo-opts button:hover{background:#333A26;color:#fff;}
+    .emo-opts button.correct{background:#2ecc71;border-color:#27ae60;color:#fff;}
+    .emo-opts button.wrong{background:#e74c3c;border-color:#c0392b;color:#fff;}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>😊 تعرّف على المشاعر</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>تعرّف على المشاعر</h2>
+      <p class="game-desc">انظر إلى الوجه واختر اسم الشعور الصحيح. ينمّي الذكاء العاطفي.</p>
+      <div class="score-bar">
+        <span>النقاط: <b id="score">0</b></span>
+        <span>السؤال: <b id="qnum">1</b>/10</span>
+      </div>
+      <div class="emo-face" id="face">😊</div>
+      <div class="emo-opts" id="opts"></div>
+      <div class="game-controls" style="margin-top:20px;">
+        <button class="btn-game" onclick="next(true)"><i class="fas fa-redo"></i> إعادة</button>
+      </div>
+    </div>
+  </div>
+<script>
+const DATA=[
+  {e:'😊',n:'سعيد'},{e:'😢',n:'حزين'},{e:'😠',n:'غاضب'},
+  {e:'😲',n:'متفاجئ'},{e:'😍',n:'محب'},{e:'😨',n:'خائف'},
+  {e:'😴',n:'نعسان'},{e:'😎',n:'واثق'},{e:'🤢',n:'مشمئز'},
+  {e:'🤔',n:'مفكر'},{e:'😭',n:'يبكي'},{e:'😤',n:'منزعج'}
+];
+let score=0, q=0, current, used=[];
+function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+function next(reset){
+  if(reset){score=0;q=0;used=[];}
+  if(q>=10){alert('انتهت الجولة! نقاطك: '+score+'/10 🎉');return;}
+  q++; document.getElementById('qnum').textContent=q;
+  document.getElementById('score').textContent=score;
+  let pool=DATA.filter(d=>!used.includes(d.n));
+  if(!pool.length){used=[];pool=DATA;}
+  current=pool[Math.floor(Math.random()*pool.length)];
+  used.push(current.n);
+  document.getElementById('face').textContent=current.e;
+  const wrong=shuffle(DATA.filter(d=>d.n!==current.n)).slice(0,3).map(d=>d.n);
+  const opts=shuffle([current.n,...wrong]);
+  const box=document.getElementById('opts');
+  box.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.textContent=o;
+    b.onclick=()=>{
+      if(o===current.n){b.classList.add('correct');score++;document.getElementById('score').textContent=score;}
+      else{b.classList.add('wrong');}
+      [...box.children].forEach(x=>x.onclick=null);
+      setTimeout(()=>next(false),700);
+    };
+    box.appendChild(b);
+  });
+}
+next(true);
+</script>
+</body>
+</html>

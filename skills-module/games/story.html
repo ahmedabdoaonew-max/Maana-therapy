@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ترتيب القصة | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .story-slots,.story-cards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;}
+    .story-slot{
+      width:100px;min-height:90px;border:3px dashed #333A26;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;background:#f0f6ff;font-size:0.8rem;color:#6C6F5F;
+    }
+    .story-card{
+      width:100px;padding:10px 8px;border-radius:12px;background:#333A26;color:#fff;
+      text-align:center;font-size:0.85rem;font-weight:700;cursor:grab;user-select:none;
+      box-shadow:0 3px 10px rgba(0,0,0,.15);
+    }
+    .story-card.used{opacity:.35;pointer-events:none;}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>📖 ترتيب القصة</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>ترتيب القصة</h2>
+      <p class="game-desc">رتّب أحداث القصة بالترتيب الصحيح من البداية للنهاية.</p>
+      <div class="score-bar"><span>القصة: <b id="snum">1</b>/5</span></div>
+      <p style="text-align:center;font-weight:700;color:#333A26;margin-bottom:8px;" id="title"></p>
+      <div class="story-slots" id="slots"></div>
+      <div class="story-cards" id="cards"></div>
+      <div class="game-controls" style="margin-top:14px;">
+        <button class="btn-game secondary" onclick="reset()"><i class="fas fa-undo"></i> مسح</button>
+        <button class="btn-game" onclick="check()"><i class="fas fa-check"></i> تحقق</button>
+        <button class="btn-game success" onclick="next()"><i class="fas fa-forward"></i> التالية</button>
+      </div>
+    </div>
+  </div>
+<script>
+const STORIES=[
+  {t:'صباح الطفل', steps:['يستيقظ من النوم','يغسل وجهه','يتناول الفطور','يذهب إلى المدرسة']},
+  {t:'زراعة النبتة', steps:['نحفر حفرة في التربة','نضع البذرة','نسقيها بالماء','تنمو النبتة']},
+  {t:'إعداد الشاي', steps:['نضع الماء على النار','يغلي الماء','نضع الشاي والسكر','نشرب الشاي']},
+  {t:'رسم لوحة', steps:['نحضر الورق والألوان','نرسم الخطوط','نلوّن الصورة','نعلّق اللوحة']},
+  {t:'زيارة الطبيب', steps:['نشعر بألم','نذهب للعيادة','يفحصنا الطبيب','نأخذ الدواء']}
+];
+let si=0, chosen=[];
+function load(){
+  const s=STORIES[si%STORIES.length];
+  document.getElementById('title').textContent=s.t;
+  document.getElementById('snum').textContent=(si%STORIES.length)+1;
+  chosen=[];
+  const slots=document.getElementById('slots');
+  slots.innerHTML='';
+  s.steps.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='story-slot'; d.id='ss'+i; d.textContent=(i+1);
+    d.ondragover=e=>e.preventDefault();
+    d.ondrop=e=>{
+      e.preventDefault();
+      const id=e.dataTransfer.getData('text');
+      const el=document.getElementById(id);
+      if(!el||d.dataset.filled) return;
+      d.textContent=el.textContent; d.dataset.filled='1'; d.dataset.val=el.dataset.val;
+      el.classList.add('used'); chosen[i]=el.dataset.val;
+    };
+    slots.appendChild(d);
+  });
+  const cards=document.getElementById('cards');
+  cards.innerHTML='';
+  const shuffled=s.steps.map((t,i)=>({t,i})).sort(()=>Math.random()-0.5);
+  shuffled.forEach((o,idx)=>{
+    const c=document.createElement('div');
+    c.className='story-card'; c.textContent=o.t; c.draggable=true;
+    c.id='sc'+idx; c.dataset.val=o.i;
+    c.ondragstart=e=>e.dataTransfer.setData('text',c.id);
+    // also click to place sequentially
+    c.onclick=()=>{
+      if(c.classList.contains('used')) return;
+      const empty=chosen.findIndex((x,i)=>x===undefined || document.getElementById('ss'+i).dataset.filled!=='1');
+      // find first empty
+      let pos=-1;
+      for(let i=0;i<s.steps.length;i++) if(!document.getElementById('ss'+i).dataset.filled){pos=i;break;}
+      if(pos<0) return;
+      const slot=document.getElementById('ss'+pos);
+      slot.textContent=o.t; slot.dataset.filled='1'; slot.dataset.val=o.i;
+      chosen[pos]=o.i; c.classList.add('used');
+    };
+    cards.appendChild(c);
+  });
+}
+function reset(){ load(); }
+function check(){
+  const s=STORIES[si%STORIES.length];
+  let ok=true;
+  for(let i=0;i<s.steps.length;i++){
+    const slot=document.getElementById('ss'+i);
+    if(+slot.dataset.val!==i) ok=false;
+  }
+  alert(ok?'ترتيب صحيح! 🎉':'الترتيب غير صحيح، حاول مجدداً');
+}
+function next(){ si++; load(); }
+load();
+</script>
+</body>
+</html>

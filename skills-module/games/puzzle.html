@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لغز الصور | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .puzzle{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:300px;margin:0 auto;background:#333A26;padding:4px;border-radius:12px;}
+    .piece{
+      aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      font-size:2rem;background:#fff;border-radius:6px;cursor:pointer;user-select:none;
+      transition:.15s;
+    }
+    .piece.empty{background:#232818;cursor:default;}
+    .piece:not(.empty):hover{transform:scale(0.96);}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>🧩 لغز الصور</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>لغز الصور (8 قطع)</h2>
+      <p class="game-desc">حرّك القطع لترتيبها بالشكل الصحيح. درّب التخطيط وحل المشكلات.</p>
+      <div class="score-bar"><span>الحركات: <b id="moves">0</b></span></div>
+      <div class="puzzle" id="puzzle"></div>
+      <div class="game-controls" style="margin-top:16px;">
+        <button class="btn-game" onclick="shuffle()"><i class="fas fa-random"></i> خلط</button>
+      </div>
+    </div>
+  </div>
+<script>
+const TARGET=['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼',''];
+let tiles=[], moves=0, empty=8;
+function render(){
+  const p=document.getElementById('puzzle');
+  p.innerHTML='';
+  tiles.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='piece'+(t===''?' empty':'');
+    d.textContent=t;
+    d.onclick=()=>move(i);
+    p.appendChild(d);
+  });
+}
+function move(i){
+  const row=Math.floor(i/3), col=i%3;
+  const er=Math.floor(empty/3), ec=empty%3;
+  if(Math.abs(row-er)+Math.abs(col-ec)===1){
+    tiles[empty]=tiles[i]; tiles[i]='';
+    empty=i; moves++; document.getElementById('moves').textContent=moves;
+    render();
+    if(tiles.every((t,idx)=>t===TARGET[idx])) setTimeout(()=>alert('أحسنت! حللّت اللغز في '+moves+' حركة 🎉'),200);
+  }
+}
+function shuffle(){
+  tiles=[...TARGET];
+  // valid shuffle by random moves
+  empty=8; moves=0; document.getElementById('moves').textContent=0;
+  for(let k=0;k<80;k++){
+    const neigh=[];
+    const er=Math.floor(empty/3), ec=empty%3;
+    [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dr,dc])=>{
+      const nr=er+dr, nc=ec+dc;
+      if(nr>=0&&nr<3&&nc>=0&&nc<3) neigh.push(nr*3+nc);
+    });
+    const pick=neigh[Math.floor(Math.random()*neigh.length)];
+    tiles[empty]=tiles[pick]; tiles[pick]=''; empty=pick;
+  }
+  render();
+}
+shuffle();
+</script>
+</body>
+</html>

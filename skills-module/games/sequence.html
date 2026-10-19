@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسلسل الأرقام | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .num-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:400px;margin:0 auto;}
+    .num-btn{
+      width:56px;height:56px;border-radius:14px;border:none;background:#333A26;color:#fff;
+      font-size:1.4rem;font-weight:800;font-family:inherit;cursor:pointer;transition:.15s;
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .num-btn:hover{transform:scale(1.08);}
+    .num-btn.done{background:#2ecc71;pointer-events:none;}
+    .num-btn.wrong{background:#e74c3c;}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>🔢 تسلسل الأرقام</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>تسلسل الأرقام</h2>
+      <p class="game-desc">اضغط الأرقام بالترتيب التصاعدي من الأصغر إلى الأكبر.</p>
+      <div class="score-bar">
+        <span>المستوى: <b id="level">1</b></span>
+        <span>التالي: <b id="next">1</b></span>
+      </div>
+      <div class="num-grid" id="grid"></div>
+      <div class="game-controls" style="margin-top:18px;">
+        <button class="btn-game" onclick="start()"><i class="fas fa-play"></i> ابدأ / إعادة</button>
+      </div>
+    </div>
+  </div>
+<script>
+let level=1, expect=1, max=5;
+function start(){
+  level=1; expect=1; max=5;
+  document.getElementById('level').textContent=1;
+  build();
+}
+function build(){
+  expect=1;
+  document.getElementById('next').textContent=1;
+  const nums=[];
+  for(let i=1;i<=max;i++) nums.push(i);
+  nums.sort(()=>Math.random()-0.5);
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  nums.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='num-btn'; b.textContent=n;
+    b.onclick=()=>{
+      if(n===expect){
+        b.classList.add('done');
+        expect++;
+        document.getElementById('next').textContent=expect>max?'✓':expect;
+        if(expect>max){
+          level++; max=Math.min(max+2,20);
+          document.getElementById('level').textContent=level;
+          setTimeout(build,500);
+        }
+      } else {
+        b.classList.add('wrong');
+        setTimeout(()=>b.classList.remove('wrong'),300);
+      }
+    };
+    grid.appendChild(b);
+  });
+}
+start();
+</script>
+</body>
+</html>

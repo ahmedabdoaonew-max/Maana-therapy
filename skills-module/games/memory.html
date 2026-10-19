@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ذاكرة المشاعر | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .board { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:420px; margin:0 auto; }
+    .card-m {
+      aspect-ratio:1; border-radius:12px; background:#333A26; color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:2.2rem;
+      cursor:pointer; transition:.25s; user-select:none; box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .card-m.flipped, .card-m.matched { background:#fff; border:3px solid #333A26; }
+    .card-m.matched { opacity:.7; cursor:default; }
+    .card-m:not(.flipped):not(.matched):hover { transform:scale(1.05); }
+    @media(max-width:400px){ .board{gap:8px;} .card-m{font-size:1.6rem;} }
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>🧠 ذاكرة المشاعر</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>ذاكرة المشاعر</h2>
+      <p class="game-desc">اطلب على بطاقتين متطابقتين. درّب ذاكرتك البصرية والتعرف على المشاعر.</p>
+      <div class="score-bar">
+        <span>النقاط: <b id="score">0</b></span>
+        <span>المحاولات: <b id="moves">0</b></span>
+      </div>
+      <div class="game-controls">
+        <button class="btn-game" onclick="startGame()"><i class="fas fa-redo"></i> لعبة جديدة</button>
+      </div>
+      <div class="board" id="board"></div>
+    </div>
+  </div>
+<script>
+const EMOJIS = ['😊','😢','😠','😲','😍','😨','😴','😎'];
+let cards=[], flipped=[], lock=false, score=0, moves=0;
+
+function startGame(){
+  score=0; moves=0; flipped=[]; lock=false;
+  document.getElementById('score').textContent=0;
+  document.getElementById('moves').textContent=0;
+  const pair = [...EMOJIS, ...EMOJIS].sort(()=>Math.random()-0.5);
+  const board = document.getElementById('board');
+  board.innerHTML='';
+  cards = pair.map((e,i)=>{
+    const el=document.createElement('div');
+    el.className='card-m';
+    el.dataset.emoji=e;
+    el.dataset.idx=i;
+    el.textContent='?';
+    el.onclick=()=>flip(el);
+    board.appendChild(el);
+    return el;
+  });
+}
+function flip(el){
+  if(lock || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  el.classList.add('flipped');
+  el.textContent=el.dataset.emoji;
+  flipped.push(el);
+  if(flipped.length===2){
+    moves++; document.getElementById('moves').textContent=moves;
+    lock=true;
+    if(flipped[0].dataset.emoji===flipped[1].dataset.emoji){
+      flipped.forEach(c=>c.classList.add('matched'));
+      score++; document.getElementById('score').textContent=score;
+      flipped=[]; lock=false;
+      if(score===EMOJIS.length) setTimeout(()=>alert('أحسنت! أكملت اللعبة 🎉'),300);
+    } else {
+      setTimeout(()=>{
+        flipped.forEach(c=>{c.classList.remove('flipped'); c.textContent='?';});
+        flipped=[]; lock=false;
+      },700);
+    }
+  }
+}
+startGame();
+</script>
+</body>
+</html>

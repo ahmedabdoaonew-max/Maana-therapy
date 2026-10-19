@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مطابقة الألوان | Maana Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/skills.css" />
+  <style>
+    .color-target{
+      width:120px;height:120px;border-radius:50%;margin:16px auto;
+      box-shadow:0 6px 20px rgba(0,0,0,.2);border:6px solid #fff;
+    }
+    .color-opts{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+    .color-opt{
+      width:64px;height:64px;border-radius:50%;border:4px solid #fff;
+      box-shadow:0 3px 12px rgba(0,0,0,.2);cursor:pointer;transition:.15s;
+    }
+    .color-opt:hover{transform:scale(1.12);}
+  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="skills-page">
+  <header class="skills-header">
+    <h1>🌈 مطابقة الألوان</h1>
+    <a href="../games.html" class="back-btn"><i class="fas fa-arrow-right"></i> الألعاب</a>
+  </header>
+  <div class="game-wrapper">
+    <div class="game-panel">
+      <h2>مطابقة الألوان</h2>
+      <p class="game-desc">اختر اللون المطابق للدائرة الكبيرة بأسرع ما يمكن.</p>
+      <div class="score-bar">
+        <span>النقاط: <b id="score">0</b></span>
+        <span>الوقت: <b id="time">20</b>ث</span>
+      </div>
+      <div class="color-target" id="target"></div>
+      <div class="color-opts" id="opts"></div>
+      <div class="game-controls" style="margin-top:18px;">
+        <button class="btn-game" onclick="start()"><i class="fas fa-play"></i> ابدأ</button>
+      </div>
+    </div>
+  </div>
+<script>
+const COLORS=['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#1abc9c','#e91e63'];
+let score=0, timeLeft=20, timer, targetColor, running=false;
+function start(){
+  clearInterval(timer);
+  score=0; timeLeft=20; running=true;
+  document.getElementById('score').textContent=0;
+  document.getElementById('time').textContent=20;
+  timer=setInterval(()=>{
+    timeLeft--; document.getElementById('time').textContent=timeLeft;
+    if(timeLeft<=0){clearInterval(timer);running=false;alert('انتهى! نقاطك: '+score);}
+  },1000);
+  next();
+}
+function next(){
+  if(!running) return;
+  targetColor=COLORS[Math.floor(Math.random()*COLORS.length)];
+  document.getElementById('target').style.background=targetColor;
+  const opts=[targetColor];
+  while(opts.length<4){
+    const c=COLORS[Math.floor(Math.random()*COLORS.length)];
+    if(!opts.includes(c)) opts.push(c);
+  }
+  opts.sort(()=>Math.random()-0.5);
+  const box=document.getElementById('opts');
+  box.innerHTML='';
+  opts.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='color-opt'; d.style.background=c;
+    d.onclick=()=>{
+      if(!running) return;
+      if(c===targetColor){score++;document.getElementById('score').textContent=score;next();}
+      else{d.style.outline='3px solid #c0392b'; setTimeout(()=>d.style.outline='',200);}
+    };
+    box.appendChild(d);
+  });
+}
+</script>
+</body>
+</html>
