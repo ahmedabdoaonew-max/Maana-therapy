@@ -1,0 +1,320 @@
+/* ============================================================
+   تنمية المهارات — skills.css
+   تصميم احترافي متوافق مع هوية معنى ثيرابي
+   ============================================================ */
+
+:root {
+  --primary: #333A26;
+  --primary-dark: #232818;
+  --primary-light: #444C34;
+  --accent: #D5B477;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --bg: #FAF6EE;
+  --card: #ffffff;
+  --text: #232818;
+  --muted: #6C6F5F;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(51, 58, 38, 0.12);
+  --shadow-hover: 0 12px 40px rgba(51, 58, 38, 0.2);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body.skills-page {
+  font-family: 'IBM Plex Sans Arabic','IBM Plex Sans Arabic',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Header */
+.skills-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.skills-header h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skills-header a.back-btn {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255,255,255,.15);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  transition: .25s;
+}
+.skills-header a.back-btn:hover { background: rgba(255,255,255,.28); }
+
+/* Hero */
+.skills-hero {
+  background: linear-gradient(135deg, #333A26, #232818 60%, #D5B477);
+  color: #fff;
+  padding: 48px 24px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.skills-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: .6;
+}
+.skills-hero h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  position: relative;
+}
+.skills-hero p {
+  max-width: 640px;
+  margin: 0 auto;
+  opacity: .92;
+  font-size: 1.05rem;
+  position: relative;
+}
+
+/* Grid cards */
+.skills-container {
+  max-width: 1100px;
+  margin: -32px auto 48px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.skill-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform .3s, box-shadow .3s;
+  cursor: pointer;
+  border-top: 5px solid var(--primary);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+.skill-card .card-icon {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #fff;
+}
+.skill-card .card-body {
+  padding: 20px 22px 24px;
+  flex: 1;
+}
+.skill-card h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+.skill-card p {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.skill-card .card-tag {
+  display: inline-block;
+  margin-top: 12px;
+  background: #e8f0fe;
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Info pages */
+.info-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+.info-page h2 {
+  color: var(--primary-dark);
+  font-size: 1.7rem;
+  margin-bottom: 8px;
+  font-weight: 900;
+}
+.info-page .lead {
+  color: var(--muted);
+  margin-bottom: 28px;
+  font-size: 1.05rem;
+}
+.info-section {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border-right: 5px solid var(--primary);
+}
+.info-section h3 {
+  color: var(--primary);
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.info-section ul {
+  padding-right: 22px;
+  color: var(--text);
+}
+.info-section li { margin-bottom: 8px; }
+.info-section p { margin-bottom: 10px; }
+
+/* Games grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 10px;
+}
+.game-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: .3s;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid transparent;
+}
+.game-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-hover);
+}
+.game-card .game-thumb {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  color: #fff;
+}
+.game-card .game-info {
+  padding: 14px 16px 18px;
+}
+.game-card h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--primary-dark);
+}
+.game-card span {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* Game canvas / play area */
+.game-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 50px;
+}
+.game-panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  margin-bottom: 18px;
+}
+.game-panel h2 {
+  text-align: center;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+  font-size: 1.4rem;
+}
+.game-panel .game-desc {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.btn-game {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: .25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-game:hover { background: var(--primary-light); transform: scale(1.03); }
+.btn-game.secondary { background: #e8f0fe; color: var(--primary); }
+.btn-game.success { background: var(--success); }
+.btn-game.warning { background: var(--warning); }
+
+.score-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.score-bar span { background: #e8f0fe; padding: 6px 16px; border-radius: 20px; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .skills-hero h2 { font-size: 1.5rem; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .games-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* لمسة الهوية الجديدة */
+h1,h2,h3{font-family:'Amiri','Noto Naskh Arabic',serif}
+.skills-hero{background:linear-gradient(160deg,#333A26,#232818)!important}
+.skills-hero::before{opacity:.12}
+.skills-header{background:#333A26!important;box-shadow:none;border-bottom:1px solid rgba(232,216,190,.2)}
