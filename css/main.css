@@ -4904,3 +4904,10 @@ img,video,iframe{max-width:100%}
 @media (prefers-reduced-motion:reduce){
   .splash-img,.splash-progress span{animation:none}
 }
+
+
+/* بعد تسجيل الدخول: اخفاء أزرار تسجيل الدخول / إنشاء حساب نهائياً (يغلب أي !important سابق) */
+html.is-auth #authButtons,
+html.is-auth #headerQuickLogin,
+html.is-auth .header-quick-login{display:none!important}
+html.is-auth #userMenu{display:flex!important}
