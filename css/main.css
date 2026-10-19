@@ -4544,7 +4544,7 @@ body.nav-open{overflow:hidden}
   .nav-links>*:not(.nav-drawer-head){opacity:0;transform:translateX(18px)}
   .nav-links.open>*:not(.nav-drawer-head){opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
   .nav-links.open>*:nth-child(2){transition-delay:.06s}.nav-links.open>*:nth-child(3){transition-delay:.1s}.nav-links.open>*:nth-child(4){transition-delay:.14s}.nav-links.open>*:nth-child(5){transition-delay:.18s}.nav-links.open>*:nth-child(6){transition-delay:.22s}.nav-links.open>*:nth-child(7){transition-delay:.26s}.nav-links.open>*:nth-child(8){transition-delay:.3s}.nav-links.open>*:nth-child(9){transition-delay:.34s}
-  #authButtons{margin-top:14px;flex-direction:column}
+  #authButtons{margin-top:14px;flex-direction:column-reverse}
   #authButtons a{text-align:center}
   #userMenu{flex-direction:column;align-items:stretch!important;margin-top:14px;gap:8px!important}
 }
