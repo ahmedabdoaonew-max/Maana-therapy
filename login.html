@@ -122,15 +122,14 @@
             <h2>تسجيل الدخول</h2>
             <p class="subtitle">مرحباً بعودتك إلى معنى ثيرابي</p>
 
-            <form id="loginForm" onsubmit="handlePhoneLogin(event)">
+            <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" id="loginName" placeholder="مثال: أحمد محمد" required autocomplete="name">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="example@email.com" required autocomplete="email" dir="ltr">
                 </div>
                 <div class="form-group">
-                    <label>رقم الهاتف</label>
-                    <input type="tel" id="loginPhone" placeholder="01xxxxxxxxx" required pattern="[0-9]{10,15}" autocomplete="tel">
-                    <p class="phone-hint">أدخل الرقم بدون + أو مسافات (مثال: 01152013172)</p>
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" dir="ltr">
                 </div>
                 <button type="submit" class="form-submit">دخول</button>
             </form>
@@ -146,36 +145,13 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js?v=11"></script>
-    <script src="js/auth.js?v=7"></script>
+    <script src="js/auth.js?v=8"></script>
 
     <script>
-    function handlePhoneLogin(e) {
-        e.preventDefault();
-        const name = document.getElementById('loginName').value.trim();
-        const phone = document.getElementById('loginPhone').value.trim().replace(/\s+/g, '');
-
-        if (!name || name.length < 2) {
-            alert('من فضلك أدخل الاسم بشكل صحيح');
-            return;
-        }
-        if (!/^01[0-9]{9}$/.test(phone) && !/^[0-9]{10,15}$/.test(phone)) {
-            alert('من فضلك أدخل رقم هاتف صحيح');
-            return;
-        }
-
-        // حفظ بيانات المستخدم محلياً (سيتم ربطها ب Firebase لاحقاً)
-        const user = {
-            name: name,
-            phone: phone,
-            loginAt: new Date().toISOString(),
-            role: 'user'
-        };
-        localStorage.setItem('maanaUser', JSON.stringify(user));
-        localStorage.setItem('maanaLoggedIn', '1');
-
-        // توجيه للصفحة الرئيسية
-        window.location.href = 'index.html';
-    }
+    // لو المستخدم مسجّل دخول بالفعل، حوّله للرئيسية
+    document.addEventListener('authReady', function (e) {
+        if (e.detail) window.location.href = e.detail.isAdmin ? 'admin.html' : 'index.html';
+    });
     </script>
 </body>
 </html>

@@ -122,17 +122,28 @@
             <h2>إنشاء حساب جديد</h2>
             <p class="subtitle">انضم إلى معنى ثيرابي — معني لكل حكايه</p>
 
-            <form id="registerForm" onsubmit="handlePhoneRegister(event)">
+            <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>الاسم الكامل</label>
                     <input type="text" id="regName" placeholder="مثال: أحمد محمد" required autocomplete="name">
                 </div>
                 <div class="form-group">
-                    <label>رقم الهاتف</label>
-                    <input type="tel" id="regPhone" placeholder="01xxxxxxxxx" required pattern="[0-9]{10,15}" autocomplete="tel">
-                    <p class="phone-hint">أدخل الرقم بدون + أو مسافات (مثال: 01152013172)</p>
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" placeholder="example@email.com" required autocomplete="email" dir="ltr">
                 </div>
-                <button type="submit" class="form-submit">إنشاء الحساب</button>
+                <div class="form-group">
+                    <label>رقم الهاتف <span style="font-weight:400;color:var(--text-muted)">(اختياري)</span></label>
+                    <input type="tel" id="regPhone" placeholder="01xxxxxxxxx" autocomplete="tel" dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" required minlength="6" autocomplete="new-password" dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="regConfirm" placeholder="أعد كتابة كلمة المرور" required minlength="6" autocomplete="new-password" dir="ltr">
+                </div>
+                <button type="submit" class="form-submit">إنشاء حساب</button>
             </form>
 
             <p class="auth-link">لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
@@ -145,35 +156,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js?v=11"></script>
-    <script src="js/auth.js?v=7"></script>
+    <script src="js/auth.js?v=8"></script>
 
     <script>
-    function handlePhoneRegister(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const phone = document.getElementById('regPhone').value.trim().replace(/\s+/g, '');
-
-        if (!name || name.length < 2) {
-            alert('من فضلك أدخل الاسم بشكل صحيح');
-            return;
-        }
-        if (!/^01[0-9]{9}$/.test(phone) && !/^[0-9]{10,15}$/.test(phone)) {
-            alert('من فضلك أدخل رقم هاتف صحيح');
-            return;
-        }
-
-        const user = {
-            name: name,
-            phone: phone,
-            registeredAt: new Date().toISOString(),
-            role: 'user'
-        };
-        localStorage.setItem('maanaUser', JSON.stringify(user));
-        localStorage.setItem('maanaLoggedIn', '1');
-
-        alert('تم إنشاء الحساب بنجاح! مرحباً بك في معنى ثيرابي');
-        window.location.href = 'index.html';
-    }
+    document.addEventListener('authReady', function (e) {
+        if (e.detail && !window.__registering) window.location.href = 'index.html';
+    });
     </script>
 </body>
 </html>
