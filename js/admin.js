@@ -55,6 +55,7 @@ function showAdminSection(section) {
     if (section === 'online-lectures') renderAdminOnlineLectures(1);
     if (section === 'podcast') renderAdminPodcast();
     if (section === 'psych-doctors') renderAdminPsychDoctors();
+    if (section === 'posters') renderAdminPosters();
     if (section === 'users') renderAdminUsers();
     if (section === 'views') renderAdminViews();
     if (section === 'payments') renderAdminPayments();
@@ -130,12 +131,12 @@ async function updateDashboardStats() {
     const lectures = await safe(() => getLecturesAsync(), {});
     const views = await safe(() => getAllViewsAsync(), []);
     const subs = await safe(async () => (await db.collection('subscriptionRequests').get()).docs.map(d => d.data()), []);
-    const certs = await safe(async () => getCertificates(), {});
+    const certsCount = await safe(async () => (await db.collection('certificates').get()).size, 0);
 
     set('statUsers', Object.keys(users).filter(k => !users[k].isAdmin).length);
     set('statLectures', Object.keys(lectures).length);
     set('statViews', views.reduce((n, v) => n + (v.count || 0), 0));
-    set('statCerts', Object.keys(certs || {}).length);
+    set('statCerts', certsCount);
     set('statPayments', subs.filter(s => s.status === 'approved').length);
     set('statActive', Object.values(users).filter(u => !u.blocked && !u.isAdmin).length);
 }

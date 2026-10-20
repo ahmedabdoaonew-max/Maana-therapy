@@ -36,7 +36,7 @@ function mnPrepareImage(file, maxSide, quality) {
 
 /** يرفع صورة (شهادة / صورة متدرب) على Cloudinary لو متفعّل، وإلا يخزّنها مصغّرة داخل Firestore. يرجّع { url, path } */
 function mnUploadFile(file, folder, onProgress) {
-    if (/^certificates\//.test(folder || '') && typeof mnStorageReady === 'function' && mnStorageReady() && file && /^image\//.test(file.type)) {
+    if (/^(certificates|posters)\//.test(folder || '') && typeof mnStorageReady === 'function' && mnStorageReady() && file && /^image\//.test(file.type)) {
         return mnPrepareImage(file, 1800, 0.88).then(function (small) { return mnCloudUpload(small, 'maana/' + folder, onProgress); }).then(function (r) { return { url: r.url, path: '' }; });
     }
     return mnUploadFileLocal(file, folder, onProgress);
