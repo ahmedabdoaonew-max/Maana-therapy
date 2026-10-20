@@ -39,12 +39,9 @@ service cloud.firestore {
     // ---------- محتوى عام: قراءة للجميع، كتابة للأدمن ----------
     match /settings/{id}          { allow read: if true; allow write: if isAdmin(); }
     match /sectionSettings/{id}   { allow read: if true; allow write: if isAdmin(); }
-    match /books/{id}             { allow read: if true; allow write: if isAdmin(); }
     match /psychDoctors/{id}      { allow read: if true; allow write: if isAdmin(); }
     match /certificates/{id}      { allow read: if true; allow write: if isAdmin(); }
     match /onlineCategories/{id}  { allow read: if true; allow write: if isAdmin(); }
-    match /lectureGroups/{id}     { allow read: if true; allow write: if isAdmin(); }
-    match /lectureGroupItems/{id} { allow read: if true; allow write: if isAdmin(); }
 
     // ---------- المحاضرات ----------
     match /lectures/{id} {
@@ -88,13 +85,6 @@ service cloud.firestore {
 
     // ---------- عدّادات المشاهدة (تزيد فقط، والأدمن يصفّرها) ----------
     match /registrations/{id} {
-      allow get: if true;
-      allow list: if isAdmin();
-      allow create: if request.resource.data.viewCount == 1;
-      allow update: if isAdmin() || request.resource.data.viewCount == resource.data.viewCount + 1;
-      allow delete: if isAdmin();
-    }
-    match /lectureGroupViews/{id} {
       allow get: if true;
       allow list: if isAdmin();
       allow create: if request.resource.data.viewCount == 1;

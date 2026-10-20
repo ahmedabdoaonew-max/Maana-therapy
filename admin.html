@@ -40,13 +40,7 @@
                     <i class="fas fa-video"></i> المحاضرات المدفوعة والأكواد
                 </a>
                 <a href="#" data-section="online-lectures" onclick="showAdminSection('online-lectures');return false;">
-                    <i class="fas fa-clapperboard"></i> باقات المحاضرات (4 أقسام)
-                </a>
-                <a href="#" data-section="lecture-groups" onclick="showAdminSection('lecture-groups');return false;">
-                    <i class="fas fa-book-open"></i> مسارات المحاضرات (ID)
-                </a>
-                <a href="#" data-section="books" onclick="showAdminSection('books');return false;">
-                    <i class="fas fa-book"></i> الكتب التعليمية
+                    <i class="fas fa-clapperboard"></i> باقة المحاضرات (4 أقسام)
                 </a>
                 <a href="#" data-section="psych-doctors" onclick="showAdminSection('psych-doctors');return false;">
                     <i class="fas fa-heart-pulse"></i> أطباء جلستك النفسية
@@ -76,7 +70,7 @@
                     <i class="fas fa-crown"></i> طلبات اشتراك الأقسام
                 </a>
                 <a href="#" data-section="logs" onclick="showAdminSection('logs');return false;">
-                    <i class="fas fa-history"></i> سجل الدخول
+                    <i class="fas fa-history"></i> سجل المسجّلين
                 </a>
                 <a href="#" data-section="settings" onclick="showAdminSection('settings');return false;">
                     <i class="fas fa-cog"></i> الإعدادات
@@ -196,9 +190,9 @@
             <!-- المحاضرات الأونلاين (4 أقسام × 8 محاضرات) -->
             <div id="admin-online-lectures" class="admin-section" style="display:none;">
                 <div class="admin-header">
-                    <h1>باقات المحاضرات الأونلاين (4 أقسام)</h1>
+                    <h1>باقة المحاضرات (4 أقسام)</h1>
                 </div>
-                <div class="ol-admin-tabs" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+<div class="ol-admin-tabs" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
                     <button type="button" class="btn-outline ol-admin-tab active" data-cat="1" onclick="renderAdminOnlineLectures(1)">أساسيات الإدارة والقيادة</button>
                     <button type="button" class="btn-outline ol-admin-tab" data-cat="2" onclick="renderAdminOnlineLectures(2)">تطوير المهارات المهنية</button>
                     <button type="button" class="btn-outline ol-admin-tab" data-cat="3" onclick="renderAdminOnlineLectures(3)">التواصل والعرض التقديمي</button>
@@ -215,12 +209,16 @@
                             <input type="text" id="olCatTitle" required>
                         </div>
                         <div class="form-group">
-                            <label>رابط الصورة الأولى</label>
-                            <input type="text" id="olCatImg1" placeholder="https://...">
+                            <label>الصورة الأولى — من الجهاز</label>
+                            <input type="file" id="olCatImg1File" accept="image/*">
+                            <input type="hidden" id="olCatImg1">
+                            <small id="olCatImg1Note" style="color:var(--admin-text-muted);"></small>
                         </div>
                         <div class="form-group">
-                            <label>رابط الصورة الثانية</label>
-                            <input type="text" id="olCatImg2" placeholder="https://...">
+                            <label>الصورة الثانية — من الجهاز</label>
+                            <input type="file" id="olCatImg2File" accept="image/*">
+                            <input type="hidden" id="olCatImg2">
+                            <small id="olCatImg2Note" style="color:var(--admin-text-muted);"></small>
                         </div>
                         <button type="submit" class="form-submit">حفظ بيانات القسم</button>
                     </form>
@@ -236,23 +234,6 @@
                         <button type="submit" class="form-submit">حفظ الرقم</button>
                     </form>
                 </div>
-            </div>
-
-            <!-- إدارة منصة "المحاضرات الأونلاين" (3 أقسام) -->
-            <div id="admin-lecture-groups" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>مسارات المحاضرات المحمية ب ID</h1>
-                </div>
-                <p style="color:var(--admin-text-muted);font-size:0.85rem;margin-bottom:16px;">دي المحاضرات اللي بتظهر في صفحة "المحاضرات" من الموقع (زر المحاضرات المستطيل في الرئيسية).</p>
-                <div id="lgAdminWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
-            </div>
-
-            <!-- إدارة الكتب التعليمية -->
-            <div id="admin-books" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>الكتب التعليمية</h1>
-                </div>
-                <div id="booksAdminWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
             </div>
 
             <!-- أطباء جلستك النفسية -->
@@ -353,7 +334,7 @@
             <!-- سجل الدخول -->
             <div id="admin-logs" class="admin-section" style="display:none;">
                 <div class="admin-header">
-                    <h1>سجل تسجيلات الدخول</h1>
+                    <h1>سجل المسجّلين</h1>
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
@@ -361,7 +342,7 @@
                         <tr>
                             <th>الاسم</th>
                             <th>البريد</th>
-                            <th>الوقت</th>
+                            <th>وقت التسجيل</th>
                         </tr>
                     </thead>
                     <tbody id="logsTableBody"></tbody>
@@ -548,8 +529,9 @@
                         <input type="text" id="lecTitle" required>
                     </div>
                     <div class="form-group">
-                        <label>رابط الفيديو (YouTube أو MP4 مباشر)</label>
-                        <input type="text" id="lecUrl" required placeholder="https://www.youtube.com/watch?v=... أو رابط mp4">
+                        <label>ملف الفيديو — مسار داخل المشروع أو رابط</label>
+                        <input type="text" id="lecUrl" required dir="ltr" placeholder="media/lectures/lec1.mp4  أو  https://www.youtube.com/watch?v=...">
+                        <small style="color:var(--admin-text-muted);display:block;margin-top:4px;">حط الفيديو في مجلد media/lectures بالمشروع واكتب مساره هنا (مثال: media/lectures/lec1.mp4)</small>
                     </div>
                     <div class="form-group">
                         <label>السعر (جنيه مصري)</label>
@@ -684,10 +666,9 @@
     <script src="js/certificates-seed.js"></script>
     <script src="js/certificates.js?v=6"></script>
     <script src="js/courses.js?v=11"></script>
-    <script src="js/lecture-groups.js?v=10"></script>
-    <script src="js/books.js?v=10"></script>
     <script src="js/psych-doctors.js?v=10"></script>
-    <script src="js/uploads.js?v=1"></script>
+    <script src="js/storage-config.js?v=1"></script>
+    <script src="js/uploads.js?v=2"></script>
     <script src="js/podcast.js?v=1"></script>
     <script src="js/admin.js?v=10"></script>
 </body>
