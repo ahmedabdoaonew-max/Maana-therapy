@@ -22,6 +22,8 @@ function pcDur(sec) {
     if (m) return m + ' د';
     return s + ' ث';
 }
+/** مسار نسبي داخل المشروع (media/...) أو رابط كامل */
+function pcValidMedia(u) { return /^https?:\/\//i.test(u) || /^(\.\/)?[A-Za-z0-9_\-\/. %()+]+\.(mp3|m4a|wav|ogg|aac|mp4|webm|mov)$/i.test(u); }
 function pcWA() { return (window.SITE_CONTACT && SITE_CONTACT.whatsapp) || '201152013172'; }
 function pcTs(e) { return Number(e.createdAtMs) || 0; }
 
@@ -73,7 +75,7 @@ async function pcInitPublic() {
     });
 }
 
-function pcIsOpen(ep) { return !(Number(ep.price) > 0) || pcState.access.has(ep.id); }
+function pcIsOpen(ep) { return ep.openToAll === true || pcState.access.has(ep.id); }
 function pcCatName(id) {
     var c = pcState.cats.find(function (x) { return x.id === id; });
     return c ? c.name : '';
@@ -99,7 +101,7 @@ function pcRenderFeatured() {
             '<span class="pc-feat-txt">' +
                 '<small>أحدث حلقة</small>' +
                 '<strong>' + pcEsc(ep.title) + '</strong>' +
-                '<em>' + (open ? '<i class="fas fa-play"></i> استمع الآن' : '<i class="fas fa-lock"></i> ' + Number(ep.price) + ' ج.م') + '</em>' +
+                '<em>' + (open ? '<i class="fas fa-play"></i> استمع الآن' : '<i class="fab fa-whatsapp"></i> طلب سماع') + '</em>' +
             '</span>' +
         '</button>';
 }
@@ -141,11 +143,11 @@ function pcRenderList() {
     list.innerHTML = eps.map(function (ep) {
         var open = pcIsOpen(ep);
         var pending = !open && pcState.pending.has(ep.id);
-        var badge = Number(ep.price) > 0
-            ? (open ? '<span class="pc-badge open"><i class="fas fa-lock-open"></i> مفتوحة لك</span>'
-                : pending ? '<span class="pc-badge wait"><i class="fas fa-hourglass-half"></i> قيد المراجعة</span>'
-                : '<span class="pc-badge paid">' + Number(ep.price) + ' ج.م</span>')
-            : '<span class="pc-badge free">مجانية</span>';
+        var badge = ep.openToAll === true
+            ? '<span class="pc-badge free">مفتوحة للجميع</span>'
+            : open ? '<span class="pc-badge open"><i class="fas fa-lock-open"></i> مفتوحة لك</span>'
+            : pending ? '<span class="pc-badge wait"><i class="fas fa-hourglass-half"></i> قيد المراجعة</span>'
+            : '<span class="pc-badge paid"><i class="fas fa-lock"></i> بموافقة الإدارة</span>';
         var meta = [pcCatName(ep.categoryId), pcDur(ep.duration), ep.mediaType === 'video' ? 'فيديو' : 'صوت'].filter(Boolean).join(' • ');
         return '' +
         '<article class="pc-ep">' +
@@ -160,7 +162,7 @@ function pcRenderList() {
                 (ep.description ? '<p>' + pcEsc(ep.description) + '</p>' : '') +
                 '<div class="pc-ep-foot">' + badge +
                     '<button type="button" class="pc-act' + (open ? '' : ' lock') + '" onclick="pcOpen(\'' + ep.id + '\')">' +
-                        (open ? '<i class="fas fa-play"></i> استمع' : '<i class="fas fa-unlock-keyhole"></i> افتح الحلقة') + '</button>' +
+                        (open ? '<i class="fas fa-play"></i> استمع' : '<i class="fab fa-whatsapp"></i> طلب سماع') + '</button>' +
                 '</div>' +
             '</div>' +
         '</article>';
@@ -225,24 +227,27 @@ async function pcPlay(ep) {
 }
 
 function pcUnlock(ep) {
-    var price = Number(ep.price) || 0;
     var user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    var head = '<div class="pc-lockbox"><i class="fas fa-lock"></i></div><h3>' + pcEsc(ep.title) + '</h3>' +
-        '<div class="pc-price">' + price + ' <span>ج.م</span></div>';
+    var head = '<div class="pc-lockbox"><i class="fas fa-lock"></i></div><h3>' + pcEsc(ep.title) + '</h3>';
     if (!auth.currentUser) {
         pcModal(head + '<p>سجّل دخولك الأول عشان نقدر نفتحلك الحلقة على حسابك.</p>' +
-            '<a class="pc-cta" href="login.html"><i class="fas fa-right-to-bracket"></i> تسجيل الدخول</a>' +
-            '<a class="pc-link" href="register.html">مش عندك حساب؟ أنشئ حساب</a>');
+            '<a class="pc-cta" href="register.html"><i class="fas fa-user-plus"></i> إنشاء حساب</a>' +
+            '<a class="pc-link" href="login.html">عندك حساب؟ تسجيل الدخول</a>');
         return;
     }
+    var u = auth.currentUser;
     var pending = pcState.pending.has(ep.id);
-    var msg = 'أرغب في فتح حلقة البودكاست: "' + ep.title + '" (' + price + ' ج.م)' +
-        '\nالاسم: ' + ((user && user.name) || '-') + '\nالهاتف: ' + ((user && user.phone) || '-');
+    var msg = 'السلام عليكم، أرغب في سماع حلقة البودكاست: "' + ep.title + '"' +
+        '\nالاسم: ' + ((user && user.name) || u.displayName || '-') +
+        '\nالهاتف: ' + ((user && user.phone) || '-') +
+        '\nالبريد: ' + (u.email || '-') +
+        '\nID الحساب: ' + u.uid +
+        '\nID الحلقة: ' + ep.id;
     var href = 'https://wa.me/' + pcWA() + '?text=' + encodeURIComponent(msg);
     pcModal(head +
-        (pending ? '<p class="pc-note"><i class="fas fa-hourglass-half"></i> طلبك وصل للإدارة وقيد المراجعة. هتتفتح الحلقة تلقائياً بعد التفعيل.</p>'
-                 : '<p>ابعت طلب الفتح على واتساب، وبعد تأكيد الدفع الإدارة بتفعّل الحلقة على حسابك.</p>') +
-        '<a class="pc-cta wa" href="' + href + '" target="_blank" rel="noopener" onclick="pcRequest(\'' + ep.id + '\')"><i class="fab fa-whatsapp"></i> ' + (pending ? 'تواصل مع الإدارة' : 'اطلب فتح الحلقة عبر واتساب') + '</a>' +
+        (pending ? '<p class="pc-note"><i class="fas fa-hourglass-half"></i> طلبك وصل للإدارة وقيد المراجعة. هتتفتح الحلقة تلقائياً بعد الموافقة.</p>'
+                 : '<p>الحلقة بتتفتح بموافقة الإدارة. اضغط الزر وابعت الطلب على واتساب (الرسالة فيها بياناتك والـ ID)، وبعد الموافقة هتشتغل على حسابك.</p>') +
+        '<a class="pc-cta wa" href="' + href + '" target="_blank" rel="noopener" onclick="pcRequest(\'' + ep.id + '\')"><i class="fab fa-whatsapp"></i> ' + (pending ? 'تواصل مع الإدارة' : 'طلب سماع عبر واتساب') + '</a>' +
         '<small class="pc-num">' + (window.SITE_CONTACT ? SITE_CONTACT.display : '01152013172') + '</small>');
 }
 
@@ -256,9 +261,9 @@ async function pcRequest(epId) {
             userId: u.uid,
             userName: (user && user.name) || '',
             userPhone: (user && user.phone) || '',
+            userEmail: u.email || '',
             episodeId: epId,
             episodeTitle: ep.title,
-            price: Number(ep.price) || 0,
             status: 'pending',
             createdAt: new Date().toISOString(),
             createdAtMs: Date.now()
@@ -299,7 +304,13 @@ async function renderAdminPodcast() {
         pcAdmin.reqs = r[2].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return (b.createdAtMs || 0) - (a.createdAtMs || 0); });
         pcAdmin.access = r[3].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
         pcAdmin.media = {};
-        r[4].docs.forEach(function (d) { pcAdmin.media[d.id] = d.data().url || ''; });
+        var lockFix = db.batch(), lockN = 0;
+        r[4].docs.forEach(function (d) {
+            pcAdmin.media[d.id] = d.data().url || '';
+            var ep = pcAdmin.eps.find(function (e) { return e.id === d.id; });
+            if (d.data().free === true && !(ep && ep.openToAll === true)) { lockFix.set(d.ref, { free: false }, { merge: true }); lockN++; }
+        });
+        if (lockN) { try { await lockFix.commit(); } catch (err) { console.warn(err); } }
     } catch (e) {
         console.error(e);
         wrap.innerHTML = '<p style="color:var(--admin-text-muted);">تعذّر تحميل البيانات. تأكد من قواعد Firestore الخاصة بالبودكاست (راجع ملف firestore.rules).</p>';
@@ -335,11 +346,11 @@ function pcRenderAdmin() {
             pcAdminInput('عنوان الحلقة', '<input name="title" required>', true) +
             pcAdminInput('القسم الفرعي', '<select name="categoryId" required>' + (pcCatOptions('') || '<option value="">أضف قسماً أولاً</option>') + '</select>') +
             pcAdminInput('اسم الضيف / المقدّم', '<input name="host">') +
-            pcAdminInput('سعر فتح الحلقة (ج.م) — 0 = مجانية', '<input type="number" name="price" min="0" step="1" value="0" required>') +
+            pcAdminInput('حلقة مفتوحة للجميع؟', '<label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="openToAll"> نعم (بدون طلب سماع) — الافتراضي: بموافقة الإدارة</label>') +
             pcAdminInput('الترتيب', '<input type="number" name="order" value="' + (pcAdmin.eps.length + 1) + '">') +
             pcAdminInput('وصف الحلقة', '<textarea name="description" rows="3"></textarea>', true) +
             pcAdminInput('صورة الغلاف (اختياري — من الجهاز)', '<input type="file" name="cover" accept="image/*">') +
-            pcAdminInput('رابط الحلقة (يوتيوب / Google Drive / رابط مباشر mp3 أو mp4)', '<input type="url" name="mediaUrl" placeholder="https://..." required dir="ltr">') +
+            pcAdminInput('مسار ملف الحلقة داخل المشروع (مثال: media/podcast/ep1.mp3) أو رابط', '<input type="text" name="mediaUrl" placeholder="media/podcast/ep1.mp3" required dir="ltr">') +
             pcAdminInput('نوع الحلقة', '<select name="mediaType"><option value="audio">صوت</option><option value="video">فيديو</option></select>') +
             '<div style="grid-column:1/-1;"><label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="published" checked> منشورة على الموقع</label></div>' +
             '<div style="grid-column:1/-1;"><div id="pcAddProgress" style="display:none;color:var(--admin-text);"></div></div>' +
@@ -348,7 +359,7 @@ function pcRenderAdmin() {
 
     /* الحلقات الحالية */
     var epsHtml = pcAdmin.eps.map(function (e) {
-        var pr = Number(e.price) > 0 ? Number(e.price) + ' ج.م' : 'مجانية';
+        var pr = e.openToAll === true ? 'مفتوحة للجميع' : 'بموافقة';
         return '<details style="' + det + '"><summary style="' + sum + '">' +
             '<span style="display:flex;align-items:center;gap:10px;min-width:0;">' +
                 (e.coverUrl ? '<img src="' + pcEsc(e.coverUrl) + '" alt="" style="width:42px;height:42px;border-radius:8px;object-fit:cover;">' : '<i class="fas fa-microphone-lines"></i>') +
@@ -358,11 +369,11 @@ function pcRenderAdmin() {
                 pcAdminInput('العنوان', '<input name="title" value="' + pcEsc(e.title) + '" required>', true) +
                 pcAdminInput('القسم الفرعي', '<select name="categoryId">' + pcCatOptions(e.categoryId) + '</select>') +
                 pcAdminInput('الضيف / المقدّم', '<input name="host" value="' + pcEsc(e.host || '') + '">') +
-                pcAdminInput('سعر الفتح (ج.م) — 0 = مجانية', '<input type="number" name="price" min="0" step="1" value="' + (Number(e.price) || 0) + '">') +
+                pcAdminInput('حلقة مفتوحة للجميع؟', '<label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="openToAll"' + (e.openToAll === true ? ' checked' : '') + '> نعم (بدون طلب سماع)</label>') +
                 pcAdminInput('الترتيب', '<input type="number" name="order" value="' + (e.order || 0) + '">') +
                 pcAdminInput('الوصف', '<textarea name="description" rows="3">' + pcEsc(e.description || '') + '</textarea>', true) +
                 pcAdminInput('استبدال الغلاف (اختياري)', '<input type="file" name="cover" accept="image/*">') +
-                pcAdminInput('رابط الحلقة (اتركه كما هو أو غيّره)', '<input type="url" name="mediaUrl" value="' + pcEsc((pcAdmin.media && pcAdmin.media[e.id]) || '') + '" dir="ltr">') +
+                pcAdminInput('مسار الحلقة (ملف داخل المشروع أو رابط)', '<input type="text" name="mediaUrl" value="' + pcEsc((pcAdmin.media && pcAdmin.media[e.id]) || '') + '" dir="ltr">') +
                 pcAdminInput('نوع الحلقة', '<select name="mediaType"><option value="audio"' + (e.mediaType === 'video' ? '' : ' selected') + '>صوت</option><option value="video"' + (e.mediaType === 'video' ? ' selected' : '') + '>فيديو</option></select>') +
                 '<div style="grid-column:1/-1;"><label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="published"' + (e.published === false ? '' : ' checked') + '> منشورة على الموقع</label></div>' +
                 '<div style="grid-column:1/-1;"><div class="pcEpProgress" style="display:none;color:var(--admin-text);"></div></div>' +
@@ -374,7 +385,7 @@ function pcRenderAdmin() {
     /* الطلبات والصلاحيات */
     var pend = pcAdmin.reqs.filter(function (r) { return r.status === 'pending'; });
     var reqRows = pend.map(function (r) {
-        return '<tr><td>' + pcEsc(r.userName || '-') + '</td><td dir="ltr">' + pcEsc(r.userPhone || '-') + '</td><td>' + pcEsc(r.episodeTitle) + '</td><td>' + (Number(r.price) || 0) + ' ج.م</td>' +
+        return '<tr><td>' + pcEsc(r.userName || '-') + '</td><td dir="ltr">' + pcEsc(r.userPhone || '-') + '<br><small>' + pcEsc(r.userEmail || '') + '</small></td><td dir="ltr"><small>' + pcEsc(r.userId || '') + '</small></td><td>' + pcEsc(r.episodeTitle) + '</td>' +
             '<td style="white-space:nowrap;"><button class="btn-sm btn-edit" onclick="pcApprove(\'' + r.id + '\')">تفعيل</button> ' +
             '<button class="btn-sm btn-delete" onclick="pcReject(\'' + r.id + '\')">رفض</button></td></tr>';
     }).join('');
@@ -393,7 +404,7 @@ function pcRenderAdmin() {
         '<div style="' + panel + '"><h3 style="' + h3 + '">إضافة حلقة جديدة</h3>' + addEp + '</div>' +
         '<h3 style="' + h3 + '">الحلقات (' + pcAdmin.eps.length + ')</h3>' + (epsHtml || '<p style="color:var(--admin-text-muted);">لا توجد حلقات بعد.</p>') +
         '<div style="' + panel + 'margin-top:24px;"><h3 style="' + h3 + '">طلبات فتح الحلقات (' + pend.length + ')</h3>' +
-            '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>الاسم</th><th>الهاتف</th><th>الحلقة</th><th>السعر</th><th>إجراء</th></tr></thead><tbody>' +
+            '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>الاسم</th><th>الهاتف / البريد</th><th>ID الحساب</th><th>الحلقة</th><th>إجراء</th></tr></thead><tbody>' +
             (reqRows || '<tr><td colspan="5" style="text-align:center;">لا توجد طلبات معلّقة</td></tr>') + '</tbody></table></div></div>' +
         '<div style="' + panel + '"><h3 style="' + h3 + '">الحلقات المفتوحة للمستخدمين</h3>' +
             '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>المستخدم</th><th>الهاتف</th><th>الحلقة</th><th>إجراء</th></tr></thead><tbody>' +
@@ -438,12 +449,13 @@ async function pcAddEpisode(ev) {
     var f = ev.target;
     if (!f.categoryId.value) { showToast('أضف قسماً فرعياً أولاً', 'error'); return; }
     var mediaUrl = (f.mediaUrl.value || '').trim();
-    if (!/^https?:\/\//i.test(mediaUrl)) { showToast('اكتب رابط الحلقة بشكل صحيح (يبدأ ب https)', 'error'); return; }
+    if (!pcValidMedia(mediaUrl)) { showToast('اكتب مسار الحلقة (مثال: media/podcast/ep1.mp3) أو رابطاً صحيحاً', 'error'); return; }
     var btn = f.querySelector('button[type=submit]');
     btn.disabled = true;
     var ui = mnProgressUI(document.getElementById('pcAddProgress'));
     try {
-        var price = Math.max(0, Number(f.price.value) || 0);
+        var duration = 0;
+        var openToAll = f.openToAll.checked;
         var cover = null;
         if (f.cover.files[0]) {
             var img = await mnPrepareImage(f.cover.files[0], 800);
@@ -453,11 +465,11 @@ async function pcAddEpisode(ev) {
         var batch = db.batch();
         batch.set(ref, {
             title: f.title.value.trim(), description: f.description.value.trim(), host: f.host.value.trim(),
-            categoryId: f.categoryId.value, price: price, order: Number(f.order.value) || 0,
-            published: f.published.checked, mediaType: f.mediaType.value,
-            duration: 0, coverUrl: cover ? cover.url : '', createdAtMs: Date.now()
+            categoryId: f.categoryId.value, price: 0, openToAll: openToAll, order: Number(f.order.value) || 0,
+            published: f.published.checked, mediaType: (/\.(mp4|webm|mov)(\?|$)/i.test(mediaUrl)) ? 'video' : f.mediaType.value,
+            duration: duration, coverUrl: cover ? cover.url : '', createdAtMs: Date.now()
         });
-        batch.set(db.collection('podcastMedia').doc(ref.id), { url: mediaUrl, free: price === 0 });
+        batch.set(db.collection('podcastMedia').doc(ref.id), { url: mediaUrl, free: openToAll });
         await batch.commit();
         ui.done('تم النشر');
         showToast('تم نشر الحلقة');
@@ -476,16 +488,17 @@ async function pcSaveEpisode(ev, id) {
     btn.disabled = true;
     var ui = mnProgressUI(f.querySelector('.pcEpProgress'));
     try {
-        var price = Math.max(0, Number(f.price.value) || 0);
+        var openToAll = f.openToAll.checked;
         var patch = {
             title: f.title.value.trim(), description: f.description.value.trim(), host: f.host.value.trim(),
-            categoryId: f.categoryId.value, price: price, order: Number(f.order.value) || 0, published: f.published.checked,
+            categoryId: f.categoryId.value, price: 0, openToAll: openToAll, order: Number(f.order.value) || 0, published: f.published.checked,
             mediaType: f.mediaType.value
         };
-        var mediaPatch = { free: price === 0 };
+        var mediaPatch = { free: openToAll };
         var newUrl = (f.mediaUrl.value || '').trim();
+
         if (newUrl) {
-            if (!/^https?:\/\//i.test(newUrl)) throw new Error('رابط الحلقة غير صحيح');
+            if (!pcValidMedia(newUrl)) throw new Error('مسار/رابط الحلقة غير صحيح');
             mediaPatch.url = newUrl;
         }
         if (f.cover.files[0]) {

@@ -53,8 +53,6 @@ function showAdminSection(section) {
     if (section === 'site-content') renderSiteContentForm();
     if (section === 'lectures') renderAdminLectures();
     if (section === 'online-lectures') renderAdminOnlineLectures(1);
-    if (section === 'lecture-groups') renderAdminLectureGroups();
-    if (section === 'books') renderAdminBooks();
     if (section === 'podcast') renderAdminPodcast();
     if (section === 'psych-doctors') renderAdminPsychDoctors();
     if (section === 'users') renderAdminUsers();
@@ -69,24 +67,76 @@ function showAdminSection(section) {
     if (section === 'sections') renderSectionSettings();
 }
 
+// ========== مساعد: عرض سبب فشل تحميل البيانات (مثلاً قواعد Firestore) ==========
+function adminErrorText(e) {
+    const code = (e && e.code) || '';
+    if (code === 'permission-denied' || /permission/i.test((e && e.message) || '')) {
+        return 'تم رفض القراءة من Firestore (permission-denied). انشر ملف firestore.rules في مشروع Firebase المستخدم، وتأكد إن حسابك فيه role = admin أو super_admin في مجموعة users.';
+    }
+    if (code === 'failed-precondition') {
+        return 'Firestore محتاج Index لهذا الاستعلام — افتح Console (F12) واضغط على الرابط اللي بيظهر في الخطأ لإنشائه.';
+    }
+    return 'تعذّر تحميل البيانات: ' + (code || (e && e.message) || 'خطأ غير معروف');
+}
+function adminAnchor(id) {
+    if (id === 'statUsers') return document.querySelector('#admin-dashboard .stats-row');
+    const host = document.getElementById(id);
+    return host && (host.closest('table') || host);
+}
+function adminShowError(containerId, e) {
+    console.error(e);
+    const anchor = adminAnchor(containerId);
+    if (!anchor || !anchor.parentElement) return;
+    let box = anchor.parentElement.querySelector(':scope > .admin-load-error');
+    if (!box) {
+        box = document.createElement('div');
+        box.className = 'admin-load-error';
+        anchor.parentElement.insertBefore(box, anchor);
+    }
+    box.textContent = adminErrorText(e);
+}
+function adminClearError(containerId) {
+    const anchor = adminAnchor(containerId);
+    const box = anchor && anchor.parentElement && anchor.parentElement.querySelector(':scope > .admin-load-error');
+    if (box) box.remove();
+}
+function adminFmtDate(v) {
+    if (!v) return '-';
+    try {
+        const d = v.toDate ? v.toDate() : new Date(v);
+        return isNaN(d) ? '-' : d.toLocaleString('ar-EG');
+    } catch (e) { return '-'; }
+}
+
+// المشاهدات الحقيقية من Firestore: عدّادات المحاضرات (كانت بتتقري من localStorage فاضي)
+async function getAllViewsAsync() {
+    const r = await db.collection('registrations').get();
+    const out = [];
+    r.forEach(d => { const v = d.data(); out.push({ code: v.lectureId || d.id, name: v.name || '-', count: v.viewCount || 0, at: v.lastAccess }); });
+    return out.sort((x, y) => String(y.at || '').localeCompare(String(x.at || '')));
+}
+
 // ========== الإحصائيات ==========
 async function updateDashboardStats() {
-    const users = await getUsersAsync();
-    const lectures = await getLecturesAsync();
-    const views = JSON.parse(localStorage.getItem('academyViews') || '{}');
-    const certs = getCertificates();
-    const payments = JSON.parse(localStorage.getItem('academyPayments') || '{}');
-
     const set = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.textContent = val;
     };
+    const safe = async (fn, fallback) => {
+        try { return await fn(); } catch (e) { adminShowError('statUsers', e); return fallback; }
+    };
+
+    const users = await safe(() => getUsersAsync(), {});
+    const lectures = await safe(() => getLecturesAsync(), {});
+    const views = await safe(() => getAllViewsAsync(), []);
+    const subs = await safe(async () => (await db.collection('subscriptionRequests').get()).docs.map(d => d.data()), []);
+    const certs = await safe(async () => getCertificates(), {});
 
     set('statUsers', Object.keys(users).filter(k => !users[k].isAdmin).length);
     set('statLectures', Object.keys(lectures).length);
-    set('statViews', Object.keys(views).length);
-    set('statCerts', Object.keys(certs).length);
-    set('statPayments', Object.keys(payments).length);
+    set('statViews', views.reduce((n, v) => n + (v.count || 0), 0));
+    set('statCerts', Object.keys(certs || {}).length);
+    set('statPayments', subs.filter(s => s.status === 'approved').length);
     set('statActive', Object.values(users).filter(u => !u.blocked && !u.isAdmin).length);
 }
 
@@ -173,6 +223,10 @@ async function renderAdminOnlineLectures(categoryId) {
         document.getElementById('olCatTitle').value = data.title || defaults[categoryId] || '';
         document.getElementById('olCatImg1').value = data.img1 || '';
         document.getElementById('olCatImg2').value = data.img2 || '';
+        document.getElementById('olCatImg1File').value = '';
+        document.getElementById('olCatImg2File').value = '';
+        document.getElementById('olCatImg1Note').textContent = data.img1 ? 'يوجد صورة محفوظة — اختر ملفاً جديداً لاستبدالها' : '';
+        document.getElementById('olCatImg2Note').textContent = data.img2 ? 'يوجد صورة محفوظة — اختر ملفاً جديداً لاستبدالها' : '';
     } catch (e) { console.error(e); }
 
     // تحميل رقم الواتساب (إعداد عام وليس لكل قسم)
@@ -218,14 +272,24 @@ async function renderAdminOnlineLectures(categoryId) {
 async function saveOnlineCategoryInfo(event) {
     event.preventDefault();
     const title = document.getElementById('olCatTitle').value.trim();
-    const img1 = document.getElementById('olCatImg1').value.trim();
-    const img2 = document.getElementById('olCatImg2').value.trim();
+    let img1 = document.getElementById('olCatImg1').value.trim();
+    let img2 = document.getElementById('olCatImg2').value.trim();
     try {
+        const f1 = document.getElementById('olCatImg1File').files[0];
+        const f2 = document.getElementById('olCatImg2File').files[0];
+        if (f1) img1 = (await mnUploadFile(await mnPrepareImage(f1, 800), 'categories')).url;
+        if (f2) img2 = (await mnUploadFile(await mnPrepareImage(f2, 800), 'categories')).url;
         await db.collection('onlineCategories').doc(String(_olAdminCurrentCat)).set({ title, img1, img2 }, { merge: true });
+        document.getElementById('olCatImg1').value = img1;
+        document.getElementById('olCatImg2').value = img2;
+        document.getElementById('olCatImg1File').value = '';
+        document.getElementById('olCatImg2File').value = '';
+        document.getElementById('olCatImg1Note').textContent = img1 ? 'يوجد صورة محفوظة — اختر ملفاً جديداً لاستبدالها' : '';
+        document.getElementById('olCatImg2Note').textContent = img2 ? 'يوجد صورة محفوظة — اختر ملفاً جديداً لاستبدالها' : '';
         showToast('تم حفظ بيانات القسم');
     } catch (e) {
         console.error(e);
-        showToast('فشل الحفظ — تحقق من صلاحياتك', 'error');
+        showToast(e.message && !e.code ? e.message : 'فشل الحفظ — تحقق من صلاحياتك', 'error');
     }
 }
 
@@ -304,7 +368,7 @@ async function saveLecture(event) {
     const onlineCategory = onlineCategoryRaw ? parseInt(onlineCategoryRaw, 10) : null;
 
     if (!title || !url) {
-        showToast('يرجى ملء العنوان والرابط', 'error');
+        showToast('يرجى ملء العنوان ومسار الفيديو (أو الرابط)', 'error');
         return;
     }
 
@@ -387,8 +451,13 @@ async function renderAdminUsers() {
     const tbody = document.getElementById('usersTableBody');
     if (!tbody) return;
 
-    const users = await getUsersAsync();
+    let users;
+    try { users = await getUsersAsync(); adminClearError('usersTableBody'); }
+    catch (e) { adminShowError('usersTableBody', e); tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">تعذّر تحميل المستخدمين</td></tr>'; return; }
     tbody.innerHTML = '';
+    if (!Object.values(users).some(u => !u.isAdmin)) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا يوجد مستخدمون مسجّلون بعد</td></tr>';
+    }
 
     Object.values(users).forEach(u => {
         if (u.isAdmin) return; // لا نعرض الأدمن في القائمة العادية
@@ -485,41 +554,51 @@ async function toggleBlockUser(id) {
 }
 
 // ========== سجل المشاهدات ==========
-function renderAdminViews() {
+async function renderAdminViews() {
     const tbody = document.getElementById('viewsTableBody');
     if (!tbody) return;
-
-    const views = JSON.parse(localStorage.getItem('academyViews') || '{}');
-    const list = Object.values(views).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-    tbody.innerHTML = list.slice(0, 50).map(v => `
-        <tr>
-            <td>${v.lectureId}</td>
-            <td>${v.userName}</td>
-            <td>${v.viewedAt}</td>
-        </tr>
-    `).join('') || '<tr><td colspan="3" style="text-align:center;">لا توجد مشاهدات</td></tr>';
+    try {
+        const list = await getAllViewsAsync();
+        adminClearError('viewsTableBody');
+        tbody.innerHTML = list.slice(0, 100).map(v => `
+            <tr>
+                <td>${v.code}</td>
+                <td>${v.name} <small style="color:var(--admin-text-muted);">(${v.count} مشاهدة)</small></td>
+                <td>${adminFmtDate(v.at)}</td>
+            </tr>
+        `).join('') || '<tr><td colspan="3" style="text-align:center;">لا توجد مشاهدات</td></tr>';
+    } catch (e) {
+        adminShowError('viewsTableBody', e);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">تعذّر التحميل</td></tr>';
+    }
 }
 
 // ========== المدفوعات ==========
-function renderAdminPayments() {
+async function renderAdminPayments() {
     const tbody = document.getElementById('paymentsTableBody');
     if (!tbody) return;
-
-    const payments = JSON.parse(localStorage.getItem('academyPayments') || '{}');
-    const list = Object.values(payments).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-    tbody.innerHTML = list.map(p => `
-        <tr>
-            <td>${p.id}</td>
-            <td>${p.lectureId}</td>
-            <td>${p.amount} ج.م</td>
-            <td>${p.method}</td>
-            <td>${p.userName}</td>
-            <td>${p.date}</td>
-            <td><span class="badge badge-success">${p.status}</span></td>
-        </tr>
-    `).join('') || '<tr><td colspan="7" style="text-align:center;">لا توجد مدفوعات</td></tr>';
+    try {
+        const snap = await db.collection('subscriptionRequests').get();
+        adminClearError('paymentsTableBody');
+        const list = [];
+        snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+        list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+        const st = { approved: 'مفعّل', rejected: 'مرفوض', pending: 'قيد الانتظار' };
+        tbody.innerHTML = list.map(p => `
+            <tr>
+                <td>${p.id.slice(0, 8)}</td>
+                <td>${p.sectionTitle || p.sectionId || '-'}</td>
+                <td>${p.amount ? p.amount + ' ج.م' : '-'}</td>
+                <td>${p.method || 'واتساب'}</td>
+                <td>${p.userName || '-'}</td>
+                <td>${adminFmtDate(p.createdAt)}</td>
+                <td><span class="badge ${p.status === 'approved' ? 'badge-success' : p.status === 'rejected' ? 'badge-danger' : 'badge-warning'}">${st[p.status] || p.status || '-'}</span></td>
+            </tr>
+        `).join('') || '<tr><td colspan="7" style="text-align:center;">لا توجد اشتراكات</td></tr>';
+    } catch (e) {
+        adminShowError('paymentsTableBody', e);
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">تعذّر التحميل</td></tr>';
+    }
 }
 
 // ========== الشهادات ==========
@@ -716,18 +795,24 @@ function saveAdminSettings(event) {
 }
 
 // ========== سجل الدخول ==========
-function renderLoginLogs() {
+async function renderLoginLogs() {
     const tbody = document.getElementById('logsTableBody');
     if (!tbody) return;
-
-    const logs = JSON.parse(localStorage.getItem('loginLogs') || '[]');
-    tbody.innerHTML = logs.slice(0, 50).map(l => `
-        <tr>
-            <td>${l.name}</td>
-            <td>${l.email}</td>
-            <td>${l.time}</td>
-        </tr>
-    `).join('') || '<tr><td colspan="3" style="text-align:center;">لا توجد سجلات</td></tr>';
+    try {
+        const users = await getUsersAsync();
+        adminClearError('logsTableBody');
+        const list = Object.values(users).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+        tbody.innerHTML = list.slice(0, 100).map(u => `
+            <tr>
+                <td>${u.name || '-'}</td>
+                <td>${u.email || '-'}</td>
+                <td>${adminFmtDate(u.createdAt)}</td>
+            </tr>
+        `).join('') || '<tr><td colspan="3" style="text-align:center;">لا توجد سجلات</td></tr>';
+    } catch (e) {
+        adminShowError('logsTableBody', e);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">تعذّر التحميل</td></tr>';
+    }
 }
 
 // ========== إعدادات الأقسام (مجاني/مدفوع/رابط خارجي/كود دخول) ==========
@@ -817,7 +902,9 @@ async function toggleSectionActive(id, isActive) {
 async function renderSubscriptionRequests() {
     const tbody = document.getElementById('subRequestsTableBody');
     if (!tbody) return;
-    const snap = await db.collection('subscriptionRequests').orderBy('createdAt', 'desc').limit(200).get();
+    let snap;
+    try { snap = await db.collection('subscriptionRequests').orderBy('createdAt', 'desc').limit(200).get(); adminClearError('subRequestsTableBody'); }
+    catch (e) { adminShowError('subRequestsTableBody', e); tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">تعذّر التحميل</td></tr>'; return; }
     const list = [];
     snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
 
@@ -875,7 +962,9 @@ async function rejectSubscriptionRequest(reqId) {
 async function renderAccessRequests() {
     const tbody = document.getElementById('requestsTableBody');
     if (!tbody) return;
-    const snap = await db.collection('accessRequests').orderBy('createdAt', 'desc').limit(200).get();
+    let snap;
+    try { snap = await db.collection('accessRequests').orderBy('createdAt', 'desc').limit(200).get(); adminClearError('requestsTableBody'); }
+    catch (e) { adminShowError('requestsTableBody', e); tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">تعذّر التحميل</td></tr>'; return; }
     const list = [];
     snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
 
@@ -1046,7 +1135,7 @@ const SITE_CONTENT_SCHEMA = [
         { k: 'home.lecturesShow', label: 'إظهار الزر', bool: true },
         { k: 'home.lecturesTitle', label: 'العنوان', ph: 'المحاضرات' },
         { k: 'home.lecturesDesc', label: 'الوصف', ph: 'محاضرات متخصصة موثّقة بكود دخول...' },
-        { k: 'home.lecturesLink', label: 'الرابط', ph: 'lectures.html' }
+        { k: 'home.lecturesLink', label: 'الرابط', ph: 'online-lectures.html' }
     ]},
     { title: 'روابط التواصل (الزر العائم)', fields: [
         { k: 'social_whatsapp', label: 'واتساب (ثابت: 01152013172 — لا يتأثر بهذه الخانة)', ph: 'https://wa.me/201152013172' },

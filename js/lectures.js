@@ -131,7 +131,7 @@ function loadLecturePlayer() {
                 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;text-align:center;">
                     <i class="fas fa-exclamation-circle" style="font-size:48px;margin-bottom:16px;opacity:0.8;"></i>
                     <p>يرجى إدخال كود المحاضرة أولاً من صفحة المحاضرات</p>
-                    <a href="lectures.html" style="margin-top:16px;color:#81C784;font-weight:700;">الذهاب للمحاضرات</a>
+                    <a href="online-lectures.html" style="margin-top:16px;color:#81C784;font-weight:700;">الذهاب للمحاضرات</a>
                 </div>`;
         }
         return;
