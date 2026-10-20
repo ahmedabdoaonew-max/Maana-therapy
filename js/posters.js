@@ -5,7 +5,7 @@
    الرسالة الجاهزة تدعم المتغيرات: {name} {role} {price} {duration}
    ============================================================ */
 
-var PST_DEFAULT_MSG = 'السلام عليكم، أرغب في حجز جلسة مع {name} ({role}).\nسعر الجلسة: {price} — مدة الجلسة: {duration}.\nبرجاء تأكيد أقرب موعد متاح.';
+var PST_DEFAULT_MSG = 'السلام عليكم، أرغب في حجز جلسة مع {name}.\nسعر الجلسة: {price} — مدة الجلسة: {duration}.\nبرجاء تأكيد أقرب موعد متاح.';
 
 /* عينات للمعاينة فقط (أسماء وأرقام تجريبية — عدّلها أو امسحها من لوحة التحكم) */
 var PST_SAMPLES = [
@@ -23,6 +23,7 @@ function pstMessage(p) {
     var tpl = (p.message && p.message.trim()) ? p.message : PST_DEFAULT_MSG;
     var msg = tpl.replace(/\{name\}/g, p.name || '').replace(/\{role\}/g, p.role || p.badge || '')
         .replace(/\{price\}/g, p.price || '').replace(/\{duration\}/g, p.duration || '');
+    msg = msg.replace(/\s*\(\s*\)/g, '');
     try {
         var u = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
         if (u && u.name) msg += '\nالاسم: ' + u.name + (u.phone ? '\nالهاتف: ' + u.phone : '');
