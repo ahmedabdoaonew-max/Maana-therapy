@@ -42,6 +42,9 @@
                 <a href="#" data-section="online-lectures" onclick="showAdminSection('online-lectures');return false;">
                     <i class="fas fa-clapperboard"></i> باقة المحاضرات (4 أقسام)
                 </a>
+                <a href="#" data-section="posters" onclick="showAdminSection('posters');return false;">
+                    <i class="fas fa-id-card"></i> بوسترات التواصل
+                </a>
                 <a href="#" data-section="psych-doctors" onclick="showAdminSection('psych-doctors');return false;">
                     <i class="fas fa-heart-pulse"></i> أطباء جلستك النفسية
                 </a>
@@ -234,6 +237,17 @@
                         <button type="submit" class="form-submit">حفظ الرقم</button>
                     </form>
                 </div>
+            </div>
+
+            <!-- بوسترات التواصل -->
+            <div id="admin-posters" class="admin-section" style="display:none;">
+                <div class="admin-header">
+                    <h1>بوسترات التواصل</h1>
+                </div>
+                <p style="color:var(--admin-text-muted);margin-bottom:16px;font-size:0.85rem;line-height:1.8;">
+                    الكروت اللي تضيفها هنا بتظهر في الصفحة الرئيسية قبل "الأسئلة الشائعة". كل كارت فيه صورة وسعر وتفاصيل وزر واتساب برسالة جاهزة. اضغط على أي كارت لتعديله أو حذفه.
+                </p>
+                <div id="postersAdminWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
             </div>
 
             <!-- أطباء جلستك النفسية -->
@@ -670,6 +684,7 @@
     <script src="js/storage-config.js?v=1"></script>
     <script src="js/uploads.js?v=2"></script>
     <script src="js/podcast.js?v=1"></script>
+    <script src="js/posters.js?v=1"></script>
     <script src="js/admin.js?v=10"></script>
 </body>
 </html>
