@@ -45,6 +45,8 @@
             '<span class="mf-spark s1" aria-hidden="true">✦</span>' +
             '<span class="mf-spark s2" aria-hidden="true">✦</span>' +
             '<span class="mf-spark s3" aria-hidden="true">✦</span>' +
+            '<span class="mf-spark s4" aria-hidden="true">✦</span>' +
+            '<span class="mf-spark s5" aria-hidden="true">✦</span>' +
             '<span class="mf-face"><i class="fas fa-comments mf-ic-open"></i><i class="fas fa-xmark mf-ic-close"></i></span>' +
           '</button>';
   wrap.innerHTML = html;
