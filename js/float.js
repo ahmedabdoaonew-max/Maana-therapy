@@ -10,7 +10,7 @@
   var LINKS = [
     { cls: 'whatsapp',  icon: 'fab fa-whatsapp',    label: 'واتساب',   href: 'https://wa.me/201152013172' },
     { cls: 'facebook',  icon: 'fab fa-facebook-f',  label: 'فيسبوك',   href: 'https://www.facebook.com/share/1EhGyn6SYy/' },
-    { cls: 'instagram', icon: 'fab fa-instagram',   label: 'إنستجرام', href: 'https://www.instagram.com/ma3na2026' },
+    { cls: 'instagram', icon: 'fab fa-instagram',   label: 'إنستجرام', href: 'https://www.instagram.com/ma3natherapy666?utm_source=qr&mdxt=MTFnejVlYTE3bmx4Nw==' },
     { cls: 'tiktok',    icon: 'fab fa-tiktok',      label: 'تيك توك',  href: 'https://www.tiktok.com/@manamgdowxc' },
     { cls: 'youtube',   icon: 'fab fa-youtube',     label: 'يوتيوب',   href: 'https://youtube.com/@mana-j2q6e' }
   ];
