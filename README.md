@@ -47,7 +47,7 @@
 - واتساب: 01152013172
 - فيسبوك: https://www.facebook.com/share/1EhGyn6SYy/
 - تيك توك: https://www.tiktok.com/@manamgdowxc
-- إنستجرام: https://www.instagram.com/ma3na2026
+- إنستجرام: https://www.instagram.com/ma3natherapy666
 - يوتيوب: https://youtube.com/@mana-j2q6e
 
 ---

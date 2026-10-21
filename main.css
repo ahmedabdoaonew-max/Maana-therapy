@@ -5389,3 +5389,27 @@ body .pc-banner .pc-banner-go{background:#FBF3E9!important;color:var(--mauve-dee
 .logo-icon.has-logo{background:transparent!important;padding:0;overflow:hidden;width:48px;height:48px;border-radius:14px;
   box-shadow:0 0 0 2px var(--mauve-soft,#EFE0E1)!important}
 .logo-icon.has-logo img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* v13 — بطاقات البرامج بنفس تصميم بانر الجلسات ونفس درجة الموف (مش غامق) */
+:root{--mn-mauve-mid:linear-gradient(135deg,#8F6C79 0%,#9E7B87 100%)}
+.ses-banner-in,
+body #lecturesHubGrid .section-card.program-card-full{background:var(--mn-mauve-mid)!important;border:1px solid transparent!important}
+.pc-banner{background:#96737F!important}
+.pc-banner-in{background:linear-gradient(90deg,rgba(143,108,121,.45),rgba(158,123,135,.9))!important}
+body #lecturesHubGrid .section-card.program-card-full{padding:clamp(12px,1.8vw,18px);box-shadow:var(--shadow)!important}
+body #lecturesHubGrid .section-card .section-img{border-radius:calc(var(--r-lg,22px) - 8px);overflow:hidden}
+body #lecturesHubGrid .section-card .program-card-body h3{color:#fff!important}
+body #lecturesHubGrid .section-card .program-card-body p,
+body #lecturesHubGrid .section-card .program-card-body p.program-card-desc{color:#F4E8DC!important}
+body #lecturesHubGrid .program-card-full .program-intro{color:#fff!important}
+body #lecturesHubGrid .program-card-full .program-points li{color:#F4E8DC!important}
+body #lecturesHubGrid .program-card-full .program-points li i{background:rgba(251,243,233,.22)!important;color:#fff!important}
+body #lecturesHubGrid .program-age-badge{background:rgba(251,243,233,.2)!important;color:#fff!important}
+body #lecturesHubGrid .program-card-wa{background:#FBF3E9!important;color:var(--mauve-deep)!important}
+
+/* v14 — اللوجو أيقونة فقط (شفافة، من غير مربع) + عرض الاسمين متساوي */
+.logo-icon.has-logo{background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible;width:52px;height:52px}
+.logo-icon.has-logo img{object-fit:contain}
+.logo .logo-names,.footer h4 .logo-names{align-items:flex-start}
+.footer h4 .logo-names{align-items:center}
+.logo .logo-names .logo-en,.logo .logo-names .logo-ar{white-space:nowrap}
