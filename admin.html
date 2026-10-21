@@ -53,10 +53,6 @@
                 <a href="#" data-section="requests" onclick="showAdminSection('requests');return false;">
                     <i class="fas fa-user-check"></i> طلبات الموافقة (محاضرات)
                 </a>
-                <div class="admin-nav-label">النظام</div>
-                <a href="#" data-section="settings" onclick="showAdminSection('settings');return false;">
-                    <i class="fas fa-cog"></i> الإعدادات
-                </a>
                 <a href="index.html" style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;">
                     <i class="fas fa-home"></i> العودة للموقع
                 </a>
@@ -299,46 +295,6 @@
                 </table>
                 </div>
             </div>
-
-            <!-- الإعدادات -->
-            <div id="admin-settings" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>إعدادات الموقع</h1>
-                </div>
-                <div class="auth-card" style="max-width:500px;">
-                    <form onsubmit="saveAdminSettings(event)">
-                        <div class="form-group">
-                            <label>رابط السيرة الذاتية (CV)</label>
-                            <input type="url" id="settingCvUrl" placeholder="https://...">
-                        </div>
-                        <div class="form-group">
-                            <label>صورة شاشة الترحيب (دائرية)</label>
-                            <input type="text" id="settingSplashImage" placeholder="https://... أو images/splash.png">
-                        </div>
-                        <div class="form-group">
-                            <label>لوجو الموقع (الهيدر)</label>
-                            <input type="text" id="settingLogoImage" placeholder="https://... أو images/logo.png">
-                        </div>
-                        <div class="form-group">
-                            <label>صورة الموقع (أيقونة التبويب + معاينة المشاركة)</label>
-                            <input type="text" id="settingSiteImage" placeholder="https://... أو images/site-image.png">
-                        </div>
-                        <div class="form-group">
-                            <label>أيقونة البرنامج (عند إضافة الموقع كتطبيق على الجوال)</label>
-                            <input type="text" id="settingAppIcon" placeholder="https://... أو images/icons/icon-512.png">
-                        </div>
-                        <div class="form-group">
-                            <label>رقم واتساب</label>
-                            <input type="text" id="settingWhatsapp" placeholder="201152013172">
-                        </div>
-                        <div class="form-group">
-                            <label>البريد الإلكتروني للتواصل</label>
-                            <input type="email" id="settingEmail" placeholder="info@...">
-                        </div>
-                        <button type="submit" class="form-submit">حفظ الإعدادات</button>
-                    </form>
-                </div>
-            </div>
         </main>
     </div>
 
@@ -361,9 +317,14 @@
                         <input type="text" id="lecTitle" required>
                     </div>
                     <div class="form-group">
-                        <label>ملف الفيديو — مسار داخل المشروع أو رابط</label>
-                        <input type="text" id="lecUrl" required dir="ltr" placeholder="media/lectures/lec1.mp4  أو  https://www.youtube.com/watch?v=...">
-                        <small style="color:var(--admin-text-muted);display:block;margin-top:4px;">حط الفيديو في مجلد media/lectures بالمشروع واكتب مساره هنا (مثال: media/lectures/lec1.mp4)</small>
+                        <label>فيديو المحاضرة — ارفعه من جهازك</label>
+                        <div class="mn-file-box"><input type="file" id="lecFile" accept="video/*,audio/*"></div>
+                        <small style="color:var(--admin-text-muted);display:block;margin-top:4px;">الحد الأقصى 100 ميجا للملف.</small>
+                        <div id="lecUploadProgress" style="display:none;color:var(--admin-text);margin-top:6px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>أو الصق رابط (يوتيوب / درايف / رابط مباشر)</label>
+                        <input type="text" id="lecUrl" dir="ltr" placeholder="https://...">
                     </div>
                     <div class="form-group">
                         <label>السعر (جنيه مصري)</label>
@@ -502,6 +463,6 @@
     <script src="js/storage-config.js?v=1"></script>
     <script src="js/uploads.js?v=3"></script>
     <script src="js/podcast.js?v=2"></script>
-    <script src="js/admin.js?v=11"></script>
+    <script src="js/admin.js?v=12"></script>
 </body>
 </html>
