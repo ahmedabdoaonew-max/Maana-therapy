@@ -5343,3 +5343,7 @@ body .cert-hero .cert-search-box button::after{display:block!important}
   .faq-item:hover{border-color:var(--mauve,#B99A9B)}
   html{scroll-behavior:smooth}
 }
+
+/* v10 — وصف البرنامج ظاهر على الموبايل (كانت قاعدة الشاشات الصغيرة بتخفي الفقرات) */
+#lecturesHubGrid .section-card .program-card-body p{display:block!important;-webkit-line-clamp:unset!important;overflow:visible!important}
+#lecturesHubGrid .section-card .program-card-body p.program-card-desc{font-size:1rem!important;line-height:1.9!important;color:var(--ink,#333)!important;opacity:1!important;text-align:center;max-width:34em}
