@@ -5029,3 +5029,125 @@ html.is-auth #userMenu{display:flex!important}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+/* ==========================================================================
+   v3 — الموف أغلب من الزيتي + الاسم ثنائي اللغة في الهيدر + بوستر البانر
+   (آخر قسم في الملف — لتعديل نسبة الموف غيّر المتغيرات هنا)
+   ========================================================================== */
+:root{
+  --mn-mauve-grad:linear-gradient(135deg,#7A5764 0%,#8A6674 45%,#A47F89 100%);
+  --mn-mauve-grad-soft:linear-gradient(135deg,#8A6674,#A98A92 60%,#BA969A);
+}
+
+/* الهيدر: اسم عربي + إنجليزي */
+.logo{align-items:center}
+.logo .logo-names{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;gap:2px}
+.logo .logo-names .logo-en{font-size:1.12rem;font-weight:700;color:var(--mauve-deep)}
+.logo .logo-names .logo-ar{font-size:.86rem;font-weight:600;color:var(--moss);letter-spacing:.02em}
+.logo-icon{background:var(--mauve-deep)!important;color:#fff!important}
+.header{border-bottom:2px solid var(--mauve)!important}
+@media(max-width:380px){.logo .logo-names .logo-en{font-size:.98rem}.logo .logo-names .logo-ar{font-size:.78rem}}
+
+/* أسطح كبيرة: من الزيتي إلى الموف */
+.footer,.splash-screen,.page-hero,.lg-hero,.ol-hero,.psych-hero{background:var(--mn-mauve-grad)!important;background-image:var(--mn-mauve-grad)!important;color:var(--paper)!important;animation:none}
+.cert-hero{background:var(--mn-mauve-grad)!important;animation:none!important;color:var(--paper)!important}
+.mn-hero{background:radial-gradient(900px 520px at 12% 115%,rgba(251,243,233,.16),transparent 62%),var(--mn-mauve-grad)}
+.mn-wide{background:var(--mn-mauve-grad)!important}
+.mn-wave{background:var(--mauve-deep)}
+.footer{border-top:4px solid var(--paper)}
+.ol-lectures-panel-header,.nav-drawer-head{background:var(--mauve-deep)!important;color:#fff!important}
+
+/* أزرار وعناصر تفاعلية */
+.btn-primary,.nav-links .btn-primary,.form-submit,.mobile-menu-btn,.cert-search-box button,.toast,.payment-steps .active,.cv-tab.active,.profile-avatar,.pst-cta,
+.doctor-whatsapp-btn,.ol-watch-btn,.program-book-btn,.cv-btn{background:var(--mauve-deep)!important;color:#fff!important}
+.btn-outline{border-color:var(--mauve-deep)!important;color:var(--mauve-deep)!important}
+.btn-outline:hover,.ol-back-btn:hover{background:var(--mauve-deep)!important;color:#fff!important}
+.lecture-card .lecture-thumb,.lg-cover-placeholder,.ol-cat-card .ol-cat-icon{background:var(--mn-mauve-grad-soft)!important}
+#sections-grid .section-img{background:var(--mn-mauve-grad-soft)!important}
+
+/* العناوين */
+.section-header h2,.ses-banner-txt h2,.mh-panel-head h2{color:var(--mauve-deep)}
+.section-card{border-color:rgba(138,102,116,.28)}
+.section-card .section-body h3{color:var(--mauve-deep)}
+
+/* قسم البرامج الرئيسي بعد بانر الأونلاين */
+.main-programs{max-width:1180px;margin:clamp(26px,4vw,48px) auto 0;padding:0 22px}
+.main-programs .sections-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2.2vw,26px)}
+@media(max-width:820px){.main-programs{padding:0 14px}.main-programs .sections-grid{grid-template-columns:1fr}}
+
+/* بوستر معنى داخل البانر الأول (بعد زرار الحجز) */
+.ses-banner-poster{grid-column:1/-1;margin:clamp(6px,1.4vw,14px) 0 0;border-radius:calc(var(--r-lg) - 8px);overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(138,102,116,.25)}
+.ses-banner-poster img{display:block;width:100%;height:auto}
+.ses-banner-in{background:linear-gradient(135deg,#fff 0%,var(--mauve-soft) 70%,#E6CDD0 100%)}
+
+/* الهيرو الرئيسي: موف عميق بدل الزيتي الداكن */
+.hero{background:linear-gradient(135deg,#5E4352,#7A5764 55%,#8A6674)!important}
+.hero::before{background:radial-gradient(900px 480px at 85% 0%,rgba(251,243,233,.14),transparent 60%),linear-gradient(180deg,rgba(94,67,82,.35),rgba(94,67,82,.75))!important}
+.sections-area .section-header h2,.main-programs .section-header h2{color:var(--mauve-deep)!important}
+.pc-banner::after,.pc-banner .pc-banner-in{--pc-tint:rgba(94,67,82,.55)}
+.pc-banner{background:#5E4352!important}
+.pc-banner-in{background:linear-gradient(90deg,rgba(94,67,82,.35),rgba(94,67,82,.82))!important}
+.pc-banner-go{background:var(--mauve)!important;color:var(--ink)!important}
+
+/* ==========================================================================
+   v4 — العاجي والموف أغلب من الزيتي: الزيتي بقى لمسة صغيرة بس
+   (غيّر المتغيرات دي لو عايز تظبط الدرجات)
+   ========================================================================== */
+:root{
+  --paper:#FDF8F1;                 /* عاجي أفتح وأدفأ */
+  --sand:#F4E8DC;                  /* عاجي-وردي بدل البيج */
+  --beige-light:#FDF8F1;
+  --bg:#FDF8F1;
+  --moss:#6A4A59;                  /* كان زيتي — بقى موف داكن */
+  --moss-2:#7A5764;
+  --ink:#43303A;                   /* نصوص بنية-موف بدل الزيتي الداكن */
+  --text-dark:#43303A;
+  --primary:#8A6674;--primary-dark:#6A4A59;--primary-blue:#8A6674;
+  --muted:#7A6670;
+  --line:rgba(138,102,116,.22);
+  --olive-accent:#5A6445;          /* الزيتي كلمسة صغيرة فقط */
+}
+body{background:var(--paper);color:var(--ink)}
+.section-card .section-body h3,.mn-path strong,.mn-path i{color:var(--mauve-deep)}
+.mn-path i{background:var(--mauve-soft)}
+.mn-path:hover{border-color:var(--mauve)}
+.gold-divider{background:linear-gradient(90deg,transparent,var(--mauve),transparent)!important}
+.hero-badge,.hero .stat-number{color:#F1DDE0!important}
+.footer a,.footer li,.footer p{color:#F4E8DC}
+/* الزيتي لمسة: أيقونات التحقق والتفاصيل الصغيرة */
+.hero .hero-card li i,.program-points li i{color:var(--olive-accent)}
+.hero .hero-card li i{color:#F1DDE0}
+.pc-nav,.pc-dot.on{background:var(--mauve-deep)}
+.program-age-badge{background:var(--mauve-soft)!important;color:var(--mauve-deep)!important}
+
+/* ==========================================================================
+   v5 — إلغاء كل الحركة في الموقع، وإبقاؤها فقط على:
+        «سلّي نفسك» و«تنمية المهارات» وأزرار التنبيه (جرس الإشعارات)
+   ========================================================================== */
+*,*::before,*::after{animation:none!important}
+
+/* عناصر كانت مخفية لحد ما الحركة تظهرها — نثبّتها ظاهرة */
+.mn-path,.mn-wide,.mn-cta,.mn-hero h1,.mn-hero p.lead{opacity:1!important}
+.mn-thread path:not(.flow):not(.flow2){stroke-dashoffset:0!important}
+.mn-thread circle.end{opacity:1!important}
+.mn-thread circle.runner,.mn-thread path.flow,.mn-thread path.flow2,.mn-thread circle.end-ring,.mn-spark,.mf-spark,.mf-pulse{opacity:0!important}
+
+/* استثناءات وظيفية (مؤشرات التحميل) */
+.splash-progress span{animation:splashBar 1.3s ease-in-out infinite!important}
+.fa-spin,.fa-spinner,.spinner,.loader{animation:spin 1s linear infinite!important}
+
+/* الحركة المسموحة */
+@keyframes attnBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.04)}}
+@keyframes attnGlow{0%,100%{box-shadow:0 0 0 0 rgba(138,102,116,.0)}50%{box-shadow:0 0 0 9px rgba(138,102,116,.22),0 0 26px rgba(186,150,154,.55)}}
+@keyframes attnIcon{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(-8deg)}}
+@keyframes attnBell{0%,70%,100%{transform:rotate(0)}74%{transform:rotate(16deg)}78%{transform:rotate(-14deg)}82%{transform:rotate(11deg)}86%{transform:rotate(-8deg)}90%{transform:rotate(4deg)}}
+@keyframes attnBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+
+a[href*="carrot-dash"],a[href*="skills-module/skills.html"]{animation:attnBob 2.6s ease-in-out infinite,attnGlow 2.6s ease-in-out infinite!important}
+a[href*="carrot-dash"] i,a[href*="skills-module/skills.html"] i{animation:attnIcon 2.6s ease-in-out infinite!important}
+a[href*="skills-module/skills.html"].mn-path i::after{animation:none!important}
+
+.notif-bell-btn{animation:attnBell 3.2s ease-in-out infinite!important;transform-origin:50% 12%}
+.notif-badge{animation:attnBadge 1.4s ease-in-out infinite!important}
+@media(prefers-reduced-motion:reduce){a[href*="carrot-dash"],a[href*="skills-module/skills.html"],a[href*="carrot-dash"] i,a[href*="skills-module/skills.html"] i,.notif-bell-btn,.notif-badge{animation:none!important}}
+.mn-hero h1,.mn-hero h1.mn-title,.mn-hero .mn-title{animation:none!important;opacity:1!important}
