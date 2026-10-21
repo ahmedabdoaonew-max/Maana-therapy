@@ -1,14 +1,14 @@
 {
   "id": "/",
-  "name": "Maana Therapy",
-  "short_name": "Maana",
-  "description": "Maana Therapy — معنى ثيرابي | معني لكل حكايه. منصة متخصصة في الصحة النفسية والروحية.",
+  "name": "maعna Therapy | مــعــنــى ثــيــرابــي",
+  "short_name": "maعna",
+  "description": "maعna Therapy — مــعــنــى ثــيــرابــي | معني لكل حكايه. منصة متخصصة في الصحة النفسية والروحية.",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#F8F3EA",
-  "theme_color": "#333A26",
+  "theme_color": "#8A6674",
   "lang": "ar",
   "dir": "rtl",
   "icons": [
