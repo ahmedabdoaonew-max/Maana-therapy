@@ -5384,3 +5384,8 @@ body .cert-hero .cert-search-box button::after{display:block!important}
 .pc-banner-in{background:linear-gradient(90deg,rgba(122,87,100,.45),rgba(138,102,116,.9))!important}
 body .ses-banner .program-book-btn,
 body .pc-banner .pc-banner-go{background:#FBF3E9!important;color:var(--mauve-deep)!important}
+
+/* v12 — اللوجو في الهيدر (بدل أيقونة اللوتس) */
+.logo-icon.has-logo{background:transparent!important;padding:0;overflow:hidden;width:48px;height:48px;border-radius:14px;
+  box-shadow:0 0 0 2px var(--mauve-soft,#EFE0E1)!important}
+.logo-icon.has-logo img{display:block;width:100%;height:100%;object-fit:cover}
