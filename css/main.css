@@ -5391,11 +5391,11 @@ body .pc-banner .pc-banner-go{background:#FBF3E9!important;color:var(--mauve-dee
 .logo-icon.has-logo img{display:block;width:100%;height:100%;object-fit:cover}
 
 /* v13 — بطاقات البرامج بنفس تصميم بانر الجلسات ونفس درجة الموف (مش غامق) */
-:root{--mn-mauve-mid:linear-gradient(135deg,#8F6C79 0%,#9E7B87 100%)}
+:root{--mn-mauve-mid:linear-gradient(135deg,#AB8894 0%,#BA9BA5 100%)}
 .ses-banner-in,
 body #lecturesHubGrid .section-card.program-card-full{background:var(--mn-mauve-mid)!important;border:1px solid transparent!important}
-.pc-banner{background:#96737F!important}
-.pc-banner-in{background:linear-gradient(90deg,rgba(143,108,121,.45),rgba(158,123,135,.9))!important}
+.pc-banner{background:#B08E99!important}
+.pc-banner-in{background:linear-gradient(90deg,rgba(171,136,148,.45),rgba(186,155,165,.9))!important}
 body #lecturesHubGrid .section-card.program-card-full{padding:clamp(12px,1.8vw,18px);box-shadow:var(--shadow)!important}
 body #lecturesHubGrid .section-card .section-img{border-radius:calc(var(--r-lg,22px) - 8px);overflow:hidden}
 body #lecturesHubGrid .section-card .program-card-body h3{color:#fff!important}
@@ -5413,3 +5413,31 @@ body #lecturesHubGrid .program-card-wa{background:#FBF3E9!important;color:var(--
 .logo .logo-names,.footer h4 .logo-names{align-items:flex-start}
 .footer h4 .logo-names{align-items:center}
 .logo .logo-names .logo-en,.logo .logo-names .logo-ar{white-space:nowrap}
+
+/* v15 — موف أفتح للبرامج والبانرات + ظل خفيف للنص الأبيض عشان يفضل واضح */
+body #lecturesHubGrid .section-card .program-card-body h3,
+body #lecturesHubGrid .section-card .program-card-body p,
+body #lecturesHubGrid .program-card-full .program-points li,
+.ses-banner-txt h2,.ses-banner-txt p,.pc-banner-txt h2,.pc-banner-txt p{text-shadow:0 1px 2px rgba(80,50,62,.35)}
+body #lecturesHubGrid .section-card .program-card-body p,
+body #lecturesHubGrid .section-card .program-card-body p.program-card-desc,
+body #lecturesHubGrid .program-card-full .program-points li{color:#FFF8F1!important}
+
+/* v15 — البرامج: موف أفتح + كل الكتابة على اليمين */
+:root{--mn-mauve-mid:linear-gradient(135deg,#B08C99 0%,#BE9CA8 100%)}
+body #lecturesHubGrid .section-card.program-card-full{background:var(--mn-mauve-mid)!important}
+body #lecturesHubGrid .section-card .program-card-body h3,
+body #lecturesHubGrid .section-card .program-card-body p,
+body #lecturesHubGrid .program-card-full .program-points li{text-shadow:0 1px 2px rgba(80,46,58,.35)}
+body #lecturesHubGrid .section-card .program-card-body{align-items:flex-start!important;text-align:right!important}
+body #lecturesHubGrid .section-card .program-card-body>*{text-align:right!important;margin-left:0!important;margin-right:0!important}
+body #lecturesHubGrid .section-card .program-card-body h3{justify-content:flex-start!important;width:100%}
+body #lecturesHubGrid .section-card .program-card-body p,
+body #lecturesHubGrid .section-card .program-card-body p.program-card-desc{text-align:right!important;max-width:none!important;width:100%}
+body #lecturesHubGrid .program-card-full .program-intro{text-align:right!important}
+body #lecturesHubGrid .program-card-full .program-points{align-items:flex-start!important;text-align:right!important}
+body #lecturesHubGrid .program-card-full .program-points li{flex-direction:row!important;align-items:flex-start!important;justify-content:flex-start!important;text-align:right!important;gap:10px}
+body #lecturesHubGrid .program-card-full .program-points li i{margin-top:6px!important}
+body #lecturesHubGrid .program-card-full .program-points li span{text-align:right!important}
+body #lecturesHubGrid .program-age-badge{align-self:flex-start!important}
+body #lecturesHubGrid .program-card-wa{align-self:flex-start!important}
