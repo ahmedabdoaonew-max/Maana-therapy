@@ -50,22 +50,29 @@ function showAdminSection(section) {
     if (navLink) navLink.classList.add('active');
 
     // تحميل البيانات حسب القسم
-    if (section === 'site-content') renderSiteContentForm();
-    if (section === 'lectures') renderAdminLectures();
-    if (section === 'online-lectures') renderAdminOnlineLectures(1);
+    if (section === 'lectures') showLecturesTab(window.__lecTab || 'paid');
     if (section === 'podcast') renderAdminPodcast();
     if (section === 'psych-doctors') renderAdminPsychDoctors();
-    if (section === 'posters') renderAdminPosters();
     if (section === 'users') renderAdminUsers();
-    if (section === 'views') renderAdminViews();
     if (section === 'payments') renderAdminPayments();
     if (section === 'certificates') renderAdminCertificates();
-    if (section === 'sub-requests') renderSubscriptionRequests();
     if (section === 'settings') loadAdminSettings();
-    if (section === 'logs') renderLoginLogs();
     if (section === 'requests') renderAccessRequests();
-    if (section === 'paymethods') renderPayMethods();
-    if (section === 'sections') renderSectionSettings();
+}
+
+// ========== تبويبات قسم المحاضرات (المحاضرات والأكواد + باقة المحاضرات) ==========
+function showLecturesTab(tab) {
+    window.__lecTab = tab = (tab === 'package') ? 'package' : 'paid';
+    var paid = document.getElementById('lecPane-paid');
+    var pack = document.getElementById('lecPane-package');
+    var addBtn = document.getElementById('lecAddBtn');
+    if (paid) paid.style.display = tab === 'paid' ? 'block' : 'none';
+    if (pack) pack.style.display = tab === 'package' ? 'block' : 'none';
+    if (addBtn) addBtn.style.display = tab === 'paid' ? '' : 'none';
+    document.querySelectorAll('#lecturesTabs .admin-tab').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+    if (tab === 'paid') renderAdminLectures(); else renderAdminOnlineLectures(1);
 }
 
 // ========== مساعد: عرض سبب فشل تحميل البيانات (مثلاً قواعد Firestore) ==========

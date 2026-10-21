@@ -36,7 +36,7 @@ function mnPrepareImage(file, maxSide, quality) {
 
 /** يرفع صورة (شهادة / صورة متدرب) على Cloudinary لو متفعّل، وإلا يخزّنها مصغّرة داخل Firestore. يرجّع { url, path } */
 function mnUploadFile(file, folder, onProgress) {
-    if (/^(certificates|posters)\//.test(folder || '') && typeof mnStorageReady === 'function' && mnStorageReady() && file && /^image\//.test(file.type)) {
+    if (/^(certificates|posters|psych-doctors|podcast)\//.test(folder || '') && typeof mnStorageReady === 'function' && mnStorageReady() && file && /^image\//.test(file.type)) {
         return mnPrepareImage(file, 1800, 0.88).then(function (small) { return mnCloudUpload(small, 'maana/' + folder, onProgress); }).then(function (r) { return { url: r.url, path: '' }; });
     }
     return mnUploadFileLocal(file, folder, onProgress);
@@ -131,6 +131,38 @@ function mnCloudUpload(file, folder, onProgress) {
                 resolve({ url: res.secure_url, path: res.public_id || '' });
             } else {
                 reject(new Error((res.error && res.error.message) || 'فشل رفع الصورة'));
+            }
+        };
+        xhr.onerror = function () { reject(new Error('تعذّر الاتصال أثناء الرفع — تحقق من الإنترنت')); };
+        xhr.send(fd);
+    });
+}
+
+
+/** يرفع ملف صوت أو فيديو من الجهاز إلى Cloudinary (مجاني — حد الملف الواحد 100 ميجا). يرجّع { url, path, isVideo } */
+var MN_MEDIA_MAX_MB = 100;
+function mnCloudUploadMedia(file, folder, onProgress) {
+    return new Promise(function (resolve, reject) {
+        if (!file || !/^(audio|video)\//.test(file.type || '')) return reject(new Error('اختار ملف صوت أو فيديو'));
+        if (file.size > MN_MEDIA_MAX_MB * 1024 * 1024) return reject(new Error('الملف أكبر من ' + MN_MEDIA_MAX_MB + ' ميجا — ضغّطه أو ارفعه على يوتيوب (غير مدرج) والصق الرابط'));
+        if (!mnStorageReady()) return reject(new Error('فعّل Cloudinary من js/storage-config.js'));
+        var cfg = window.MN_CLOUDINARY;
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', cfg.uploadPreset);
+        if (folder) fd.append('folder', folder);
+        var xhr = new XMLHttpRequest();
+        // الصوت والفيديو الاتنين بيترفعوا على resource_type = video في Cloudinary
+        xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + encodeURIComponent(cfg.cloudName) + '/video/upload');
+        xhr.upload.onprogress = function (e) { if (e.lengthComputable && onProgress) onProgress(e.loaded / e.total); };
+        xhr.onload = function () {
+            var res = {};
+            try { res = JSON.parse(xhr.responseText); } catch (e) {}
+            if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
+                if (onProgress) onProgress(1);
+                resolve({ url: res.secure_url, path: res.public_id || '', isVideo: /^video\//.test(file.type) });
+            } else {
+                reject(new Error((res.error && res.error.message) || 'فشل رفع الملف'));
             }
         };
         xhr.onerror = function () { reject(new Error('تعذّر الاتصال أثناء الرفع — تحقق من الإنترنت')); };

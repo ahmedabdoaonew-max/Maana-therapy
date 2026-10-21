@@ -93,7 +93,7 @@ function psychRenderAdmin() {
             <form onsubmit="psychSaveDoctor(event, '${d.id}')" style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="form-group"><label>اسم الطبيب</label><input type="text" name="name" value="${(d.name || '').replace(/"/g, '&quot;')}" required></div>
                 <div class="form-group"><label>التخصص (اختياري)</label><input type="text" name="role" value="${(d.role || '').replace(/"/g, '&quot;')}" placeholder="مثال: استشاري نفسي"></div>
-                <div class="form-group" style="grid-column:1/-1;"><label>رابط صورة الطبيب</label><input type="text" name="photo" value="${(d.photo || '').replace(/"/g, '&quot;')}" placeholder="https://..."></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>صورة الطبيب — من الجهاز</label>${d.photo ? `<img class="mn-photo-prev" src="${d.photo}" alt="">` : ''}<div class="mn-file-box"><input type="file" name="photoFile" accept="image/*"></div><input type="hidden" name="photo" value="${(d.photo || '').replace(/"/g, '&quot;')}"></div>
                 <div class="form-group"><label>رقم واتساب (بصيغة دولية بدون + مثال: 201152013172)</label><input type="text" name="whatsapp" value="${(d.whatsapp || '').replace(/"/g, '&quot;')}" required placeholder="201152013172"></div>
                 <div class="form-group"><label>ترتيب العرض</label><input type="number" name="order" value="${d.order || 0}"></div>
                 <div class="form-group" style="grid-column:1/-1;">
@@ -112,7 +112,7 @@ function psychRenderAdmin() {
             <form onsubmit="psychAddDoctor(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="form-group"><label>اسم الطبيب</label><input type="text" name="name" required></div>
                 <div class="form-group"><label>التخصص (اختياري)</label><input type="text" name="role" placeholder="مثال: استشاري نفسي"></div>
-                <div class="form-group" style="grid-column:1/-1;"><label>رابط صورة الطبيب</label><input type="text" name="photo" placeholder="https://..."></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>صورة الطبيب — من الجهاز</label><div class="mn-file-box"><input type="file" name="photoFile" accept="image/*"></div><input type="hidden" name="photo" value=""></div>
                 <div class="form-group"><label>رقم واتساب (بصيغة دولية بدون + مثال: 201152013172)</label><input type="text" name="whatsapp" required placeholder="201152013172"></div>
                 <div class="form-group"><label>ترتيب العرض</label><input type="number" name="order" value="${psychDoctorsAdminData.list.length + 1}"></div>
                 <div class="form-group" style="align-self:end;">
@@ -129,13 +129,26 @@ function psychRenderAdmin() {
         ${itemsHtml || '<p style="color:var(--admin-text-muted);">لا يوجد أطباء بعد.</p>'}`;
 }
 
+/** يرفع صورة الطبيب من الجهاز (Cloudinary لو متفعّل) ويرجّع الرابط، أو الرابط القديم لو مفيش ملف جديد */
+async function psychUploadPhoto(f) {
+    const file = f.photoFile && f.photoFile.files[0];
+    if (!file) return f.photo.value.trim();
+    const small = await mnPrepareImage(file, 900);
+    const r = await mnUploadFile(small, 'psych-doctors/photos');
+    return r.url;
+}
+
 async function psychAddDoctor(event) {
     event.preventDefault();
     const f = event.target;
+    const btn = f.querySelector('button[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'جاري الحفظ...'; }
+    let photoUrl;
+    try { photoUrl = await psychUploadPhoto(f); } catch (e) { console.error(e); showToast('فشل رفع الصورة: ' + (e.message || ''), 'error'); if (btn) { btn.disabled = false; btn.textContent = 'إضافة الطبيب'; } return; }
     const data = {
         name: f.name.value.trim(),
         role: f.role.value.trim(),
-        photo: f.photo.value.trim(),
+        photo: photoUrl,
         whatsapp: f.whatsapp.value.trim().replace(/[^0-9]/g, ''),
         order: Number(f.order.value) || 0,
         active: !!f.active.checked,
@@ -148,10 +161,14 @@ async function psychAddDoctor(event) {
 async function psychSaveDoctor(event, docId) {
     event.preventDefault();
     const f = event.target;
+    const btn = f.querySelector('button[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'جاري الحفظ...'; }
+    let photoUrl;
+    try { photoUrl = await psychUploadPhoto(f); } catch (e) { console.error(e); showToast('فشل رفع الصورة: ' + (e.message || ''), 'error'); if (btn) { btn.disabled = false; btn.textContent = 'حفظ بيانات الطبيب'; } return; }
     const patch = {
         name: f.name.value.trim(),
         role: f.role.value.trim(),
-        photo: f.photo.value.trim(),
+        photo: photoUrl,
         whatsapp: f.whatsapp.value.trim().replace(/[^0-9]/g, ''),
         order: Number(f.order.value) || 0,
         active: !!f.active.checked,

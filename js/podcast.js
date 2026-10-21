@@ -350,8 +350,8 @@ function pcRenderAdmin() {
             pcAdminInput('الترتيب', '<input type="number" name="order" value="' + (pcAdmin.eps.length + 1) + '">') +
             pcAdminInput('وصف الحلقة', '<textarea name="description" rows="3"></textarea>', true) +
             pcAdminInput('صورة الغلاف (اختياري — من الجهاز)', '<input type="file" name="cover" accept="image/*">') +
-            pcAdminInput('مسار ملف الحلقة داخل المشروع (مثال: media/podcast/ep1.mp3) أو رابط', '<input type="text" name="mediaUrl" placeholder="media/podcast/ep1.mp3" required dir="ltr">') +
-            pcAdminInput('نوع الحلقة', '<select name="mediaType"><option value="audio">صوت</option><option value="video">فيديو</option></select>') +
+            pcAdminInput('ملف الحلقة — صوت أو فيديو من جهازك', '<div class="mn-file-box"><input type="file" name="mediaFile" accept="audio/*,video/*"><small style="display:block;margin-top:6px;opacity:.75;">الحد الأقصى 100 ميجا للملف. النوع (صوت/فيديو) بيتحدد تلقائياً.</small></div>', true) +
+            pcAdminInput('أو الصق رابط (يوتيوب / درايف / رابط مباشر) بدل الرفع', '<input type="text" name="mediaUrl" placeholder="https://..." dir="ltr">', true) +
             '<div style="grid-column:1/-1;"><label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="published" checked> منشورة على الموقع</label></div>' +
             '<div style="grid-column:1/-1;"><div id="pcAddProgress" style="display:none;color:var(--admin-text);"></div></div>' +
             '<div style="grid-column:1/-1;"><button type="submit" class="form-submit" style="width:auto;padding:10px 28px;"><i class="fas fa-paper-plane"></i> نشر الحلقة</button></div>' +
@@ -373,8 +373,9 @@ function pcRenderAdmin() {
                 pcAdminInput('الترتيب', '<input type="number" name="order" value="' + (e.order || 0) + '">') +
                 pcAdminInput('الوصف', '<textarea name="description" rows="3">' + pcEsc(e.description || '') + '</textarea>', true) +
                 pcAdminInput('استبدال الغلاف (اختياري)', '<input type="file" name="cover" accept="image/*">') +
-                pcAdminInput('مسار الحلقة (ملف داخل المشروع أو رابط)', '<input type="text" name="mediaUrl" value="' + pcEsc((pcAdmin.media && pcAdmin.media[e.id]) || '') + '" dir="ltr">') +
-                pcAdminInput('نوع الحلقة', '<select name="mediaType"><option value="audio"' + (e.mediaType === 'video' ? '' : ' selected') + '>صوت</option><option value="video"' + (e.mediaType === 'video' ? ' selected' : '') + '>فيديو</option></select>') +
+                pcAdminInput('استبدال ملف الحلقة من جهازك (اختياري — صوت أو فيديو)', '<div class="mn-file-box"><input type="file" name="mediaFile" accept="audio/*,video/*"></div>', true) +
+                pcAdminInput('الرابط الحالي / رابط بديل', '<input type="text" name="mediaUrl" value="' + pcEsc((pcAdmin.media && pcAdmin.media[e.id]) || '') + '" dir="ltr">', true) +
+                '<input type="hidden" name="mediaType" value="' + (e.mediaType === 'video' ? 'video' : 'audio') + '">' +
                 '<div style="grid-column:1/-1;"><label style="color:var(--admin-text);display:flex;gap:8px;align-items:center;"><input type="checkbox" name="published"' + (e.published === false ? '' : ' checked') + '> منشورة على الموقع</label></div>' +
                 '<div style="grid-column:1/-1;"><div class="pcEpProgress" style="display:none;color:var(--admin-text);"></div></div>' +
                 '<div style="grid-column:1/-1;display:flex;gap:10px;"><button type="submit" class="form-submit" style="width:auto;padding:10px 24px;">حفظ التعديلات</button>' +
@@ -449,12 +450,20 @@ async function pcAddEpisode(ev) {
     var f = ev.target;
     if (!f.categoryId.value) { showToast('أضف قسماً فرعياً أولاً', 'error'); return; }
     var mediaUrl = (f.mediaUrl.value || '').trim();
-    if (!pcValidMedia(mediaUrl)) { showToast('اكتب مسار الحلقة (مثال: media/podcast/ep1.mp3) أو رابطاً صحيحاً', 'error'); return; }
+    var mediaFile = f.mediaFile && f.mediaFile.files[0];
+    if (!mediaFile && !pcValidMedia(mediaUrl)) { showToast('ارفع ملف الحلقة من جهازك أو الصق رابطاً صحيحاً', 'error'); return; }
     var btn = f.querySelector('button[type=submit]');
     btn.disabled = true;
     var ui = mnProgressUI(document.getElementById('pcAddProgress'));
     try {
         var duration = 0;
+        var uploadedType = '';
+        if (mediaFile) {
+            duration = await mnMediaDuration(mediaFile);
+            var up = await mnCloudUploadMedia(mediaFile, 'maana/podcast/media', function (p) { ui.set(p, 'رفع الحلقة'); });
+            mediaUrl = up.url;
+            uploadedType = up.isVideo ? 'video' : 'audio';
+        }
         var openToAll = f.openToAll.checked;
         var cover = null;
         if (f.cover.files[0]) {
@@ -466,7 +475,7 @@ async function pcAddEpisode(ev) {
         batch.set(ref, {
             title: f.title.value.trim(), description: f.description.value.trim(), host: f.host.value.trim(),
             categoryId: f.categoryId.value, price: 0, openToAll: openToAll, order: Number(f.order.value) || 0,
-            published: f.published.checked, mediaType: (/\.(mp4|webm|mov)(\?|$)/i.test(mediaUrl)) ? 'video' : f.mediaType.value,
+            published: f.published.checked, mediaType: uploadedType || ((/\.(mp4|webm|mov)(\?|$)/i.test(mediaUrl)) ? 'video' : 'audio'),
             duration: duration, coverUrl: cover ? cover.url : '', createdAtMs: Date.now()
         });
         batch.set(db.collection('podcastMedia').doc(ref.id), { url: mediaUrl, free: openToAll });
@@ -496,6 +505,15 @@ async function pcSaveEpisode(ev, id) {
         };
         var mediaPatch = { free: openToAll };
         var newUrl = (f.mediaUrl.value || '').trim();
+        var newFile = f.mediaFile && f.mediaFile.files[0];
+        if (newFile) {
+            patch.duration = await mnMediaDuration(newFile);
+            var up = await mnCloudUploadMedia(newFile, 'maana/podcast/media', function (p) { ui.set(p, 'رفع الحلقة'); });
+            newUrl = up.url;
+            patch.mediaType = up.isVideo ? 'video' : 'audio';
+        } else if (/\.(mp4|webm|mov)(\?|$)/i.test(newUrl)) {
+            patch.mediaType = 'video';
+        }
 
         if (newUrl) {
             if (!pcValidMedia(newUrl)) throw new Error('مسار/رابط الحلقة غير صحيح');
