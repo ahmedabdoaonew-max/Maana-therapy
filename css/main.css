@@ -5227,3 +5227,50 @@ a[href*="skills-module/skills.html"].mn-path i::after{animation:none!important}
 .mn-hero .mn-thread circle.end-ring{animation:mnRipple 2.4s ease-out 4.4s infinite!important}
 .mn-hero .mn-thread circle.runner{display:block!important;fill:#FFF3D0;opacity:0;animation:mnShow .3s ease 4.5s forwards!important}
 .mn-hero .mn-thread{animation:mnFloat 6s ease-in-out infinite!important}
+
+/* =========================================================
+   v7 — حركة الهيرو الاحترافية + تهدئة باقي الأزرار
+   ========================================================= */
+
+/* --- باقي أزرار الموقع: ثابتة (إلغاء حركة النبض/الوهج الجماعية) --- */
+body .mn-cta .ghost,
+body .mn-path,body .mn-wide,body .cv-btn,body .btn-primary,body .btn-outline,body .program-book-btn,
+body .pc-banner-go,body .pst-cta,body .doctor-whatsapp-btn,body .cert-search-box,body .cert-search-box button,
+body a[href*="carrot-dash"],body a[href*="skills-module/skills.html"],
+body .mn-wide-go,body .notif-bell-btn{animation:none!important}
+body .mn-cta .ghost i,body .mn-path i,body .mn-wide-ic i,body .cv-btn i,body .btn-primary i,body .btn-outline i,
+body .program-book-btn i,body .pc-banner-go i,body .pst-cta i,body .doctor-whatsapp-btn i,
+body a[href*="carrot-dash"] i,body a[href*="skills-module/skills.html"] i{animation:none!important}
+body .cert-search-box button::after{display:none!important}
+
+/* --- زر احجز جلسة نفسية: حلقة جواهر بتلف دائرياً + لمعة --- */
+body .mn-cta .primary{
+  background:linear-gradient(135deg,#F8EBCB,#D5B477)!important;color:#2B2220!important;
+  position:relative;isolation:isolate;overflow:visible;
+  animation:mnBtnBob 3.6s ease-in-out infinite!important;
+  box-shadow:0 0 26px rgba(213,180,119,.45),0 10px 28px rgba(94,67,82,.3)!important}
+body .mn-cta .primary::before{
+  display:block!important;content:"";position:absolute;inset:-3px;padding:3px;border-radius:inherit;z-index:1;pointer-events:none;
+  background:conic-gradient(from var(--mnAng),#FFF3D0,#D5B477,#F6C7CF,#B99A9B,#FFF3D0,#E9C46A,#F6C7CF,#FFF3D0);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:mnSpin 3.2s linear infinite!important;
+  filter:drop-shadow(0 0 7px rgba(246,199,207,.85))}
+body .mn-cta .primary::after{
+  display:block!important;content:"";position:absolute;inset:0;border-radius:inherit;z-index:2;pointer-events:none;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.7) 50%,transparent 65%);background-size:250% 100%;
+  mix-blend-mode:soft-light;animation:mnSweep 3.2s ease-in-out infinite!important}
+body .mn-cta .primary i{animation:mnHeart 1.6s ease-in-out infinite!important}
+
+/* --- الخيط: تدفّق ضوء مستمر + توهّج --- */
+.mn-hero .mn-thread path.main{stroke:var(--gold)!important;opacity:.95;filter:drop-shadow(0 0 5px rgba(213,180,119,.55))}
+.mn-hero .mn-thread path.flow{stroke:#FFF1C9!important;stroke-width:3.6!important;stroke-dasharray:70 380!important;stroke-dashoffset:0;opacity:0;
+  animation:mnFlow 4.2s linear 2.6s infinite,mnShow .6s ease 2.6s forwards!important}
+.mn-hero .mn-thread path.flow3{stroke:#F6C7CF!important;stroke-width:2.6!important;stroke-dasharray:46 404!important;
+  animation:mnFlow 4.2s linear -2.1s infinite,mnShow .6s ease 2.8s forwards!important}
+.mn-hero .mn-thread path.soft.flow2{stroke:#F3C9BD!important;stroke-dasharray:36 160!important;opacity:0;
+  animation:mnFlow 3.2s linear 1.8s infinite,mnShow .6s ease 1.8s forwards!important}
+.mn-hero .mn-thread circle.runner{display:block!important;fill:#FFF3D0;opacity:0;animation:mnShow .3s ease 3s forwards!important}
+
+/* --- البرامج ظاهرة دايماً --- */
+#lecturesHubGrid .section-card{opacity:1!important;transform:none!important}
