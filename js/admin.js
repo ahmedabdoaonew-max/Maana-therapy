@@ -56,7 +56,6 @@ function showAdminSection(section) {
     if (section === 'users') renderAdminUsers();
     if (section === 'payments') renderAdminPayments();
     if (section === 'certificates') renderAdminCertificates();
-    if (section === 'settings') loadAdminSettings();
     if (section === 'requests') renderAccessRequests();
 }
 
@@ -332,6 +331,7 @@ function openAddLectureModal() {
     document.getElementById('lecId').placeholder = 'مثال: LEC-100 أو اتركه فارغاً للتوليد التلقائي';
     document.getElementById('lecTitle').value = '';
     document.getElementById('lecUrl').value = '';
+    var _lf = document.getElementById('lecFile'); if (_lf) _lf.value = '';
     document.getElementById('lecPrice').value = '50';
     document.getElementById('lecMaxViews').value = '1';
     document.getElementById('lecActive').checked = true;
@@ -356,6 +356,7 @@ async function editLecture(id) {
     document.getElementById('lecId').readOnly = true;
     document.getElementById('lecTitle').value = lec.title;
     document.getElementById('lecUrl').value = url;
+    var _lf2 = document.getElementById('lecFile'); if (_lf2) _lf2.value = '';
     document.getElementById('lecPrice').value = lec.price;
     document.getElementById('lecMaxViews').value = lec.maxViews;
     document.getElementById('lecActive').checked = lec.active;
@@ -367,7 +368,8 @@ async function saveLecture(event) {
     event.preventDefault();
     let idInput = document.getElementById('lecId').value.trim().toUpperCase().replace(/\s+/g, '-');
     const title = document.getElementById('lecTitle').value.trim();
-    const url = document.getElementById('lecUrl').value.trim();
+    let url = document.getElementById('lecUrl').value.trim();
+    const lecFile = (document.getElementById('lecFile') || {}).files && document.getElementById('lecFile').files[0];
     const price = parseFloat(document.getElementById('lecPrice').value) || 0;
     const maxViews = parseInt(document.getElementById('lecMaxViews').value) || 1;
     const active = document.getElementById('lecActive').checked;
@@ -375,8 +377,8 @@ async function saveLecture(event) {
     const onlineCategoryRaw = document.getElementById('lecOnlineCategory').value;
     const onlineCategory = onlineCategoryRaw ? parseInt(onlineCategoryRaw, 10) : null;
 
-    if (!title || !url) {
-        showToast('يرجى ملء العنوان ومسار الفيديو (أو الرابط)', 'error');
+    if (!title || (!url && !lecFile)) {
+        showToast('اكتب العنوان وارفع الفيديو من جهازك (أو الصق رابطاً)', 'error');
         return;
     }
 
@@ -390,7 +392,15 @@ async function saveLecture(event) {
         }
     }
 
+    const saveBtn = event.target.querySelector('button[type=submit]');
     try {
+        if (lecFile) {
+            if (saveBtn) saveBtn.disabled = true;
+            const ui = mnProgressUI(document.getElementById('lecUploadProgress'));
+            const up = await mnCloudUploadMedia(lecFile, 'maana/lectures', function (p) { ui.set(p, 'رفع الفيديو'); });
+            url = up.url;
+            ui.done('تم الرفع');
+        }
         const metadata = {
             id: id,
             title: title,
@@ -419,7 +429,9 @@ async function saveLecture(event) {
         showToast('تم حفظ المحاضرة — الكود: ' + id);
     } catch (e) {
         console.error(e);
-        showToast('فشل الحفظ — تحقق من صلاحياتك', 'error');
+        showToast('فشل الحفظ: ' + (e && e.message ? e.message : 'تحقق من صلاحياتك'), 'error');
+    } finally {
+        if (saveBtn) saveBtn.disabled = false;
     }
 }
 

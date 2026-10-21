@@ -632,7 +632,8 @@ async function requestAdminAccess(lec) {
         if (waNumber) {
             const msg = 'مرحباً، أرغب في متابعة محاضرة "' + lec.title + '" (كود: ' + lec.id + ').' +
                 '\nالاسم: ' + (user.name || '-') +
-                '\nالبريد: ' + (user.email || '-');
+                '\nالبريد: ' + (user.email || '-') +
+                (lec.price ? '\nالسعر: ' + lec.price + ' ج.م' : '');
             window.open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(msg), '_blank');
             showToast('تم إرسال طلبك، تابع معنا على واتساب لإتمام الموافقة', 'success');
         } else {
