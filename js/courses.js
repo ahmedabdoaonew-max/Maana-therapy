@@ -844,7 +844,7 @@ function renderLecturesHub(containerId) {
                 ${introHtml}
                 ${pointsHtml}
                 ${videoHtml}
-                <a href="https://wa.me/${PROGRAMS_CONFIG.whatsappNumber}?text=${encodeURIComponent('أرغب في حجز برنامج: ' + g.title)}" target="_blank" rel="noopener" class="program-book-btn program-card-wa"><i class="fab fa-whatsapp"></i> حجز عبر واتساب</a>
+                <a href="https://wa.me/${PROGRAMS_CONFIG.whatsappNumber}?text=${encodeURIComponent('أرغب في حجز برنامج: ' + g.title)}" target="_blank" rel="noopener" class="program-book-btn program-card-wa"><i class="fab fa-whatsapp"></i> احجز جلستك</a>
             </div>
         `;
         const coverImg = card.querySelector('.section-cover-img');
