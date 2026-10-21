@@ -11,7 +11,7 @@
     <title>maعna Therapy | مــعــنــى ثــيــرابــي — لوحة التحكم</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/main.css?v=9">
+    <link rel="stylesheet" href="css/main.css?v=10">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -33,48 +33,27 @@
                 <a href="#" data-section="dashboard" class="active" onclick="showAdminSection('dashboard');return false;">
                     <i class="fas fa-chart-line"></i> لوحة المعلومات
                 </a>
-                <a href="#" data-section="site-content" onclick="showAdminSection('site-content');return false;">
-                    <i class="fas fa-wand-magic-sparkles"></i> محتوى الصفحة الرئيسية
-                </a>
+                <div class="admin-nav-label">المحتوى</div>
                 <a href="#" data-section="lectures" onclick="showAdminSection('lectures');return false;">
-                    <i class="fas fa-video"></i> المحاضرات المدفوعة والأكواد
-                </a>
-                <a href="#" data-section="online-lectures" onclick="showAdminSection('online-lectures');return false;">
-                    <i class="fas fa-clapperboard"></i> باقة المحاضرات (4 أقسام)
-                </a>
-                <a href="#" data-section="posters" onclick="showAdminSection('posters');return false;">
-                    <i class="fas fa-id-card"></i> بوسترات التواصل
-                </a>
-                <a href="#" data-section="psych-doctors" onclick="showAdminSection('psych-doctors');return false;">
-                    <i class="fas fa-heart-pulse"></i> أطباء جلستك النفسية
-                </a>
-                <a href="#" data-section="users" onclick="showAdminSection('users');return false;">
-                    <i class="fas fa-users"></i> المستخدمون
-                </a>
-                <a href="#" data-section="sections" onclick="showAdminSection('sections');return false;">
-                    <i class="fas fa-th-large"></i> إعدادات الأقسام
-                </a>
-                <a href="#" data-section="views" onclick="showAdminSection('views');return false;">
-                    <i class="fas fa-eye"></i> سجل المشاهدات
-                </a>
-                <a href="#" data-section="paymethods" onclick="showAdminSection('paymethods');return false;">
-                    <i class="fas fa-wallet"></i> طرق الدفع
+                    <i class="fas fa-video"></i> المحاضرات
                 </a>
                 <a href="#" data-section="podcast" onclick="showAdminSection('podcast');return false;">
                     <i class="fas fa-podcast"></i> البودكاست
                 </a>
+                <a href="#" data-section="psych-doctors" onclick="showAdminSection('psych-doctors');return false;">
+                    <i class="fas fa-heart-pulse"></i> أطباء جلستك النفسية
+                </a>
                 <a href="#" data-section="certificates" onclick="showAdminSection('certificates');return false;">
                     <i class="fas fa-certificate"></i> الشهادات
+                </a>
+                <div class="admin-nav-label">المستخدمون والطلبات</div>
+                <a href="#" data-section="users" onclick="showAdminSection('users');return false;">
+                    <i class="fas fa-users"></i> المستخدمون
                 </a>
                 <a href="#" data-section="requests" onclick="showAdminSection('requests');return false;">
                     <i class="fas fa-user-check"></i> طلبات الموافقة (محاضرات)
                 </a>
-                <a href="#" data-section="sub-requests" onclick="showAdminSection('sub-requests');return false;">
-                    <i class="fas fa-crown"></i> طلبات اشتراك الأقسام
-                </a>
-                <a href="#" data-section="logs" onclick="showAdminSection('logs');return false;">
-                    <i class="fas fa-history"></i> سجل المسجّلين
-                </a>
+                <div class="admin-nav-label">النظام</div>
                 <a href="#" data-section="settings" onclick="showAdminSection('settings');return false;">
                     <i class="fas fa-cog"></i> الإعدادات
                 </a>
@@ -89,15 +68,6 @@
 
         <!-- المحتوى الرئيسي -->
         <main class="admin-main">
-            <!-- محتوى الصفحة الرئيسية -->
-            <div id="admin-site-content" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>محتوى الصفحة الرئيسية</h1>
-                </div>
-                <p style="color:var(--admin-text-muted);font-size:0.85rem;margin-bottom:16px;">عدّل نصوص وروابط الهيرو وبانر التحقق وأزرار الأقسام وزر المحاضرات وروابط التواصل. أي خانة تتسيب فاضية بيرجع النص الأصلي. التغييرات بتظهر فورًا لكل الزوار.</p>
-                <div id="siteContentWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
-            </div>
-
             <!-- لوحة المعلومات -->
             <div id="admin-dashboard" class="admin-section">
                 <div class="admin-header">
@@ -141,15 +111,19 @@
                 </div>
             </div>
 
-            <!-- المحاضرات -->
+            <!-- المحاضرات (دمج: المحاضرات المدفوعة والأكواد + باقة المحاضرات) -->
             <div id="admin-lectures" class="admin-section" style="display:none;">
                 <div class="admin-header">
-                    <h1>إدارة المحاضرات والأكواد</h1>
-                    <button class="btn-primary" style="padding:10px 20px;border:none;border-radius:30px;cursor:pointer;" onclick="openAddLectureModal()">
+                    <h1>المحاضرات</h1>
+                    <button class="btn-primary" id="lecAddBtn" style="padding:10px 20px;border:none;border-radius:30px;cursor:pointer;" onclick="openAddLectureModal()">
                         <i class="fas fa-plus"></i> محاضرة جديدة
                     </button>
                 </div>
-
+                <div class="admin-tabs" id="lecturesTabs">
+                    <button type="button" class="admin-tab active" data-tab="paid" onclick="showLecturesTab('paid')"><i class="fas fa-key"></i> المحاضرات والأكواد</button>
+                    <button type="button" class="admin-tab" data-tab="package" onclick="showLecturesTab('package')"><i class="fas fa-clapperboard"></i> باقة المحاضرات (4 أقسام)</button>
+                </div>
+                <div id="lecPane-paid">
                 <!-- طريقة وصول المحاضرات: دفع أونلاين أو موافقة يدوية عبر واتساب -->
                 <div style="background:var(--admin-panel-2);border:1px solid var(--admin-border);border-radius:12px;padding:20px;margin-bottom:24px;">
                     <h3 style="color:var(--admin-text);margin-bottom:6px;font-size:1rem;">طريقة الوصول للمحاضرات</h3>
@@ -188,14 +162,9 @@
                         <tbody id="lecturesTableBody"></tbody>
                     </table>
                 </div>
-            </div>
-
-            <!-- المحاضرات الأونلاين (4 أقسام × 8 محاضرات) -->
-            <div id="admin-online-lectures" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>باقة المحاضرات (4 أقسام)</h1>
                 </div>
-<div class="ol-admin-tabs" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+                <div id="lecPane-package" style="display:none;">
+                <div class="ol-admin-tabs" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
                     <button type="button" class="btn-outline ol-admin-tab active" data-cat="1" onclick="renderAdminOnlineLectures(1)">أساسيات الإدارة والقيادة</button>
                     <button type="button" class="btn-outline ol-admin-tab" data-cat="2" onclick="renderAdminOnlineLectures(2)">تطوير المهارات المهنية</button>
                     <button type="button" class="btn-outline ol-admin-tab" data-cat="3" onclick="renderAdminOnlineLectures(3)">التواصل والعرض التقديمي</button>
@@ -237,17 +206,7 @@
                         <button type="submit" class="form-submit">حفظ الرقم</button>
                     </form>
                 </div>
-            </div>
-
-            <!-- بوسترات التواصل -->
-            <div id="admin-posters" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>بوسترات التواصل</h1>
                 </div>
-                <p style="color:var(--admin-text-muted);margin-bottom:16px;font-size:0.85rem;line-height:1.8;">
-                    الكروت اللي تضيفها هنا بتظهر في الصفحة الرئيسية قبل "الأسئلة الشائعة". كل كارت فيه صورة وسعر وتفاصيل وزر واتساب برسالة جاهزة. اضغط على أي كارت لتعديله أو حذفه.
-                </p>
-                <div id="postersAdminWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
             </div>
 
             <!-- أطباء جلستك النفسية -->
@@ -285,33 +244,6 @@
                 </div>
             </div>
 
-            <!-- إعدادات الأقسام -->
-            <div id="admin-sections" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>إعدادات الأقسام (مجاني / مدفوع)</h1>
-                </div>
-                <div id="sectionSettingsList"></div>
-            </div>
-
-            <!-- المشاهدات -->
-            <div id="admin-views" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>سجل المشاهدات</h1>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>كود المحاضرة</th>
-                            <th>اسم المشاهد</th>
-                            <th>التاريخ والوقت</th>
-                        </tr>
-                    </thead>
-                        <tbody id="viewsTableBody"></tbody>
-                </table>
-                </div>
-            </div>
-
             <!-- البودكاست -->
             <div id="admin-podcast" class="admin-section" style="display:none;">
                 <div class="admin-header">
@@ -345,99 +277,7 @@
                 </div>
             </div>
 
-            <!-- سجل الدخول -->
-            <div id="admin-logs" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>سجل المسجّلين</h1>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>البريد</th>
-                            <th>وقت التسجيل</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logsTableBody"></tbody>
-                </table>
-                </div>
-            </div>
-
             <!-- طلبات الموافقة -->
-
-            <!-- طرق الدفع -->
-            <div id="admin-paymethods" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>طرق الدفع</h1>
-                    <button class="btn-primary" onclick="openPayMethodModal()" style="padding:10px 20px;border:none;border-radius:30px;cursor:pointer;">
-                        <i class="fas fa-plus"></i> إضافة طريقة دفع
-                    </button>
-                </div>
-                <p style="color:#666;margin-bottom:16px;">فعّل أو عطّل طرق الدفع التي تظهر للمستخدم عند شراء محاضرة. يمكنك إضافة محافظ أو حسابات بنكية أو تعليمات يدوية.</p>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>الترتيب</th>
-                            <th>الاسم</th>
-                            <th>النوع</th>
-                            <th>رقم / بيانات الحساب</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="payMethodsTableBody"></tbody>
-                </table>
-                </div>
-            </div>
-
-            <!-- مودال طريقة دفع -->
-            <div class="modal-overlay" id="payMethodModal">
-                <div class="modal" style="max-width:480px;">
-                    <div class="modal-header">
-                        <h3 id="payMethodModalTitle">إضافة طريقة دفع</h3>
-                        <button class="modal-close" onclick="document.getElementById('payMethodModal').classList.remove('active')">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form onsubmit="savePayMethod(event)">
-                            <input type="hidden" id="pmEditId" value="">
-                            <div class="form-group">
-                                <label>اسم الطريقة</label>
-                                <input type="text" id="pmName" required placeholder="مثال: فودافون كاش">
-                            </div>
-                            <div class="form-group">
-                                <label>النوع</label>
-                                <select id="pmType">
-                                    <option value="wallet">محفظة إلكترونية</option>
-                                    <option value="bank">تحويل بنكي / إنستاباي</option>
-                                    <option value="manual">يدوي / أخرى</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>أيقونة (Font Awesome)</label>
-                                <input type="text" id="pmIcon" value="fa-wallet" placeholder="fa-mobile-alt">
-                            </div>
-                            <div class="form-group">
-                                <label>رقم الحساب / المحفظة / IBAN</label>
-                                <input type="text" id="pmAccount" placeholder="01xxxxxxxxx">
-                            </div>
-                            <div class="form-group">
-                                <label>تعليمات للمستخدم</label>
-                                <textarea id="pmInstructions" rows="3" placeholder="حوّل المبلغ ثم أرسل الإيصال على واتساب..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>الترتيب</label>
-                                <input type="number" id="pmOrder" value="10" min="1">
-                            </div>
-                            <div class="form-group">
-                                <label><input type="checkbox" id="pmActive" checked> مفعّلة (تظهر للمستخدم)</label>
-                            </div>
-                            <button type="submit" class="form-submit">حفظ</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
 
             <div id="admin-requests" class="admin-section" style="display:none;">
                 <div class="admin-header">
@@ -456,28 +296,6 @@
                         </tr>
                     </thead>
                     <tbody id="requestsTableBody"></tbody>
-                </table>
-                </div>
-            </div>
-
-            <!-- طلبات اشتراك الأقسام -->
-            <div id="admin-sub-requests" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>طلبات اشتراك الأقسام</h1>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>المستخدم</th>
-                            <th>الهاتف</th>
-                            <th>القسم</th>
-                            <th>التاريخ</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subRequestsTableBody"></tbody>
                 </table>
                 </div>
             </div>
@@ -680,11 +498,10 @@
     <script src="js/certificates-seed.js"></script>
     <script src="js/certificates.js?v=6"></script>
     <script src="js/courses.js?v=11"></script>
-    <script src="js/psych-doctors.js?v=10"></script>
+    <script src="js/psych-doctors.js?v=11"></script>
     <script src="js/storage-config.js?v=1"></script>
-    <script src="js/uploads.js?v=2"></script>
-    <script src="js/podcast.js?v=1"></script>
-    <script src="js/posters.js?v=1"></script>
-    <script src="js/admin.js?v=10"></script>
+    <script src="js/uploads.js?v=3"></script>
+    <script src="js/podcast.js?v=2"></script>
+    <script src="js/admin.js?v=11"></script>
 </body>
 </html>
