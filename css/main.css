@@ -5441,3 +5441,11 @@ body #lecturesHubGrid .program-card-full .program-points li i{margin-top:6px!imp
 body #lecturesHubGrid .program-card-full .program-points li span{text-align:right!important}
 body #lecturesHubGrid .program-age-badge{align-self:flex-start!important}
 body #lecturesHubGrid .program-card-wa{align-self:flex-start!important}
+
+/* v16 — موف واحد فاتح في كل الموقع + حواف نص البرامج متوازية مع الصورة */
+:root{
+  --mn-mauve-grad:linear-gradient(135deg,#B08C99 0%,#BE9CA8 100%);
+  --mn-mauve-mid:linear-gradient(135deg,#B08C99 0%,#BE9CA8 100%)}
+.pc-banner{background:#B08C99!important}
+.pc-banner-in{background:linear-gradient(90deg,rgba(176,140,153,.45),rgba(190,156,168,.9))!important}
+body #lecturesHubGrid .section-card .program-card-body{padding:20px 0 6px!important}
