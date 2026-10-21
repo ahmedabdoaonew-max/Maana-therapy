@@ -5212,3 +5212,18 @@ a[href*="skills-module/skills.html"].mn-path i::after{animation:none!important}
 .footer .logo-names{display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.3}
 .footer .logo-names .logo-en{display:block}
 .footer .logo-names .logo-ar{display:block}
+
+/* ===== البرامج: المحتوى ظاهر في الكارت بدون ضغط ===== */
+#lecturesHubGrid .section-card.program-card-full{cursor:default}
+#lecturesHubGrid .program-card-full .program-points{margin:0 auto 10px;max-width:none}
+#lecturesHubGrid .program-card-full .program-intro{margin:0;font-weight:600;color:var(--moss)}
+#lecturesHubGrid .program-card-video{width:100%;border-radius:12px;background:#000}
+
+/* ===== حركة الخيط في الهيرو: ظاهرة وواضحة ===== */
+.mn-hero .mn-thread path.main{stroke:var(--gold)!important;opacity:.9}
+.mn-hero .mn-thread path.flow{stroke:#FFF1C9!important;stroke-width:3.4!important;stroke-dasharray:70 380!important;stroke-dashoffset:0;opacity:0;animation:mnFlow 4.2s linear 4.4s infinite,mnShow .6s ease 4.4s forwards!important}
+.mn-hero .mn-thread path.soft.flow2{stroke:#F3C9BD!important;stroke-dasharray:36 160!important;opacity:0;animation:mnFlow 3.2s linear 1.8s infinite,mnShow .6s ease 1.8s forwards!important}
+.mn-hero .mn-thread circle.end{animation:mnPop .6s var(--ease) 4.3s forwards,mnBeat 1.8s ease-in-out 5s infinite!important}
+.mn-hero .mn-thread circle.end-ring{animation:mnRipple 2.4s ease-out 4.4s infinite!important}
+.mn-hero .mn-thread circle.runner{display:block!important;fill:#FFF3D0;opacity:0;animation:mnShow .3s ease 4.5s forwards!important}
+.mn-hero .mn-thread{animation:mnFloat 6s ease-in-out infinite!important}
