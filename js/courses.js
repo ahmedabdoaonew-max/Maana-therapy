@@ -817,7 +817,12 @@ function renderLecturesHub(containerId) {
     if (!container) return;
 
     container.innerHTML = '';
-    PROGRAMS_CONFIG.groups.forEach(function (g, idx) {
+    // data-groups="G7,G8,G9" على الحاوية = عرض هذه البرامج فقط وبنفس الترتيب
+    const wanted = (container.getAttribute('data-groups') || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    const list = wanted.length
+        ? wanted.map(function (id) { return PROGRAMS_CONFIG.groups.find(function (x) { return x.id === id; }); }).filter(Boolean)
+        : PROGRAMS_CONFIG.groups;
+    list.forEach(function (g, idx) {
         const card = document.createElement('div');
         card.className = 'section-card';
         card.setAttribute('role', 'button');
