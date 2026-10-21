@@ -781,6 +781,32 @@ const PROGRAMS_CONFIG = {
                 'https://i.postimg.cc/RF6Hzj2k/IMG-20260715-WA0005.jpg?w=600&q=80',
                 'https://i.postimg.cc/fRRkNG92/IMG-20260801-135203.png?w=600&q=80'
             ]
+        },
+        {
+            id: 'G7', title: 'جلسات العلاج الزواجي والأسري',
+            desc: 'علاقات أقوى بتبدأ بالفهم والحوار.. ساعد علاقتك تنمو في مساحة من التفاهم والاحترام.',
+            intro: 'من خلال جلسات المتخصصة بنساعدك على:',
+            points: [
+                'التعامل مع الخلافات الزوجية والأسرية بطريقة صحية وفعّالة.',
+                'تقوية الروابط العاطفية وتعزيز التواصل، الثقة والاحترام المتبادل.'
+            ],
+            images: ['images/programs/marital-family.jpg']
+        },
+        {
+            id: 'G8', title: 'دعم الأطفال والمراهقين',
+            desc: 'كل مرحلة عمرية ليها تحدياتها، وفي «معنى» بنوفر مساحة آمنة تساعد الأطفال والمراهقين يفهموا مشاعرهم، ويعبّروا عن نفسهم، ويكتسبوا مهارات تساعدهم يتعاملوا مع المواقف اليومية بثقة ووعي.',
+            points: [
+                'جلسات نفسية مناسبة لكل مرحلة عمرية.',
+                'تنمية المهارات العاطفية والاجتماعية.',
+                'إرشاد ودعم للوالدين.'
+            ],
+            badge: 'تحت الـ 20 عام',
+            images: ['images/programs/kids-teens.jpg']
+        },
+        {
+            id: 'G9', title: 'جلسات التخاطب، التربية الخاصة وتنمية المهارات',
+            desc: 'بنساعد الأطفال على تنمية مهارات التواصل واللغة، وتحسين الانتباه والتركيز، واكتساب المهارات الحياتية والاجتماعية، مع دعم تعديل السلوك بما يتناسب مع احتياجات كل طفل.',
+            images: ['images/programs/speech-special-skills.jpg']
         }
     ]
 };
@@ -848,13 +874,26 @@ function openProgramModal(g) {
     const waMessage = encodeURIComponent('أرغب في حجز برنامج: ' + g.title);
     const waLink = 'https://wa.me/' + PROGRAMS_CONFIG.whatsappNumber + '?text=' + waMessage;
 
+    // الفيديو اختياري (بعض البرامج صورة فقط)، والنقاط/الفئة العمرية اختيارية كذلك
+    const videoHtml = g.videoUrl
+        ? '<div class="program-video"><iframe src="' + g.videoUrl + '" title="' + g.title + '" allowfullscreen loading="lazy"></iframe></div>'
+        : '';
+    const introHtml = g.intro ? '<p class="program-intro">' + g.intro + '</p>' : '';
+    const pointsHtml = (g.points && g.points.length)
+        ? '<ul class="program-points">' + g.points.map(function (t) { return '<li><i class="fas fa-check"></i><span>' + t + '</span></li>'; }).join('') + '</ul>'
+        : '';
+    const badgeHtml = g.badge ? '<span class="program-age-badge"><i class="fas fa-seedling"></i> ' + g.badge + '</span>' : '';
+
     modalBody.innerHTML =
         '<button type="button" class="program-modal-close" aria-label="إغلاق">&times;</button>' +
-        '<div class="program-gallery">' + galleryImgs + '</div>' +
-        '<div class="program-video"><iframe src="' + g.videoUrl + '" title="' + g.title + '" allowfullscreen loading="lazy"></iframe></div>' +
+        '<div class="program-gallery' + (g.videoUrl ? '' : ' program-gallery--full') + '">' + galleryImgs + '</div>' +
+        videoHtml +
         '<div class="program-body">' +
         '<h3>' + g.title + '</h3>' +
+        badgeHtml +
         '<p>' + g.desc + '</p>' +
+        introHtml +
+        pointsHtml +
         '<a href="' + waLink + '" target="_blank" class="program-book-btn"><i class="fab fa-whatsapp"></i> حجز</a>' +
         '</div>';
 

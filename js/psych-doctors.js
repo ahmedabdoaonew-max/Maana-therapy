@@ -18,13 +18,15 @@ async function psychInitPublic() {
     const grid = document.getElementById('psychDoctorsGrid');
     if (!grid) return;
     grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</p>';
+    // الأخصائيون الأساسيون (js/specialists.js) أولًا، وبعدهم اللي بيتضاف من لوحة التحكم
+    let extras = [];
     try {
-        psychDoctorsState.list = await psychFetchPublicList();
+        extras = (await psychFetchPublicList())
+            .filter(d => !(window.maanaIsPlaceholder && maanaIsPlaceholder(d.name)));
     } catch (e) {
         console.error(e);
-        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:var(--text-muted);">تعذّر تحميل بيانات الأطباء حالياً.</p>';
-        return;
     }
+    psychDoctorsState.list = (window.MAANA_SPECIALISTS || []).concat(extras);
     psychRenderGrid();
 }
 
@@ -37,17 +39,21 @@ function psychRenderGrid() {
         return;
     }
 
-    grid.innerHTML = psychDoctorsState.list.map(d => `
+    grid.innerHTML = psychDoctorsState.list.map(d => {
+        const href = window.maanaBookingUrl ? maanaBookingUrl(d) : 'https://wa.me/' + SITE_CONTACT.whatsapp;
+        return `
         <div class="doctor-card fade-in">
             ${d.photo
-                ? `<img class="doctor-photo" src="${d.photo}" alt="${(d.name || '').replace(/"/g, '&quot;')}">`
+                ? `<img class="doctor-photo" src="${d.photo}" alt="${(d.name || '').replace(/"/g, '&quot;')}" loading="lazy" decoding="async">`
                 : '<div class="doctor-photo-placeholder"><i class="fas fa-user-doctor"></i></div>'}
             <div class="doctor-name">${d.name || ''}</div>
             ${d.role ? `<div class="doctor-role">${d.role}</div>` : ''}
-            <a class="doctor-whatsapp-btn" href="https://wa.me/${SITE_CONTACT.whatsapp}" target="_blank" rel="noopener">
-                <i class="fab fa-whatsapp"></i> تواصل عبر واتساب
+            ${d.tags ? `<div class="doctor-extra">${d.tags}</div>` : ''}
+            <a class="doctor-whatsapp-btn" href="${href}" target="_blank" rel="noopener">
+                <i class="fab fa-whatsapp"></i> ${d.buttonText || 'حجز جلسة'}
             </a>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
 
 document.addEventListener('DOMContentLoaded', () => {

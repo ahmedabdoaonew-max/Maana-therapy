@@ -506,3 +506,38 @@ async function verifyLectureAccess(code, name, lectureId) {
     }
     return { success: false, error: 'الكود غير صحيح' };
 }
+
+
+/* ==========================================================
+   التواصل للمسجّلين فقط
+   أي رابط تواصل (واتساب / اتصال / إيميل / سوشيال) أو زر التواصل العائم
+   أو فتح واتساب من أي زر حجز — لا يعمل إلا بعد تسجيل الدخول
+   ========================================================== */
+(function () {
+    var CONTACT_RE = /^(tel:|mailto:)|(^|\/\/|\.)(wa\.me|whatsapp\.com|facebook\.com|fb\.com|instagram\.com|tiktok\.com|youtube\.com|youtu\.be|t\.me)(\/|$|\?)/i;
+    function isContact(url) { return CONTACT_RE.test(String(url || '').trim()); }
+    function loggedIn() {
+        try { return !!JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) { return false; }
+    }
+    var denying = false;
+    function deny() {
+        if (denying) return;
+        denying = true;
+        if (typeof showToast === 'function') showToast('سجّل الدخول أولاً عشان تقدر تتواصل معنا', 'error');
+        setTimeout(function () { location.href = 'login.html'; }, 900);
+    }
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (!a) return;
+        if (!(a.classList.contains('maana-float-link') || isContact(a.getAttribute('href')))) return;
+        if (loggedIn()) return;
+        e.preventDefault();
+        e.stopPropagation();
+        deny();
+    }, true);
+    var nativeOpen = window.open;
+    window.open = function (url) {
+        if (isContact(url) && !loggedIn()) { deny(); return null; }
+        return nativeOpen.apply(window, arguments);
+    };
+})();

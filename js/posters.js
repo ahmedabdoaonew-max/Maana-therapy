@@ -7,12 +7,8 @@
 
 var PST_DEFAULT_MSG = 'السلام عليكم، أرغب في حجز جلسة مع {name}.\nسعر الجلسة: {price} — مدة الجلسة: {duration}.\nبرجاء تأكيد أقرب موعد متاح.';
 
-/* عينات للمعاينة فقط (أسماء وأرقام تجريبية — عدّلها أو امسحها من لوحة التحكم) */
-var PST_SAMPLES = [
-    { name: 'د. اسم الأخصائي (مثال 1)', role: 'أخصائي الطب النفسي', badge: 'أخصائي الطب النفسي', experience: '+8 سنوات الخبرة', tags: '', price: '920 EGP', duration: '30 دقيقة', photo: '', whatsapp: '', message: '', buttonText: 'حجز جلسة', order: 1, active: true },
-    { name: 'أ. اسم الأخصائية (مثال 2)', role: 'أخصائية نفسية', badge: 'أخصائية نفسية', experience: '+5 سنوات الخبرة', tags: 'العلاج الفردي', price: '250 EGP', duration: '30 دقيقة', photo: '', whatsapp: '', message: '', buttonText: 'حجز جلسة', order: 2, active: true },
-    { name: 'أ. اسم المرشد (مثال 3)', role: 'مرشد أسري وتربوي', badge: 'إرشاد أسري', experience: '+6 سنوات الخبرة', tags: 'العلاقات الأسرية، الاستشارات', price: '300 EGP', duration: '45 دقيقة', photo: '', whatsapp: '', message: '', buttonText: 'احجز استشارة', order: 3, active: true }
-];
+/* لا توجد عينات: الأخصائيون الأساسيون في js/specialists.js، وأي أخصائي تضيفه من لوحة التحكم بيظهر بعدهم */
+var PST_SAMPLES = [];
 
 function pstEsc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; });
@@ -34,7 +30,7 @@ function pstMessage(p) {
 /* ================= الواجهة العامة (index.html) ================= */
 function pstCardHtml(p) {
     var tags = pstTags(p).map(function (t) { return '<span class="pst-tag">' + pstEsc(t) + '</span>'; }).join('');
-    var href = 'https://wa.me/' + pstWA(p) + '?text=' + encodeURIComponent(pstMessage(p));
+    var href = (p.builtin && window.maanaBookingUrl) ? maanaBookingUrl(p) : 'https://wa.me/' + pstWA(p) + '?text=' + encodeURIComponent(pstMessage(p));
     return '<article class="pst-card">' +
         '<div class="pst-photo">' +
             (p.photo ? '<img src="' + pstEsc(p.photo) + '" alt="' + pstEsc(p.name) + '" loading="lazy" decoding="async">' : '<i class="fas fa-user-doctor pst-ph"></i>') +
@@ -55,23 +51,23 @@ async function pstInitPublic() {
     var sec = document.getElementById('postersSection');
     var grid = document.getElementById('postersGrid');
     if (!sec || !grid) return;
-    var list = [];
+    var extras = [];
     try {
         var res = await Promise.all([
             db.collection('contactPosters').get(),
             db.collection('settings').doc('posters').get()
         ]);
-        list = res[0].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
-        var seeded = res[1].exists && res[1].data().seeded === true;
-        if (!list.length && !seeded) list = PST_SAMPLES.slice();   // قبل ما الأدمن يفتح القسم أول مرة: اعرض العينات
+        extras = res[0].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
         var t = res[1].exists ? res[1].data() : {};
         if (t.title) { var h = document.getElementById('pstTitle'); if (h) h.textContent = t.title; }
         if (t.subtitle) { var s = document.getElementById('pstSub'); if (s) s.textContent = t.subtitle; }
     } catch (e) {
-        console.error(e);
-        return; // لو فشل التحميل نسيب القسم مخفي
+        console.error(e); // لو فشل التحميل نعرض الأخصائيين الأساسيين برضه
     }
-    list = list.filter(function (p) { return p.active !== false; }).sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    extras = extras
+        .filter(function (p) { return p.active !== false && !(window.maanaIsPlaceholder && maanaIsPlaceholder(p.name)); })
+        .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    var list = (window.MAANA_SPECIALISTS || []).concat(extras);
     if (!list.length) { sec.style.display = 'none'; return; }
     grid.innerHTML = list.map(pstCardHtml).join('');
     sec.style.display = '';
