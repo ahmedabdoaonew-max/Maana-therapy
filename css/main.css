@@ -5169,3 +5169,13 @@ a[href*="skills-module/skills.html"].mn-path i::after{animation:none!important}
 .faq-question i{color:var(--olive)}
 .footer{border-top:4px solid var(--olive)!important}
 .footer-bottom{border-top-color:rgba(167,178,134,.45)!important}
+
+/* ===== قائمة الأدمن: عناوين مجموعات + تبويبات داخلية ===== */
+.admin-nav-label{margin:14px 22px 4px;font-size:.72rem;letter-spacing:.04em;color:var(--gold,#D5B477);opacity:.75;font-weight:600}
+.admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;padding:6px;background:var(--admin-panel-2,rgba(255,255,255,.05));border:1px solid var(--admin-border,rgba(255,255,255,.1));border-radius:14px}
+.admin-tab{flex:1 1 160px;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border:0;border-radius:10px;background:transparent;color:var(--admin-text-muted,#cfc8b4);font:inherit;font-size:.9rem;cursor:pointer;transition:background .2s,color .2s}
+.admin-tab i{color:var(--gold,#D5B477)}
+.admin-tab.active{background:linear-gradient(90deg,rgba(213,180,119,.3),rgba(213,180,119,.1));color:var(--paper,#F8F3EA);font-weight:700;box-shadow:inset 0 -2px 0 var(--gold,#D5B477)}
+.mn-file-box{border:1.5px dashed var(--admin-border,rgba(255,255,255,.25));border-radius:12px;padding:12px;background:rgba(255,255,255,.03)}
+.mn-file-box input[type=file]{width:100%}
+.mn-photo-prev{width:56px;height:56px;border-radius:50%;object-fit:cover;margin-bottom:8px;display:block}
