@@ -833,10 +833,17 @@ function renderLecturesHub(containerId) {
             <div class="section-img" style="${cover ? '' : 'background:linear-gradient(135deg,var(--primary-blue),var(--primary-dark));'}">
                 ${cover ? '<img src="' + cover + '" alt="" class="section-cover-img">' : '<i class="fas fa-video"></i>'}
             </div>
-            <div class="section-body">
+            <div class="section-body program-card-body">
                 <h3>${g.title}</h3>
+                ${g.desc ? '<p class="program-card-desc">' + g.desc + '</p>' : ''}
+                <a href="https://wa.me/${PROGRAMS_CONFIG.whatsappNumber}?text=${encodeURIComponent('أرغب في حجز برنامج: ' + g.title)}" target="_blank" rel="noopener" class="program-book-btn program-card-wa"><i class="fab fa-whatsapp"></i> حجز عبر واتساب</a>
             </div>
         `;
+        const waBtn = card.querySelector('.program-card-wa');
+        if (waBtn) {
+            waBtn.addEventListener('click', function (e) { e.stopPropagation(); });
+            waBtn.addEventListener('keydown', function (e) { e.stopPropagation(); });
+        }
         const coverImg = card.querySelector('.section-cover-img');
         if (coverImg) {
             coverImg.addEventListener('error', function () {
