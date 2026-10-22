@@ -70,3 +70,22 @@
 /* كارت الخدمات (نص بس) */
 .hero .hero-card{display:block}
 .hero .hero-card-actions{display:none}
+
+/* ===== الدائرة الجديدة: صورة الدائرة كما هي + حركة هادئة ===== */
+.bal-orb{background:none;border:0;box-shadow:none;padding:0;overflow:visible;isolation:isolate;
+  animation:balOrbFloat 5.5s ease-in-out infinite}
+.bal-orb::before{inset:-5%;z-index:-1;border:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(226,190,120,.55) 0%,rgba(236,170,170,.28) 45%,transparent 70%);
+  animation:balOrbHalo 3.2s ease-in-out infinite}
+.bal-orb-img{display:block;width:100%;height:auto;border-radius:50%;
+  filter:drop-shadow(0 18px 26px rgba(106,74,89,.28));
+  animation:balOrbBreath 3.2s ease-in-out infinite}
+.bal-shine{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none}
+.bal-shine::after{content:"";position:absolute;top:-10%;bottom:-10%;width:30%;left:-45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-18deg);animation:balOrbShine 5.5s ease-in-out infinite 1s}
+@keyframes balOrbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.2cqw)}}
+@keyframes balOrbHalo{0%,100%{opacity:.55;transform:scale(.97)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes balOrbBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+@keyframes balOrbShine{0%{left:-45%;opacity:0}12%{opacity:1}55%{left:125%;opacity:1}60%,100%{left:125%;opacity:0}}
+@media (prefers-reduced-motion:reduce){.bal-orb,.bal-orb::before,.bal-orb-img,.bal-shine::after{animation:none!important}}
