@@ -982,12 +982,6 @@ const SITE_CONTENT_SCHEMA = [
         { k: 'home.cta2Text', label: 'نص الزر الثاني', ph: 'ابدأ رحلتك' },
         { k: 'home.cta2Link', label: 'رابط الزر الثاني', ph: 'register.html' }
     ]},
-    { title: 'هيرو: رحلتك نحو التوازن', fields: [
-        { k: 'home.balTitle', label: 'العنوان (بيتكتب بالتتابع)', ph: 'رحلتك نحو التوازن تبدأ من هنا' },
-        { k: 'home.balDesc', label: 'الوصف (بيتكتب بالتتابع)', ph: 'نقدم لك برامج علاجية متكاملة...', area: true },
-        { k: 'home.balCta', label: 'نص الزر (جنب الأيقونة المتحركة)', ph: 'اكتشف العلاج الأنسب ليك، وابدأ خطوتك نحو التغيير' },
-        { k: 'home.balCtaLink', label: 'رابط الزر', ph: 'psych-session.html' }
-    ]},
     { title: 'أزرار الأقسام', paths: [
         ['sessions', 'أطباء الجلسات'], ['spiritual', 'الصحة النفسية والروحية'], ['skills', 'تنمية المهارات'],
         ['vignettes', 'حالات سريرية'], ['tests', 'الاختبارات النفسية']
