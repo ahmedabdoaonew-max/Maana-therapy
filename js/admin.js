@@ -55,7 +55,6 @@ function showAdminSection(section) {
     if (section === 'psych-doctors') renderAdminPsychDoctors();
     if (section === 'users') renderAdminUsers();
     if (section === 'payments') renderAdminPayments();
-    if (section === 'certificates') renderAdminCertificates();
     if (section === 'requests') renderAccessRequests();
 }
 
@@ -137,12 +136,10 @@ async function updateDashboardStats() {
     const lectures = await safe(() => getLecturesAsync(), {});
     const views = await safe(() => getAllViewsAsync(), []);
     const subs = await safe(async () => (await db.collection('subscriptionRequests').get()).docs.map(d => d.data()), []);
-    const certsCount = await safe(async () => (await db.collection('certificates').get()).size, 0);
 
     set('statUsers', Object.keys(users).filter(k => !users[k].isAdmin).length);
     set('statLectures', Object.keys(lectures).length);
     set('statViews', views.reduce((n, v) => n + (v.count || 0), 0));
-    set('statCerts', certsCount);
     set('statPayments', subs.filter(s => s.status === 'approved').length);
     set('statActive', Object.values(users).filter(u => !u.blocked && !u.isAdmin).length);
 }
@@ -621,164 +618,6 @@ async function renderAdminPayments() {
     }
 }
 
-// ========== الشهادات ==========
-function renderAdminCertificates() {
-    const tbody = document.getElementById('certsTableBody');
-    if (!tbody) return;
-
-    const certs = getCertificates();
-    tbody.innerHTML = Object.values(certs).map(c => `
-        <tr>
-            <td>${c.id}</td>
-            <td>${c.name}</td>
-            <td>${c.courseName}</td>
-            <td>${c.date}</td>
-            <td>
-                <button class="btn-sm btn-edit" onclick="editCert('${c.id}')">تعديل</button>
-                <button class="btn-sm btn-delete" onclick="deleteCert('${c.id}')">حذف</button>
-            </td>
-        </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;">لا توجد شهادات</td></tr>';
-}
-
-function openAddCertModal() {
-    var set = function(id, v) { var el = document.getElementById(id); if (el) el.value = v; };
-    set('certSecretId', '');
-    document.getElementById('certSecretId').readOnly = false;
-    set('certName', '');
-    set('certPhoto', '');
-    set('certImage', '');
-    certResetFiles();
-    set('certCourse', '');
-    set('certYear', new Date().getFullYear().toString());
-    set('certGrade', '');
-    set('certDoctor', 'Maana Therapy');
-    set('certDate', new Date().toISOString().split('T')[0]);
-    set('certDuration', '');
-    set('certEmail', '');
-    set('certPhone', '');
-    document.getElementById('certFormModal').querySelector('.modal-header h3').textContent = 'إصدار شهادة جديدة';
-    document.getElementById('certFormModal').classList.add('active');
-}
-
-function editCert(id) {
-    const certs = getCertificates();
-    const c = certs[id];
-    if (!c) return;
-    var set = function(fid, v) { var el = document.getElementById(fid); if (el) el.value = v || ''; };
-    set('certSecretId', id);
-    document.getElementById('certSecretId').readOnly = true;
-    set('certName', c.name);
-    set('certPhoto', c.photoUrl);
-    set('certImage', c.certificateImageUrl);
-    certResetFiles(c);
-    set('certCourse', c.courseName);
-    set('certYear', c.graduationYear);
-    set('certGrade', c.grade);
-    set('certDoctor', c.doctorName || 'Maana Therapy');
-    set('certDate', c.date);
-    set('certDuration', c.duration);
-    set('certEmail', c.email);
-    set('certPhone', c.phone);
-    document.getElementById('certFormModal').querySelector('.modal-header h3').textContent = 'تعديل الشهادة';
-    document.getElementById('certFormModal').classList.add('active');
-}
-
-function certResetFiles(c) {
-    ['certPhotoFile', 'certImageFile'].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
-    var n1 = document.getElementById('certPhotoNote'), n2 = document.getElementById('certImageNote');
-    if (n1) n1.textContent = c && c.photoUrl ? 'يوجد ملف محفوظ — اختر ملفاً جديداً لاستبداله' : '';
-    if (n2) n2.textContent = c && c.certificateImageUrl ? 'يوجد ملف محفوظ — اختر ملفاً جديداً لاستبداله' : '';
-}
-
-async function saveCertificate(event) {
-    event.preventDefault();
-    var name = document.getElementById('certName').value.trim();
-    var course = document.getElementById('certCourse').value.trim();
-    var date = document.getElementById('certDate').value;
-    var secretId = (document.getElementById('certSecretId').value || '').trim().toUpperCase();
-    var isEdit = document.getElementById('certSecretId').readOnly;
-    var photo = (document.getElementById('certPhoto') || {}).value || '';
-    var certImage = (document.getElementById('certImage') || {}).value || '';
-    var year = (document.getElementById('certYear') || {}).value || '';
-    var grade = (document.getElementById('certGrade') || {}).value || '';
-    var doctor = (document.getElementById('certDoctor') || {}).value || 'Maana Therapy';
-
-    var duration = (document.getElementById('certDuration') || {}).value || '';
-    var email = (document.getElementById('certEmail') || {}).value || '';
-    var phone = (document.getElementById('certPhone') || {}).value || '';
-
-    if (!name || !course) {
-        showToast('املأ الحقول الأساسية', 'error');
-        return;
-    }
-
-    var certs = getCertificates();
-    var id = secretId || generateCode('CERT');
-    if (!isEdit && certs[id]) {
-        showToast('هذا الكود مستخدم مسبقاً', 'error');
-        return;
-    }
-
-    // رفع الصور من الجهاز (إن اختارها الأدمن)
-    var pFile = (document.getElementById('certPhotoFile') || {}).files;
-    var iFile = (document.getElementById('certImageFile') || {}).files;
-    var submitBtn = event.target.querySelector('button[type=submit]');
-    if ((pFile && pFile[0]) || (iFile && iFile[0])) {
-        var ui = mnProgressUI(document.getElementById('certUploadProgress'));
-        if (submitBtn) submitBtn.disabled = true;
-        try {
-            if (pFile && pFile[0]) {
-                var pf = await mnPrepareImage(pFile[0], 900);
-                photo = (await mnUploadFile(pf, 'certificates/photos', function (p) { ui.set(p * 0.5, 'رفع صورة المتدرب'); })).url;
-            }
-            if (iFile && iFile[0]) {
-                var cf = await mnPrepareImage(iFile[0], 2000, 0.9);
-                certImage = (await mnUploadFile(cf, 'certificates/images', function (p) { ui.set(0.5 + p * 0.5, 'رفع صورة الشهادة'); })).url;
-            }
-            ui.done('تم الرفع');
-        } catch (err) {
-            console.error(err);
-            showToast('فشل رفع الصورة: ' + (err.code || err.message || 'خطأ'), 'error');
-            if (submitBtn) submitBtn.disabled = false;
-            return;
-        }
-        if (submitBtn) submitBtn.disabled = false;
-    }
-    certs[id] = {
-        id: id,
-        secretId: id,
-        code: id,
-        name: name,
-        courseName: course,
-        grantName: course,
-        graduationYear: year,
-        grade: grade,
-        doctorName: doctor,
-        photoUrl: photo.trim(),
-        certificateImageUrl: certImage.trim(),
-        certificateNumber: id,
-        duration: duration.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        date: date
-    };
-    saveCertificates(certs);
-
-    document.getElementById('certFormModal').classList.remove('active');
-    renderAdminCertificates();
-    updateDashboardStats();
-    showToast(isEdit ? 'تم تحديث الشهادة' : 'تم إصدار الشهادة — الكود السري: ' + id);
-}
-
-function deleteCert(id) {
-    if (!confirm('حذف الشهادة؟')) return;
-    deleteCertificateById(id);
-    renderAdminCertificates();
-    updateDashboardStats();
-    showToast('تم الحذف');
-}
-
 // ========== الإعدادات ==========
 function loadAdminSettings() {
     const settings = getSettings();
@@ -1143,9 +982,11 @@ const SITE_CONTENT_SCHEMA = [
         { k: 'home.cta2Text', label: 'نص الزر الثاني', ph: 'ابدأ رحلتك' },
         { k: 'home.cta2Link', label: 'رابط الزر الثاني', ph: 'register.html' }
     ]},
-    { title: 'بانر التحقق من الشهادة', fields: [
-        { k: 'home.verifyTitle', label: 'العنوان', ph: 'التحقق من صحة الشهادة' },
-        { k: 'home.verifyDesc', label: 'الوصف', ph: 'أدخل كود الشهادة (ID) ...' }
+    { title: 'هيرو: رحلتك نحو التوازن', fields: [
+        { k: 'home.balTitle', label: 'العنوان (بيتكتب بالتتابع)', ph: 'رحلتك نحو التوازن تبدأ من هنا' },
+        { k: 'home.balDesc', label: 'الوصف (بيتكتب بالتتابع)', ph: 'نقدم لك برامج علاجية متكاملة...', area: true },
+        { k: 'home.balCta', label: 'نص الزر (جنب الأيقونة المتحركة)', ph: 'اكتشف العلاج الأنسب ليك، وابدأ خطوتك نحو التغيير' },
+        { k: 'home.balCtaLink', label: 'رابط الزر', ph: 'psych-session.html' }
     ]},
     { title: 'أزرار الأقسام', paths: [
         ['sessions', 'أطباء الجلسات'], ['spiritual', 'الصحة النفسية والروحية'], ['skills', 'تنمية المهارات'],
