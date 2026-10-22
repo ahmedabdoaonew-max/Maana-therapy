@@ -8,7 +8,7 @@
   'use strict';
 
   window.MAANA_SPECIALISTS = [
-    { name: 'د. شيرين توكل',  role: 'استشاري نفسي، أسري وإرشاد زواجي', badge: 'استشاري نفسي',   tags: '',                                      photo: 'images/specialists/sherine-tawakol.jpg' },
+    { name: 'د/ شيرين توكل',  role: 'استشاري نفسي، أسري وإرشاد زواجي', badge: 'استشاري نفسي',   tags: '',                                      photo: 'images/specialists/sherine-tawakol.jpg' },
     { name: 'صباح الشافعي',   role: 'أخصائي نفسي وتربية خاصة',          badge: 'أخصائي نفسي',    tags: '',                                      photo: 'images/specialists/sabah-elshafei.jpg' },
     { name: 'لمى بيدس',       role: 'أخصائي نفسي وتطوير ذات',           badge: 'أخصائي نفسي',    tags: '',                                      photo: 'images/specialists/lama-bides.jpg' },
     { name: 'د/ شريف أحمد',   role: 'أخصائي صحة نفسية',                 badge: 'أخصائي نفسي',    tags: 'عضو اتحاد المعالجين النفسيين العرب',    photo: 'images/specialists/sherif-ahmed.jpg' }
