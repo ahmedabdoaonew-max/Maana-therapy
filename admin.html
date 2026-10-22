@@ -43,9 +43,6 @@
                 <a href="#" data-section="psych-doctors" onclick="showAdminSection('psych-doctors');return false;">
                     <i class="fas fa-heart-pulse"></i> أطباء جلستك النفسية
                 </a>
-                <a href="#" data-section="certificates" onclick="showAdminSection('certificates');return false;">
-                    <i class="fas fa-certificate"></i> الشهادات
-                </a>
                 <div class="admin-nav-label">المستخدمون والطلبات</div>
                 <a href="#" data-section="users" onclick="showAdminSection('users');return false;">
                     <i class="fas fa-users"></i> المستخدمون
@@ -86,11 +83,6 @@
                         <div class="label">المشاهدات</div>
                     </div>
                     <div class="stat-card">
-                        <div class="icon"><i class="fas fa-certificate"></i></div>
-                        <div class="number" id="statCerts">0</div>
-                        <div class="label">الشهادات</div>
-                    </div>
-                    <div class="stat-card">
                         <div class="icon"><i class="fas fa-money-bill"></i></div>
                         <div class="number" id="statPayments">0</div>
                         <div class="label">المدفوعات</div>
@@ -103,7 +95,7 @@
                 </div>
                 <div class="admin-welcome">
                     <h3>مرحباً بك في لوحة التحكم</h3>
-                    <p>من هنا يمكنك إدارة المحاضرات، صلاحيات المستخدمين، الأقسام، الشهادات، ومتابعة الإحصائيات.</p>
+                    <p>من هنا يمكنك إدارة المحاضرات، صلاحيات المستخدمين، الأقسام، ومتابعة الإحصائيات.</p>
                 </div>
             </div>
 
@@ -249,29 +241,6 @@
                 <div id="podcastAdminWrap"><p style="color:var(--admin-text-muted);">جاري التحميل...</p></div>
             </div>
 
-            <!-- الشهادات -->
-            <div id="admin-certificates" class="admin-section" style="display:none;">
-                <div class="admin-header">
-                    <h1>إدارة الشهادات</h1>
-                    <button class="btn-primary" style="padding:10px 20px;border:none;border-radius:30px;cursor:pointer;" onclick="openAddCertModal()">
-                        <i class="fas fa-plus"></i> إصدار شهادة
-                    </button>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>الكود</th>
-                            <th>الاسم</th>
-                            <th>الدورة</th>
-                            <th>التاريخ</th>
-                            <th>إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="certsTableBody"></tbody>
-                </table>
-                </div>
-            </div>
 
             <!-- طلبات الموافقة -->
 
@@ -381,73 +350,6 @@
         </div>
     </div>
 
-    <!-- مودال إصدار شهادة -->
-    <div class="modal-overlay" id="certFormModal">
-        <div class="modal" style="max-width:450px;">
-            <div class="modal-header">
-                <h3>إصدار شهادة جديدة</h3>
-                <button class="modal-close" onclick="document.getElementById('certFormModal').classList.remove('active')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form onsubmit="saveCertificate(event)">
-                    <div class="form-group">
-                        <label>الكود السري (ID) — اتركه فارغاً للتوليد</label>
-                        <input type="text" id="certSecretId" placeholder="CERT-XXXX" style="text-transform:uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label>اسم المتدرب</label>
-                        <input type="text" id="certName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>صورة المتدرب (من الجهاز)</label>
-                        <input type="hidden" id="certPhoto">
-                        <input type="file" id="certPhotoFile" accept="image/*">
-                        <small id="certPhotoNote" style="color:var(--admin-text-muted);"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>صورة الشهادة (من الجهاز)</label>
-                        <input type="hidden" id="certImage">
-                        <input type="file" id="certImageFile" accept="image/*">
-                        <small id="certImageNote" style="color:var(--admin-text-muted);"></small>
-                    </div>
-                    <div id="certUploadProgress" style="display:none;color:var(--admin-text);margin-bottom:10px;"></div>
-                    <div class="form-group">
-                        <label>اسم المنحة / الدورة</label>
-                        <input type="text" id="certCourse" required>
-                    </div>
-                    <div class="form-group">
-                        <label>سنة التخرج</label>
-                        <input type="text" id="certYear" placeholder="2026">
-                    </div>
-                    <div class="form-group">
-                        <label>الدرجة</label>
-                        <input type="text" id="certGrade" placeholder="امتياز / جيد جداً...">
-                    </div>
-                    <div class="form-group">
-                        <label>الجهة المانحة / المشرف</label>
-                        <input type="text" id="certDoctor" value="Maana Therapy">
-                    </div>
-                    <div class="form-group">
-                        <label>تاريخ الإصدار</label>
-                        <input type="date" id="certDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>مدة البرنامج</label>
-                        <input type="text" id="certDuration" placeholder="مثال: 6 أسابيع">
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني (اختياري)</label>
-                        <input type="email" id="certEmail">
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف (اختياري)</label>
-                        <input type="text" id="certPhone">
-                    </div>
-                    <button type="submit" class="form-submit">إصدار الشهادة</button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Firebase (Auth + Firestore) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -456,8 +358,6 @@
     <script src="js/firebase-config.js"></script>
     <script src="js/app.js?v=11"></script>
     <script src="js/auth.js?v=6"></script>
-    <script src="js/certificates-seed.js"></script>
-    <script src="js/certificates.js?v=6"></script>
     <script src="js/courses.js?v=11"></script>
     <script src="js/psych-doctors.js?v=11"></script>
     <script src="js/storage-config.js?v=1"></script>
