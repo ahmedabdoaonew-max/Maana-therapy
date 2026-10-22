@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" role="img" aria-label="بوستر معنى ثيرابي — اكتشف العلاج الأنسب ليك">
+<defs>
+<radialGradient id="bg" cx=".3" cy=".2" r="1"><stop offset="0" stop-color="#fffaf0"/><stop offset=".7" stop-color="#f6ecd7"/><stop offset="1" stop-color="#efe0c3"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6c88a"/><stop offset=".5" stop-color="#b88f45"/><stop offset="1" stop-color="#e6c88a"/></linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<g opacity=".5" fill="#fff"><path d="M600 0h120l-380 1080h-120z"/><path d="M900 0h90l-380 1080h-90z" opacity=".6"/></g>
+<circle cx="540" cy="540" r="440" fill="#f9f2e2" stroke="url(#gold)" stroke-width="5"/>
+<g transform="translate(-30 -40) scale(2.2)"><g fill="#6f7f5a"><path d="M40 112 C 20 90 28 62 58 56 C 66 82 58 100 40 112Z" opacity=".9"/><path d="M62 88 C 46 64 58 40 88 38 C 92 62 82 80 62 88Z" opacity=".75"/><path d="M92 62 C 80 42 92 22 118 20 C 120 40 110 56 92 62Z" opacity=".6"/><path d="M48 118 C 70 124 92 112 98 90 C 76 86 56 98 48 118Z" opacity=".8"/></g><path d="M10 150 C 40 110 70 70 150 20" fill="none" stroke="#6f7f5a" stroke-width="2" opacity=".6"/></g>
+<g transform="translate(1110 1120) rotate(180) scale(2.2)"><g fill="#6f7f5a"><path d="M40 112 C 20 90 28 62 58 56 C 66 82 58 100 40 112Z" opacity=".9"/><path d="M62 88 C 46 64 58 40 88 38 C 92 62 82 80 62 88Z" opacity=".75"/><path d="M92 62 C 80 42 92 22 118 20 C 120 40 110 56 92 62Z" opacity=".6"/><path d="M48 118 C 70 124 92 112 98 90 C 76 86 56 98 48 118Z" opacity=".8"/></g><path d="M10 150 C 40 110 70 70 150 20" fill="none" stroke="#6f7f5a" stroke-width="2" opacity=".6"/></g>
+<g transform="translate(300 170) scale(1.6)"><defs>
+    <linearGradient id="balHg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eaaaa5"/><stop offset="1" stop-color="#c9777a"/></linearGradient>
+    <linearGradient id="balGg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6c88a"/><stop offset="1" stop-color="#b88f45"/></linearGradient>
+    <linearGradient id="balOg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#84946d"/><stop offset="1" stop-color="#5d6c4a"/></linearGradient>
+    <radialGradient id="balGl"><stop offset="0" stop-color="#eaaaa5" stop-opacity=".7"/><stop offset="1" stop-color="#eaaaa5" stop-opacity="0"/></radialGradient>
+  </defs>
+  <path  d="M234.9 65.1 A120 120 0 1 0 262.8 191" fill="none" stroke="url(#balGg)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="170" cy="182" r="84" fill="url(#balGl)"/>
+  <g >
+    <circle  cx="112" cy="70" r="19" fill="url(#balOg)"/>
+    <path  d="M112 108 C74 128 62 184 88 224 C112 252 170 254 214 230" fill="none" stroke="url(#balOg)" stroke-width="34" stroke-linecap="round"/>
+  </g>
+  <g ><g transform="translate(172 178) scale(1.28)"><g >
+    <path d="M0 38C-52 6-50-36-24-38C-10-39 0-31 0-22C0-31 10-39 24-38C50-36 52 6 0 38Z" fill="url(#balHg)"/>
+    <ellipse cx="-22" cy="-22" rx="11" ry="6" fill="#fff" opacity=".35" transform="rotate(-30 -22 -22)"/>
+  </g></g></g>
+  <g stroke="url(#balGg)" stroke-width="3" stroke-linecap="round">
+    <line  x1="228" y1="120" x2="238" y2="102"/>
+    <line  x1="240" y1="138" x2="258" y2="130"/>
+    <line  x1="242" y1="158" x2="262" y2="158"/>
+  </g>
+</g>
+<text x="540" y="720" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="800" font-size="68" fill="#4c2a7a">اكتشف العلاج الأنسب ليك</text>
+<text x="540" y="805" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="500" font-size="50" fill="#7d5aa6">وابدأ خطوتك من هنا</text>
+<g stroke="#c9a35e" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="400" y1="880" x2="500" y2="880"/><line x1="580" y1="880" x2="680" y2="880"/><path d="M540 896C522 882 520 866 530 862 535 860 540 864 540 868 540 864 545 860 550 862 560 866 558 882 540 896Z"/></g>
+<text x="540" y="1040" text-anchor="middle" font-family="'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif" font-size="30" fill="#7d5aa6" opacity=".85">معنى ثيرابي</text>
+</svg>
