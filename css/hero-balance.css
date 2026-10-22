@@ -1,0 +1,96 @@
+/* ============================================================
+   هيرو "رحلتك نحو التوازن" — نص بيتكتب + بوستر + أيقونة بتحتوي القلب
+   ============================================================ */
+.bal-hero{
+  --bal-purple:#6a3f9e; --bal-purple-deep:#4c2a7a; --bal-purple-soft:#7d5aa6;
+  --bal-olive:#6f7f5a; --bal-pink:#d98e8a; --bal-gold:#c9a35e; --bal-cream:#f8f1e3;
+  position:relative; overflow:hidden; isolation:isolate;
+  padding:72px 20px 80px;
+  background:
+    radial-gradient(900px 420px at 85% 10%, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(700px 380px at 5% 95%, rgba(217,142,138,.16), transparent 65%),
+    linear-gradient(135deg,#fbf6ea 0%,#f3e8d2 100%);
+}
+.bal-hero::before{ /* خطوط ضوء ناعمة زي البوستر */
+  content:""; position:absolute; inset:-20% -10%; z-index:-1; opacity:.55;
+  background:repeating-linear-gradient(115deg, transparent 0 90px, rgba(255,255,255,.35) 90px 150px);
+  transform:skewX(-8deg);
+}
+.bal-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.bal-text{text-align:right}
+.bal-kicker{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600;color:var(--bal-purple);
+  background:rgba(106,63,158,.09);border:1px solid rgba(106,63,158,.18);padding:6px 16px;border-radius:999px;margin-bottom:18px}
+.bal-title{font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.35;font-weight:800;color:var(--bal-purple-deep)!important;
+  text-shadow:none!important;margin:0 0 18px;min-height:1.4em;text-wrap:balance}
+.bal-desc{font-size:clamp(1rem,1.9vw,1.2rem);line-height:2;color:var(--bal-purple);margin:0 0 28px;max-width:34em;min-height:6em}
+.bal-caret{display:inline-block;width:3px;height:1.05em;margin-inline-start:3px;vertical-align:-.15em;
+  background:var(--bal-purple);border-radius:2px;animation:balBlink .8s steps(1) infinite !important}
+@keyframes balBlink{50%{opacity:0}}
+
+/* الزر: الجملة داخل أيقونة بتتحرك */
+.bal-cta{display:inline-flex;align-items:center;gap:14px;padding:10px 12px 10px 24px;border-radius:999px;text-decoration:none;
+  background:linear-gradient(135deg,var(--bal-purple),var(--bal-purple-deep));color:#fff;font-weight:700;font-size:1.05rem;line-height:1.5;
+  box-shadow:0 10px 26px rgba(76,42,122,.28);transition:transform .25s,box-shadow .25s;
+  opacity:1;transform:none}
+.bal-cta:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(76,42,122,.36)}
+.bal-cta-ic{flex:0 0 auto;width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.bal-cta-ic svg{width:34px;height:34px;overflow:visible}
+.bal-cta-ic .mh{transform-box:fill-box;transform-origin:center;animation:balBeat 1.6s ease-in-out infinite !important}
+.bal-cta-ic .ma{transform-box:fill-box;transform-origin:center;animation:balHugMini 3.2s ease-in-out infinite !important}
+@keyframes balHugMini{0%,100%{transform:translate(0,0)}50%{transform:translate(1.6px,-1px)}}
+.bal-cta-arrow{font-size:.95rem;animation:balNudge 1.5s ease-in-out infinite !important}
+@keyframes balNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
+.bal-pending .bal-cta{opacity:0;transform:translateY(14px);pointer-events:none}
+.bal-cta{transition:opacity .7s ease,transform .7s ease,box-shadow .25s}
+
+/* البوستر */
+.bal-poster{position:relative;width:100%;max-width:440px;aspect-ratio:1;margin:0 auto;border-radius:32px;
+  background:radial-gradient(circle at 30% 20%,#fffaf0,#f6ecd7 70%);
+  box-shadow:0 24px 60px rgba(76,42,122,.16),inset 0 0 0 1px rgba(201,163,94,.25);overflow:hidden;display:grid;place-items:center}
+.bal-poster-ring{position:absolute;inset:7%;border-radius:50%;border:2px solid transparent;
+  background:linear-gradient(#f9f2e2,#f9f2e2) padding-box,linear-gradient(135deg,#e6c88a,#b88f45,#e6c88a) border-box;
+  box-shadow:0 0 0 1px rgba(201,163,94,.2)}
+.bal-poster-in{position:relative;z-index:2;text-align:center;width:78%;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2%}
+.bal-icon{width:62%;height:auto;overflow:visible;display:block}
+.bal-poster-t1{font-size:clamp(1.15rem,3.2vw,1.55rem);font-weight:800;color:var(--bal-purple-deep);margin:6px 0 0;line-height:1.5}
+.bal-poster-t2{font-size:clamp(.95rem,2.6vw,1.2rem);font-weight:500;color:var(--bal-purple-soft);margin:0;line-height:1.6}
+.bal-poster-div{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--bal-gold)}
+.bal-poster-div i{display:block;width:44px;height:1.5px;background:currentColor;opacity:.8}
+.bal-poster-div svg{width:16px;height:16px}
+.bal-leaf{position:absolute;z-index:1;width:34%;height:auto;opacity:.95;pointer-events:none}
+.bal-leaf.l1{top:-3%;left:-4%;transform-origin:0 0;animation:balSway 7s ease-in-out infinite !important}
+.bal-leaf.l2{bottom:-4%;right:-4%;transform:rotate(180deg);transform-origin:center;animation:balSway2 8s ease-in-out infinite !important}
+@keyframes balSway{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
+@keyframes balSway2{0%,100%{transform:rotate(180deg)}50%{transform:rotate(183deg)}}
+
+/* حركة الأيقونة: الجسم يرسم نفسه ويحتوي القلب ثم القلب ينبض */
+.bal-icon .ring{stroke-dasharray:1;stroke-dashoffset:1;animation:balDraw 2.2s ease forwards .2s !important}
+.bal-icon .arm{stroke-dasharray:1;stroke-dashoffset:1;animation:balDraw 1.9s cubic-bezier(.45,.05,.25,1) forwards .8s !important}
+.bal-icon .head{transform-box:fill-box;transform-origin:center;transform:scale(0);animation:balPop .6s cubic-bezier(.2,1.6,.4,1) forwards .45s !important}
+.bal-icon .heart-wrap{transform-box:fill-box;transform-origin:center;transform:scale(0);animation:balPop .7s cubic-bezier(.2,1.6,.4,1) forwards 2.1s !important}
+.bal-icon .heart{transform-box:fill-box;transform-origin:center;animation:balBeat 1.7s ease-in-out infinite 2.9s !important}
+.bal-icon .glow{opacity:0;animation:balGlow 1.7s ease-in-out infinite 2.9s !important}
+.bal-icon .hug{transform-box:fill-box;transform-origin:center;animation:balEmbrace 4.2s ease-in-out infinite 2.9s !important}
+.bal-icon .spark{opacity:0;animation:balSpark 2.4s ease-in-out infinite !important}
+.bal-icon .spark.s1{animation-delay:3.0s}.bal-icon .spark.s2{animation-delay:3.3s}.bal-icon .spark.s3{animation-delay:3.6s}
+@keyframes balDraw{to{stroke-dashoffset:0}}
+@keyframes balPop{to{transform:scale(1)}}
+@keyframes balBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.11)}28%{transform:scale(1)}42%{transform:scale(1.07)}56%{transform:scale(1)}}
+@keyframes balGlow{0%,100%{opacity:.15}14%{opacity:.6}28%{opacity:.15}}
+@keyframes balEmbrace{0%,100%{transform:translate(0,0)}50%{transform:translate(5px,-3px)}}
+@keyframes balSpark{0%,100%{opacity:0;transform:translate(0,0)}35%,65%{opacity:1;transform:translate(2px,-2px)}}
+
+@media (max-width:860px){
+  .bal-hero{padding:48px 18px 56px}
+  .bal-inner{grid-template-columns:1fr;gap:34px}
+  .bal-text{text-align:center}
+  .bal-desc{margin-inline:auto;min-height:7.5em}
+  .bal-poster{max-width:360px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bal-hero *,.bal-hero *::before{animation:none!important;transition:none!important}
+  .bal-icon .ring,.bal-icon .arm{stroke-dashoffset:0}
+  .bal-icon .head,.bal-icon .heart-wrap{transform:scale(1)}
+  .bal-icon .spark{opacity:1}
+  .bal-caret{display:none}
+}
