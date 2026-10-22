@@ -149,8 +149,8 @@ function pstRenderAdmin() {
     wrap.innerHTML =
         '<div style="' + panel + '"><h3 style="color:var(--admin-text);margin-bottom:14px;font-size:1rem;">عنوان القسم في الرئيسية</h3>' +
             '<form onsubmit="pstSaveTitles(event)" style="' + grid + '">' +
-                pstField('العنوان', '<input name="title" value="' + pstEsc(pstAdmin.settings.title || 'احجز جلستك مع أخصائيينا') + '">') +
-                pstField('وصف قصير', '<input name="subtitle" value="' + pstEsc(pstAdmin.settings.subtitle || 'اختر الأخصائي المناسب وتواصل معنا مباشرة على واتساب') + '">') +
+                pstField('العنوان', '<input name="title" value="' + pstEsc(pstAdmin.settings.title || 'تعرف علي فريقنا من المعالجين') + '">') +
+                pstField('وصف قصير', '<input name="subtitle" value="' + pstEsc(pstAdmin.settings.subtitle || 'فريق من الخبراء المتخصصين لمرافقتك في رحلة التعافي وتحقيق التوازن النفسي.') + '">') +
                 '<div style="grid-column:1/-1;"><button type="submit" class="form-submit" style="width:auto;padding:10px 24px;">حفظ العنوان</button></div>' +
             '</form></div>' +
         '<div style="' + panel + '"><h3 style="color:var(--admin-text);margin-bottom:14px;font-size:1rem;">إضافة بوستر جديد</h3>' +
