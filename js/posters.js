@@ -30,7 +30,8 @@ function pstMessage(p) {
 /* ================= الواجهة العامة (index.html) ================= */
 function pstCardHtml(p) {
     var tags = pstTags(p).map(function (t) { return '<span class="pst-tag">' + pstEsc(t) + '</span>'; }).join('');
-    var href = (p.builtin && window.maanaBookingUrl) ? maanaBookingUrl(p) : 'https://wa.me/' + pstWA(p) + '?text=' + encodeURIComponent(pstMessage(p));
+    var simple = !(p.message && p.message.trim()) && !p.price && !p.duration;
+    var href = ((p.builtin || simple) && window.maanaBookingUrl) ? maanaBookingUrl(p) : 'https://wa.me/' + pstWA(p) + '?text=' + encodeURIComponent(pstMessage(p));
     return '<article class="pst-card">' +
         '<div class="pst-photo">' +
             (p.photo ? '<img src="' + pstEsc(p.photo) + '" alt="' + pstEsc(p.name) + '" loading="lazy" decoding="async">' : '<i class="fas fa-user-doctor pst-ph"></i>') +

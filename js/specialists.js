@@ -32,7 +32,8 @@
   };
 
   window.maanaBookingUrl = function (s) {
-    var num = (window.SITE_CONTACT && SITE_CONTACT.whatsapp) || '201152013172';
+    var own = String((s && s.whatsapp) || '').replace(/[^0-9]/g, '');
+    var num = own || (window.SITE_CONTACT && SITE_CONTACT.whatsapp) || '201152013172';
     return 'https://wa.me/' + num + '?text=' + encodeURIComponent(window.maanaBookingMessage(s));
   };
 })();
