@@ -20,9 +20,7 @@ async function psychFetchPublicList() {
     const main = snaps[0].docs.map(d => ({ id: d.id, ...d.data() }));
     const seen = new Set(main.map(d => String(d.name || '').trim()));
     const legacy = snaps[1] ? snaps[1].docs.map(d => ({ id: d.id, ...d.data() })).filter(d => !seen.has(String(d.name || '').trim())) : [];
-    return main.concat(legacy)
-        .filter(d => d.active !== false)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
+    return main.concat(legacy.filter(d => d.active !== false));
 }
 
 async function psychInitPublic() {
@@ -36,7 +34,7 @@ async function psychInitPublic() {
     } catch (e) {
         console.error(e);
     }
-    psychDoctorsState.list = (window.MAANA_SPECIALISTS || []).concat(extras);
+    psychDoctorsState.list = window.maanaMergeSpecialists ? maanaMergeSpecialists(extras) : (window.MAANA_SPECIALISTS || []).concat(extras);
     psychRenderGrid();
 }
 
@@ -98,6 +96,23 @@ async function psychMigrateLegacy(existing) {
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
+/* أول مرة: ننسخ الأخصائيين الأساسيين لقاعدة البيانات عشان يظهروا في اللوحة ويتعدلوا */
+async function psychSeedBuiltins(existing) {
+    const keys = new Set(existing.map(d => d.builtinKey).filter(Boolean));
+    const todo = (window.MAANA_SPECIALISTS || []).filter(b => !keys.has(b.builtinKey));
+    if (!todo.length) return existing;
+    const batch = db.batch();
+    todo.forEach(b => {
+        batch.set(db.collection('contactPosters').doc(), {
+            name: b.name, role: b.role || '', badge: b.badge || '', tags: b.tags || '', photo: b.photo || '',
+            whatsapp: '', order: b.order, active: true, buttonText: 'حجز جلسة', builtinKey: b.builtinKey
+        });
+    });
+    await batch.commit();
+    const snap = await db.collection('contactPosters').get();
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
 async function renderAdminPsychDoctors() {
     const wrap = document.getElementById('psychDoctorsAdminWrap');
     if (!wrap) return;
@@ -106,6 +121,7 @@ async function renderAdminPsychDoctors() {
         const snap = await db.collection('contactPosters').get();
         let list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         list = await psychMigrateLegacy(list);
+        list = await psychSeedBuiltins(list);
         psychDoctorsAdminData = { list: list.sort((a, b) => (a.order || 0) - (b.order || 0)) };
     } catch (e) {
         console.error(e);
@@ -123,8 +139,9 @@ function psychFormFields(d) {
         <div class="form-group"><label>الوصف (التخصص)</label><input type="text" name="role" value="${v('role')}" placeholder="مثال: أخصائية تخاطب واضطرابات النطق"></div>
         <div class="form-group" style="grid-column:1/-1;"><label>الصورة — من الجهاز</label>${d.photo ? `<img class="mn-photo-prev" src="${v('photo')}" alt="">` : ''}<div class="mn-file-box"><input type="file" name="photoFile" accept="image/*"></div><input type="hidden" name="photo" value="${v('photo')}"></div>
         <div class="form-group"><label>الشارة على الصورة (اختياري)</label><input type="text" name="badge" value="${v('badge')}" placeholder="مثال: أخصائي نفسي"></div>
+        <div class="form-group"><label>سطر إضافي تحت الاسم (اختياري)</label><input type="text" name="tags" value="${v('tags')}" placeholder="مثال: عضو اتحاد المعالجين النفسيين العرب"></div>
         <div class="form-group"><label>رقم واتساب (اختياري — لو فاضي يستخدم رقم الموقع)</label><input type="text" name="whatsapp" dir="ltr" value="${v('whatsapp')}" placeholder="201152013172"></div>
-        <div class="form-group"><label>ترتيب العرض (بعد الأخصائيين الأساسيين)</label><input type="number" name="order" value="${d.order || 0}"></div>
+        <div class="form-group"><label>ترتيب العرض (الأصغر يظهر أول)</label><input type="number" name="order" value="${d.order || 0}"></div>
         <div class="form-group" style="align-self:end;">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
                 <input type="checkbox" name="active" ${d.active === false ? '' : 'checked'}> ظاهر في الرئيسية وصفحة "جلستك النفسية"
@@ -136,7 +153,7 @@ function psychRenderAdmin() {
     const wrap = document.getElementById('psychDoctorsAdminWrap');
     if (!wrap || !psychDoctorsAdminData) return;
     const list = psychDoctorsAdminData.list;
-    const nextOrder = list.reduce((m, d) => Math.max(m, d.order || 0), (window.MAANA_SPECIALISTS || []).length) + 1;
+    const nextOrder = list.reduce((m, d) => Math.max(m, d.order || 0), 0) + 1;
 
     const itemsHtml = list.map(d => `
         <details style="background:var(--admin-panel-2);border:1px solid var(--admin-border);border-radius:10px;margin-bottom:10px;">
@@ -158,8 +175,8 @@ function psychRenderAdmin() {
                 <div class="form-group" style="grid-column:1/-1;"><button type="submit" class="form-submit" style="width:auto;padding:10px 24px;"><i class="fas fa-plus"></i> إضافة</button></div>
             </form>
         </div>
-        <h3 style="color:var(--admin-text);margin-bottom:14px;font-size:1rem;">المضافون من لوحة التحكم (${list.length})</h3>
-        ${itemsHtml || '<p style="color:var(--admin-text-muted);">لا يوجد أحد بعد — الأخصائيون الأساسيون ظاهرون دايمًا وأي حد تضيفه هنا بيظهر بعدهم.</p>'}`;
+        <h3 style="color:var(--admin-text);margin-bottom:14px;font-size:1rem;">كل الأخصائيين والمعالجين (${list.length})</h3>
+        ${itemsHtml || '<p style="color:var(--admin-text-muted);">لا يوجد أحد بعد.</p>'}`;
 }
 
 /** يرفع الصورة من الجهاز ويرجّع الرابط، أو الرابط القديم لو مفيش ملف جديد */
@@ -176,6 +193,7 @@ function psychReadForm(f, photoUrl) {
         name: f.name.value.trim(),
         role: f.role.value.trim(),
         badge: f.badge.value.trim(),
+        tags: f.tags.value.trim(),
         photo: photoUrl,
         whatsapp: f.whatsapp.value.replace(/[^0-9]/g, ''),
         order: Number(f.order.value) || 0,
@@ -219,6 +237,13 @@ async function psychSaveDoctor(event, docId) {
 }
 
 async function psychDeleteDoctor(docId) {
+    const cur = psychDoctorsAdminData && psychDoctorsAdminData.list.find(d => d.id === docId);
+    if (cur && cur.builtinKey) {
+        if (!confirm('هذا أخصائي أساسي في الموقع — هيتم إخفاؤه (ممكن ترجعه بتفعيل خانة "ظاهر"). متأكد؟')) return;
+        try { await db.collection('contactPosters').doc(docId).set({ active: false }, { merge: true }); showToast('تم الإخفاء'); renderAdminPsychDoctors(); }
+        catch (e) { console.error(e); showToast('تعذّر الإخفاء', 'error'); }
+        return;
+    }
     if (!confirm('حذف هذا الأخصائي؟')) return;
     try {
         await db.collection('contactPosters').doc(docId).delete();

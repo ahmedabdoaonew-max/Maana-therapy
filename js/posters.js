@@ -66,9 +66,9 @@ async function pstInitPublic() {
         console.error(e); // لو فشل التحميل نعرض الأخصائيين الأساسيين برضه
     }
     extras = extras
-        .filter(function (p) { return p.active !== false && !(window.maanaIsPlaceholder && maanaIsPlaceholder(p.name)); })
+        .filter(function (p) { return !(window.maanaIsPlaceholder && maanaIsPlaceholder(p.name)); })
         .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
-    var list = (window.MAANA_SPECIALISTS || []).concat(extras);
+    var list = window.maanaMergeSpecialists ? maanaMergeSpecialists(extras) : (window.MAANA_SPECIALISTS || []).concat(extras);
     if (!list.length) { sec.style.display = 'none'; return; }
     grid.innerHTML = list.map(pstCardHtml).join('');
     sec.style.display = '';
