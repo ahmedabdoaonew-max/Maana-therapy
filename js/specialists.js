@@ -11,7 +11,9 @@
     { name: 'د/ شيرين توكل',  role: 'استشاري نفسي، أسري وإرشاد زواجي', badge: 'استشاري نفسي',   tags: '',                                      photo: 'images/specialists/sherine-tawakol.jpg' },
     { name: 'صباح الشافعي',   role: 'أخصائي نفسي وتربية خاصة',          badge: 'أخصائي نفسي',    tags: '',                                      photo: 'images/specialists/sabah-elshafei.jpg' },
     { name: 'لمى بيدس',       role: 'أخصائي نفسي وتطوير ذات',           badge: 'أخصائي نفسي',    tags: '',                                      photo: 'images/specialists/lama-bides.jpg' },
-    { name: 'د/ شريف أحمد',   role: 'أخصائي صحة نفسية',                 badge: 'أخصائي نفسي',    tags: 'عضو اتحاد المعالجين النفسيين العرب',    photo: 'images/specialists/sherif-ahmed.jpg' }
+    { name: 'د/ شريف أحمد',   role: 'أخصائي صحة نفسية',                 badge: 'أخصائي نفسي',    tags: 'عضو اتحاد المعالجين النفسيين العرب',    photo: 'images/specialists/sherif-ahmed.jpg' },
+    { name: 'أ/ سناء عبد السلام', role: 'لايف كوتش تطوير الذات', badge: 'لايف كوتش', tags: '', photo: 'images/specialists/sanaa-abdelsalam.jpg' },
+    { name: 'د/ أريج محمود', role: 'أخصائية تخاطب واضطرابات النطق والطلاقة', badge: 'أخصائية تخاطب', tags: '', photo: 'images/specialists/areej-mahmoud.jpg' }
   ].map(function (s, i) { s.builtin = true; s.order = i + 1; s.buttonText = 'حجز جلسة'; return s; });
 
   /* كروت الأمثلة القديمة (مثال 1 / 2 / 3) ما تظهرش تاني */
