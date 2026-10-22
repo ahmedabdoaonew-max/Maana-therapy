@@ -9,10 +9,10 @@
 <g transform="translate(-30 -40) scale(2.2)"><g fill="#6f7f5a"><path d="M40 112 C 20 90 28 62 58 56 C 66 82 58 100 40 112Z" opacity=".9"/><path d="M62 88 C 46 64 58 40 88 38 C 92 62 82 80 62 88Z" opacity=".75"/><path d="M92 62 C 80 42 92 22 118 20 C 120 40 110 56 92 62Z" opacity=".6"/><path d="M48 118 C 70 124 92 112 98 90 C 76 86 56 98 48 118Z" opacity=".8"/></g><path d="M10 150 C 40 110 70 70 150 20" fill="none" stroke="#6f7f5a" stroke-width="2" opacity=".6"/></g>
 <g transform="translate(1110 1120) rotate(180) scale(2.2)"><g fill="#6f7f5a"><path d="M40 112 C 20 90 28 62 58 56 C 66 82 58 100 40 112Z" opacity=".9"/><path d="M62 88 C 46 64 58 40 88 38 C 92 62 82 80 62 88Z" opacity=".75"/><path d="M92 62 C 80 42 92 22 118 20 C 120 40 110 56 92 62Z" opacity=".6"/><path d="M48 118 C 70 124 92 112 98 90 C 76 86 56 98 48 118Z" opacity=".8"/></g><path d="M10 150 C 40 110 70 70 150 20" fill="none" stroke="#6f7f5a" stroke-width="2" opacity=".6"/></g>
 <g transform="translate(300 170) scale(1.6)"><defs>
-    <linearGradient id="balHg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eaaaa5"/><stop offset="1" stop-color="#c9777a"/></linearGradient>
+    <linearGradient id="balHg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9b2b5"/><stop offset="1" stop-color="#a97580"/></linearGradient>
     <linearGradient id="balGg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6c88a"/><stop offset="1" stop-color="#b88f45"/></linearGradient>
     <linearGradient id="balOg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#84946d"/><stop offset="1" stop-color="#5d6c4a"/></linearGradient>
-    <radialGradient id="balGl"><stop offset="0" stop-color="#eaaaa5" stop-opacity=".7"/><stop offset="1" stop-color="#eaaaa5" stop-opacity="0"/></radialGradient>
+    <radialGradient id="balGl"><stop offset="0" stop-color="#d9b2b5" stop-opacity=".7"/><stop offset="1" stop-color="#d9b2b5" stop-opacity="0"/></radialGradient>
   </defs>
   <path  d="M234.9 65.1 A120 120 0 1 0 262.8 191" fill="none" stroke="url(#balGg)" stroke-width="3" stroke-linecap="round"/>
   <circle cx="170" cy="182" r="84" fill="url(#balGl)"/>
@@ -30,8 +30,8 @@
     <line  x1="242" y1="158" x2="262" y2="158"/>
   </g>
 </g>
-<text x="540" y="720" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="800" font-size="68" fill="#4c2a7a">اكتشف العلاج الأنسب ليك</text>
-<text x="540" y="805" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="500" font-size="50" fill="#7d5aa6">وابدأ خطوتك من هنا</text>
+<text x="540" y="720" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="800" font-size="68" fill="#6A4A59">اكتشف العلاج الأنسب ليك</text>
+<text x="540" y="805" text-anchor="middle" font-family="'IBM Plex Sans Arabic','Noto Naskh Arabic',Tahoma,Arial,sans-serif" font-weight="500" font-size="50" fill="#8A6674">وابدأ خطوتك من هنا</text>
 <g stroke="#c9a35e" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="400" y1="880" x2="500" y2="880"/><line x1="580" y1="880" x2="680" y2="880"/><path d="M540 896C522 882 520 866 530 862 535 860 540 864 540 868 540 864 545 860 550 862 560 866 558 882 540 896Z"/></g>
-<text x="540" y="1040" text-anchor="middle" font-family="'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif" font-size="30" fill="#7d5aa6" opacity=".85">معنى ثيرابي</text>
+<text x="540" y="1040" text-anchor="middle" font-family="'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif" font-size="30" fill="#8A6674" opacity=".85">معنى ثيرابي</text>
 </svg>
