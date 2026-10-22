@@ -4861,7 +4861,7 @@ html.is-auth #userMenu{display:flex!important}
 @media(max-width:600px){.pc-nav{width:34px;height:34px;font-size:.8rem}.pc-stage{gap:6px}}
 @media(prefers-reduced-motion:reduce){.pc-slide{transition:none}}
 
-/* فيديو تعرّف على الأكاديمية (رأسي) */
+/* فيديو تعرّف على المنصة (رأسي) */
 .academy-video{max-width:380px;margin:0 auto;border-radius:var(--r-lg,18px);overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.22);aspect-ratio:9/16}
 .academy-video video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 
