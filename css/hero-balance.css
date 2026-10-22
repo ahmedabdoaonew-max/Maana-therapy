@@ -57,7 +57,9 @@
 .hero-programs .pc-dot{background:rgba(255,255,255,.35)}
 .hero-programs .pc-dot.on{background:#fff!important}
 
-/* أزرار المسارات: الاختبارات النفسية مستطيل في الأول، وبعدها المربعات */
-.mn-paths-grid{grid-template-columns:repeat(3,1fr)!important}
-.mn-paths-grid .mn-path:first-child{grid-column:1/-1}
-@media(max-width:1000px){.mn-paths-grid{grid-template-columns:repeat(2,1fr)!important}.mn-paths-grid .mn-path:last-child{grid-column:1/-1}}
+/* المسارات: مربعات اتنين اتنين */
+.mn-paths-grid{grid-template-columns:repeat(2,1fr)!important;max-width:760px;margin-inline:auto}
+.mn-paths-grid .mn-path:first-child,.mn-paths-grid .mn-path:last-child{grid-column:auto!important}
+/* كارت الخدمات (نص بس) */
+.hero .hero-card{display:block}
+.hero .hero-card-actions{display:none}
