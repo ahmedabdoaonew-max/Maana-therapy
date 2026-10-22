@@ -9,16 +9,23 @@
   background:linear-gradient(135deg,rgba(186,150,154,.16),rgba(186,150,154,.04));transform:rotate(-8deg)}
 .bal-h{font-size:7.2cqw;font-weight:800;line-height:1.4;color:#6A4A59!important;margin:0 0 4.5cqw;text-shadow:none!important;text-wrap:balance}
 .bal-p{font-size:3.9cqw;line-height:1.95;color:#7a5666;margin:0 auto 8cqw;max-width:92%}
-.bal-orb{box-sizing:border-box;width:68%;aspect-ratio:1;margin:0 auto;border-radius:50%;
-  background:radial-gradient(circle at 32% 25%,#cfaeb1 0%,#BA969A 55%,#8A6674 130%);
-  border:2.4cqw solid #fff;box-shadow:0 18px 44px rgba(106,74,89,.28);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2cqw;padding:3cqw}
-.bal-icon{width:44%;height:auto;overflow:visible;display:block}
-.bal-glow{margin:0;font-size:3.9cqw;font-weight:800;line-height:1.55;color:#fff;
-  animation:balTextGlow 2.4s ease-in-out infinite !important}
+.bal-orb{box-sizing:border-box;width:88%;aspect-ratio:1;margin:0 auto;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 30% 22%,#fffdf6 0%,#fbf3e1 55%,#f1e4c8 100%);
+  border:1.6cqw solid #fff;
+  box-shadow:0 22px 46px rgba(106,74,89,.25),0 0 0 .5cqw rgba(201,163,94,.55),inset 0 6px 14px rgba(255,255,255,.9),inset 0 -10px 22px rgba(201,163,94,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:3cqw}
+.bal-orb::before{content:"";position:absolute;inset:3.2%;border-radius:50%;border:1.5px solid rgba(201,163,94,.75);pointer-events:none}
+.bal-icon{width:46%;height:auto;overflow:visible;display:block;filter:drop-shadow(0 7px 7px rgba(90,70,50,.3))}
+.bal-glow{margin:0;display:flex;flex-direction:column;align-items:center;gap:.6cqw;line-height:1.5;color:#4d5a3c;
+  animation:balTextGlow 2.6s ease-in-out infinite !important}
+.bal-glow .t1{font-size:5.3cqw;font-weight:800}
+.bal-glow .t2{font-size:4.2cqw;font-weight:600;color:#667452}
+.bal-div{display:flex;align-items:center;gap:1.4cqw;margin-top:1.2cqw;color:#c9a35e}
+.bal-div i{display:block;width:9cqw;height:1.5px;background:currentColor;opacity:.85}
+.bal-div svg{width:3.6cqw;height:3.6cqw}
 @keyframes balTextGlow{
-  0%,100%{text-shadow:0 0 3px rgba(255,255,255,.35),0 0 8px rgba(255,255,255,.2);opacity:.93}
-  50%{text-shadow:0 0 6px #fff,0 0 16px rgba(255,255,255,.95),0 0 30px rgba(255,236,240,.85);opacity:1}
+  0%,100%{text-shadow:0 0 2px rgba(201,163,94,.15)}
+  50%{text-shadow:0 0 8px rgba(224,190,120,.9),0 0 20px rgba(224,190,120,.6)}
 }
 /* الحركة: القلب بس */
 .bal-icon .heart-wrap{transform-box:fill-box;transform-origin:center}
