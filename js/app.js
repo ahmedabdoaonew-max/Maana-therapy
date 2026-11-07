@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // رأس القائمة (اللوجو + زر الإغلاق) — يظهر فقط داخل الدرج
         var head = document.createElement('div');
         head.className = 'nav-drawer-head';
-        head.innerHTML = '<span class="nav-drawer-title"><i class="fas fa-spa"></i> <span dir="ltr" style="unicode-bidi:isolate;">Maana Therapy</span></span>' +
+        head.innerHTML = '<span class="nav-drawer-title"><img src="images/logo-icon.png?v=3" alt="" width="34" height="34" style="width:34px;height:34px;display:block;flex:none;object-fit:contain;background:#F8F3EA;border-radius:10px;padding:3px"> <span dir="ltr" style="unicode-bidi:isolate;">Maعna</span></span>' +
                          '<button type="button" class="nav-drawer-close" aria-label="إغلاق القائمة"><i class="fas fa-xmark"></i></button>';
         navLinks.insertBefore(head, navLinks.firstChild);
 
