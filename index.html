@@ -4,10 +4,11 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png?v=3">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=3">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#8A6674">
-    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <title>Maعna Therapy | مــعــنــى ثــيــرابــي — منصة الصحة النفسية والروحية</title>
@@ -439,9 +440,26 @@
             <h2>تعرّف على المنصة</h2>
         </div>
         <div class="academy-video">
-            <video controls playsinline preload="metadata" poster="images/academy-intro-poster.jpg" src="media/academy-intro.mp4">متصفحك لا يدعم تشغيل الفيديو.</video>
+            <video id="introVideo" controls playsinline muted preload="metadata" poster="images/academy-intro-poster.jpg?v=2" src="media/academy-intro.mp4?v=2">متصفحك لا يدعم تشغيل الفيديو.</video>
         </div>
     </section>
+    <script>
+(function(){
+  var v=document.getElementById('introVideo'); if(!v) return;
+  v.muted=true; var visible=false, manual=false, auto=false;
+  function play(){ if(manual) return; auto=true; var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  function stop(){ auto=true; v.pause(); }
+  v.addEventListener('pause',function(){ if(!auto && visible) manual=true; auto=false; });
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){
+      visible=e.isIntersecting&&e.intersectionRatio>=0.5;
+      if(visible) play(); else { manual=false; if(!v.paused) stop(); }
+    }); },{threshold:[0,0.5,1]}).observe(v);
+  }
+  v.addEventListener('mouseenter',function(){ visible=true; play(); });
+})();
+</script>
+
 
     <div class="gold-divider"></div>
 
