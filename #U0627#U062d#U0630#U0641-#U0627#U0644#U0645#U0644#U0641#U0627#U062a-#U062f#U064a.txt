@@ -1,0 +1,4 @@
+certificate.html
+certificates.html
+js/certificates-seed.js
+js/certificates.js

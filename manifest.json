@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Maعna Therapy | مــعــنــى ثــيــرابــي",
+  "name": "Maana Therapy | مــعــنــى ثــيــرابــي",
   "short_name": "Maعna",
-  "description": "Maعna Therapy — مــعــنــى ثــيــرابــي | معني لكل حكايه. منصة متخصصة في الصحة النفسية والروحية.",
+  "description": "Maana Therapy — مــعــنــى ثــيــرابــي | معنى لكل حكايه. منصة متخصصة في الصحة النفسية.",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",

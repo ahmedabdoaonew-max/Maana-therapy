@@ -1,11 +1,11 @@
 # Maعna Therapy — معنى ثيرابي (مــعــنــى ثــيــرابــي)
 
-> معنى ثيرابي منصة عربية للصحة النفسية والروحية: جلسات نفسية مع مختصين، محاضرات وبرامج تدريبية، اختبارات نفسية، وبودكاست — معنى لكل حكاية.
+> معنى ثيرابي منصة عربية للصحة النفسية: جلسات نفسية مع مختصين، محاضرات وبرامج تدريبية، اختبارات نفسية، وبودكاست — معنى لكل حكاية.
 
-معنى ثيرابي منصة عربية (RTL) متخصصة في الصحة النفسية والروحية تعتمد على العلاج بالمعنى (Logotherapy). شعارها: «كل نفس لها معنى» / «معنى لكل حكاية». المحتوى باللغة العربية.
+معنى ثيرابي منصة عربية (RTL) متخصصة في الصحة النفسية تعتمد على العلاج بالمعنى (Logotherapy). شعارها: «كل نفس لها معنى» / «معنى لكل حكاية». المحتوى باللغة العربية.
 
 ## أسماء المنصة (Also known as)
-Maعna · Maعna Therapy · Maana Therapy · معنى ثيرابي · ثيرابي معنى · معنى سيرابي · Ma3na Therapy · Mana Therapy. كلها تشير إلى نفس المنصة العربية للصحة النفسية والروحية على https://maana-therapy.vercel.app/ .
+Maعna · Maعna Therapy · Maana Therapy · معنى ثيرابي · ثيرابي معنى · معنى سيرابي · Ma3na Therapy · Mana Therapy. كلها تشير إلى نفس المنصة العربية للصحة النفسية على https://maana-therapy.vercel.app/ .
 
 ## Summary (English)
 Maana Therapy / Maعna Therapy (Arabic: معنى ثيرابي, also written ثيرابي معنى, also spelled معنى سيرابي / Maena Therapy / Mana Therapy) is an Arabic-language mental health and spiritual wellness platform based on logotherapy (meaning-centered therapy). It offers therapy sessions with specialists, online lectures and training programs, a podcast, daily spiritual tools (Quran, adhkar, prayer times) and skill-building games. Content is informational and does not replace a licensed professional.
@@ -14,22 +14,22 @@ Maana Therapy / Maعna Therapy (Arabic: معنى ثيرابي, also written ثي
 - جلسات نفسية مع أطباء ومختصين (الحجز عبر واتساب)
 - برامج تدريبية ومحاضرات أونلاين مسجّلة بموافقة الإدارة
 - بودكاست معنى: حلقات صوتية ومرئية في الصحة النفسية
-- قسم الصحة النفسية والروحية: قرآن، أذكار، ورد يومي، مواقيت الصلاة، تتبّع التقدم
+- قسم الصحة النفسية: قرآن، أذكار، ورد يومي، مواقيت الصلاة، تتبّع التقدم
 - ألعاب تنمية المهارات واختبارات وحالات سريرية للتدريب
 
 ## الصفحات
-- [عن المنصة](https://maana-therapy.vercel.app/about.html): تعرّف على معنى ثيرابي: رؤيتنا ورسالتنا في دعم الصحة النفسية والروحية بالعلاج بالمعنى، وفريق المختصين الذي يقف خلف المنصة.
+- [عن المنصة](https://maana-therapy.vercel.app/about.html): تعرّف على معنى ثيرابي: رؤيتنا ورسالتنا في دعم الصحة النفسية بالعلاج بالمعنى، وفريق المختصين الذي يقف خلف المنصة.
 - [البرامج التدريبية](https://maana-therapy.vercel.app/courses.html): برامج تدريبية متخصصة في الصحة النفسية والعلاج بالمعنى مقدّمة من مختصين، مع محاضرات مسجلة وشهادات إتمام.
 - [المحاضرات الأونلاين](https://maana-therapy.vercel.app/online-lectures.html): تصفّح المحاضرات الأونلاين حسب التصنيف، واحصل على كود المحاضرة لمشاهدتها على المنصة بسهولة.
 - [بودكاست معنى](https://maana-therapy.vercel.app/podcast.html): بودكاست معنى: حلقات صوتية ومرئية مع ضيوف ومختصين عن الصحة النفسية والعلاقات والتعافي، مقسّمة حسب الموضوع.
 - [تواصل معنا](https://maana-therapy.vercel.app/contact.html): تواصل مع فريق معنى ثيرابي عبر واتساب أو فيسبوك أو إنستجرام أو تيك توك أو يوتيوب للاستفسار وحجز الجلسات.
-- [الصحة النفسية والروحية](https://maana-therapy.vercel.app/mental-health.html): قسم الصحة النفسية والروحية: ورد القرآن اليومي، الأذكار، مواقيت الصلاة، متابعة التقدم والإنجازات — كل قسم في صفحة مستقلة.
+- [الصحة النفسية](https://maana-therapy.vercel.app/mental-health.html): قسم الصحة النفسية: ورد القرآن اليومي، الأذكار، مواقيت الصلاة، متابعة التقدم والإنجازات — كل قسم في صفحة مستقلة.
 - [القرآن الكريم](https://maana-therapy.vercel.app/quran.html): اقرأ القرآن الكريم بالسور والآيات واستمع بأصوات القرّاء وحدّد هدفك اليومي لتتابع ورد التلاوة.
 - [الأذكار](https://maana-therapy.vercel.app/athkar.html): أذكار الصباح والمساء وبعد الصلاة بصيغة سهلة مع عدّاد للتكرار ومتابعة لما أنجزته يومياً.
-- [الورد اليومي](https://maana-therapy.vercel.app/daily-wird.html): خطة يومية بسيطة من الأعمال الروحية والنفسية مع نقاط وتتبّع للالتزام لتصنع عادة ثابتة.
+- [الورد اليومي](https://maana-therapy.vercel.app/daily-wird.html): خطة يومية بسيطة من الأعمال النفسية مع نقاط وتتبّع للالتزام لتصنع عادة ثابتة.
 - [مواقيت الصلاة](https://maana-therapy.vercel.app/prayer-times.html): مواقيت الصلاة حسب موقعك مع الوقت المتبقي للصلاة القادمة وتنبيه بسيط يساعدك على الالتزام.
 - [تقدّمك](https://maana-therapy.vercel.app/progress.html): تابع تقدّمك في القرآن والأذكار والمهام اليومية بإحصائيات واضحة ورسوم مبسّطة.
-- [الإنجازات](https://maana-therapy.vercel.app/achievements.html): أوسمة وإنجازات تحفّزك على الاستمرار في عاداتك الروحية والنفسية يوماً بعد يوم.
+- [الإنجازات](https://maana-therapy.vercel.app/achievements.html): أوسمة وإنجازات تحفّزك على الاستمرار في عاداتك النفسية يوماً بعد يوم.
 - [الجلسات النفسية](https://maana-therapy.vercel.app/psych-session.html): تعرّف على أطباء ومختصي الجلسات النفسية في معنى ثيرابي واحجز جلستك بسهولة عبر واتساب.
 - [الحالات السريرية](https://maana-therapy.vercel.app/clinical-vignettes.html): تدريب تفاعلي على الحالات السريرية التشخيصية لطلاب ومتخصصي الصحة النفسية مع تغذية راجعة فورية.
 - [Carrot Dash](https://maana-therapy.vercel.app/carrot-dash.html): لعبة جري خفيفة للاسترخاء وتهدئة الذهن بين المهام، من ألعاب تنمية المهارات في معنى ثيرابي.
