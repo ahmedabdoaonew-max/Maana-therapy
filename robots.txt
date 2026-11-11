@@ -38,4 +38,4 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-Sitemap: https://maana-therapy.vercel.app/sitemap.xml
+Sitemap: https://ma3natherapy.com/sitemap.xml

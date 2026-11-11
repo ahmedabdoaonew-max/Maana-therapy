@@ -109,7 +109,7 @@
 
 الملفات الجاهزة: `robots.txt` و`sitemap.xml` و`llms.txt` و`images/og-image.jpg` (صورة المعاينة 1200×630) ووسوم Open Graph / Twitter / JSON-LD في كل صفحة عامة. الصفحات الخاصة (أدمن، تسجيل، ملف شخصي، مشاهدة، قسم/قسم فرعي) عليها `noindex`.
 
-> الدومين المكتوب في كل الملفات: `https://maana-therapy.vercel.app` — لو هتستخدم دومين تاني استبدله في كل الملفات (بحث واستبدال شامل).
+> الدومين المكتوب في كل الملفات: `https://ma3natherapy.com` — لو هتستخدم دومين تاني استبدله في كل الملفات (بحث واستبدال شامل).
 
 **بعد النشر على Vercel:**
 1. افتح search.google.com/search-console ← Add property ← **URL prefix** ← اكتب رابط الموقع.
